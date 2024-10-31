@@ -170,17 +170,17 @@ const NewProduct = (props) => {
         }
     };
     
-    // const isValidUrl = (url, type) => {
-    //     if (type === "Youtube"){
-    //         const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
-    //         return youtubeRegex.test(url)
-    //     }else if(type === "Vimeo"){
-    //         const vimeoRegex = /^(https?:\/\/)?(www\.)?vimeo\.com\/.+$/;
-    //         return vimeoRegex.test(url);
-    //     }else{
-    //         toast.error('Invalid Video Type');
-    //     }
-    // };
+    const isValidUrl = (url, type) => {
+        if (type === "Youtube"){
+            const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
+            return youtubeRegex.test(url)
+        }else if(type === "Vimeo"){
+            const vimeoRegex = /^(https?:\/\/)?(www\.)?vimeo\.com\/.+$/;
+            return vimeoRegex.test(url);
+        }else{
+            toast.error('Invalid Video Type');
+        }
+    };
 
     useEffect(() => {
         setProductData({
@@ -406,7 +406,7 @@ const NewProduct = (props) => {
                                 }
                             </Form.Group>
                             <Form.Group className='mb-4 mt-2'>
-                                <Form.Label>Weave</Form.Label>
+                                <Form.Label>Weave<span className='text-danger'>*</span></Form.Label>
                                 <Form.Control as='select' name='weave' value={weave} className='mr-sm-2 mb-2' onChange={handleChangeWeave} required>
                                     <option value=''>Select Weave</option>
                                     <option value='Plain'>Plain</option>
@@ -670,9 +670,14 @@ const NewProduct = (props) => {
                                     <option value='Upload'>Upload Video</option>
                                 </Form.Control>
                                 {/* Check if Youtube or Vimeo URL is Valid */}
-                                {/* {productData.video_demo_type === "Youtube" || productData.video_demo_type === "Vimeo" ?
+                                {productData.video_demo_type === "Youtube" || productData.video_demo_type === "Vimeo" ?
                                     <>
                                         <FormControl  type='text' name='video_demo_url'  value={productData.video_demo_url}  className='mr-sm-2 mt-3' onChange={handleChange} placeholder={`Insert ${productData.video_demo_type} embed link`} />
+                                        {productData.video_demo_url === "" && (
+                                            <div className="text-danger mt-1 fs-12">
+                                                Please enter a {productData.video_demo_type} link.
+                                            </div>
+                                        )}
                                         {productData.video_demo_url && productData.video_demo_url !== "" && !isValidUrl(productData.video_demo_url, productData.video_demo_type) && (
                                             <div className="text-danger mt-2 fs-12">
                                                 Please enter a valid {productData.video_demo_type} link.
@@ -690,8 +695,8 @@ const NewProduct = (props) => {
                                         </div>
                                         :
                                         null
-                                } */}
-                                {productData.video_demo_type == "Youtube" || productData.video_demo_type == "Vimeo" ?
+                                }
+                                {/* {productData.video_demo_type == "Youtube" || productData.video_demo_type == "Vimeo" ?
                                     <>
                                         <FormControl type='text' name='video_demo_url' value={productData.video_demo_url} className='mr-sm-2 mt-3' onChange={handleChange} placeholder={`Insert ${productData.video_demo_type} embed link`} />
                                         {productData.video_demo_url && productData.video_demo_url != "" ?
@@ -708,7 +713,7 @@ const NewProduct = (props) => {
                                     </div>
                                     :
                                     null
-                                }
+                                } */}
                             </Form.Group>
                             <Form.Group className='my-4'>
                                 <Form.Label>Notes (Additional notes/remarks)</Form.Label>
@@ -727,7 +732,13 @@ const NewProduct = (props) => {
                     {productLoading ?
                         <Button className='btn-primary' type="button">{size == "small" ? "Uploading..." : "Saving..." }</Button>
                         :
-                        <Button className='btn-primary' type="submit">{size == "small" ? "Upload" : "Save" }</Button>
+                        <>
+                            {productData.video_demo_type === "Youtube" || productData.video_demo_type === "Vimeo" ?
+                                <Button className='btn-primary' disabled = {!isValidUrl(productData.video_demo_url, productData.video_demo_type)} type="submit">{size == "small" ? "Upload" : "Save" }</Button>
+                                :
+                                <Button className='btn-primary' type="submit">{size == "small" ? "Upload" : "Save" }</Button>
+                            }
+                        </>
                     }
                     {withDraft ?
                         <>

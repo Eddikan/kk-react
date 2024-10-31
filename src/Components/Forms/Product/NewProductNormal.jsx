@@ -113,6 +113,18 @@ const NewProductNormal = (props) => {
         })
     };
 
+    const isValidUrl = (url, type) => {
+        if (type === "Youtube"){
+            const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
+            return youtubeRegex.test(url)
+        }else if(type === "Vimeo"){
+            const vimeoRegex = /^(https?:\/\/)?(www\.)?vimeo\.com\/.+$/;
+            return vimeoRegex.test(url);
+        }else{
+            toast.error('Invalid Video Type');
+        }
+    };
+
     const handleChangeComposition = (e) => {
         var { name, value } = e.target;
         setOtherComposition("");
@@ -424,9 +436,15 @@ const NewProductNormal = (props) => {
                     <div className="text-left mt-5">
                         <Button className='btn-outline me-3' type="button" onClick={handleCancel}>Cancel</Button>
                         {productLoading ?
-                            <Button className='btn-primary' type="button">{size == "small" ? "Uploading..." : "Saving..."}</Button>
+                            <Button className='btn-primary' type="button">{size == "small" ? "Uploading..." : "Saving..." }</Button>
                             :
-                            <Button className='btn-primary' type="button" onClick={ProductSubmit}>{size == "small" ? "Upload" : "Save"}</Button>
+                            <>
+                                {productData.video_demo_type === "Youtube" || productData.video_demo_type === "Vimeo" ?
+                                    <Button className='btn-primary' disabled = {!isValidUrl(productData.video_demo_url, productData.video_demo_type)} type="submit">{size == "small" ? "Upload" : "Save" }</Button>
+                                    :
+                                    <Button className='btn-primary' type="submit">{size == "small" ? "Upload" : "Save" }</Button>
+                                }
+                            </>
                         }
                         {withDraft ?
                             <>
@@ -772,7 +790,33 @@ const NewProductNormal = (props) => {
                                                     <option value='Vimeo'>Vimeo</option>
                                                     <option value='Upload'>Upload Video</option>
                                                 </Form.Control>
-                                                {productData.video_demo_type == "Youtube" || productData.video_demo_type == "Vimeo" ?
+                                                {productData.video_demo_type === "Youtube" || productData.video_demo_type === "Vimeo" ?
+                                                    <>
+                                                        <FormControl  type='text mt-2 fs-12' name='video_demo_url'  value={productData.video_demo_url}  className='mr-sm-2 mt-3' onChange={handleChange} placeholder={`Insert ${productData.video_demo_type} embed link`} />
+                                                        {productData.video_demo_url === "" && (
+                                                            <div className="text-danger mt-1 fs-12">
+                                                                Please enter a {productData.video_demo_type} link.
+                                                            </div>
+                                                        )}
+                                                        {productData.video_demo_url && productData.video_demo_url !== "" && !isValidUrl(productData.video_demo_url, productData.video_demo_type) && (
+                                                            <div className="text-danger mt-1 fs-12">
+                                                                Please enter a valid {productData.video_demo_type} link.
+                                                            </div>
+                                                        )}
+                                                        {productData.video_demo_url && productData.video_demo_url !== "" && isValidUrl(productData.video_demo_url, productData.video_demo_type) && (
+                                                            <div className="mt-3">
+                                                                <ResponsiveEmbedVideo src={productData.video_demo_url} title={productData.name} />
+                                                            </div>
+                                                        )}
+                                                    </>
+                                                    : productData.video_demo_type == "Upload" ?
+                                                        <div className="mt-3">
+                                                            <VideoDragAndDrop type="product" onVideoChange={handleVideoChange} size={size} />
+                                                        </div>
+                                                        :
+                                                        null
+                                                }
+                                                {/* {productData.video_demo_type == "Youtube" || productData.video_demo_type == "Vimeo" ?
                                                     <>
                                                         <FormControl type='text' name='video_demo_url' value={productData.video_demo_url} className='mr-sm-2 mt-3' onChange={handleChange} placeholder={`Insert ${productData.video_demo_type} embed link`} />
                                                         {productData.video_demo_url && productData.video_demo_url != "" ?
@@ -789,7 +833,7 @@ const NewProductNormal = (props) => {
                                                         </div>
                                                         :
                                                         null
-                                                }
+                                                } */}
                                             </Form.Group>
                                         </Col>
 

@@ -150,6 +150,9 @@ const EditProfile = () => {
     const [citiesLoading, setCitiesLoading] = useState(false);
     const [coordinates, setCoordinates] = useState(initialLatLon);
 
+    //Validation
+    const [isAnyInvalid, setisAnyInvalid] = useState(false);
+
     const currentUser = cookies.currentUser;
     const token = cookies.token;
 
@@ -827,9 +830,53 @@ const EditProfile = () => {
             setCitiesLoading(false);
         }
     };
+    // Input Validation for Social
+    const SocialLinkpatterns = {
+        facebook: /^(https?:\/\/)?(www\.)?(facebook\.com\/|fb\.com\/)[a-zA-Z0-9(\.\?)?]/,
+        twitter: /^(https?:\/\/)?(www\.)?(twitter\.com)\/[a-zA-Z0-9_]+/,
+        instagram: /^(https?:\/\/)?(www\.)?(instagram\.com)\/[a-zA-Z0-9_.]+/,
+        linkedin: /^(https?:\/\/)?(www\.)?(linkedin\.com)\/in\/[a-zA-Z0-9_-]+/,
+        pinterest: /^(https?:\/\/)?(www\.)?(pinterest\.com)\/[a-zA-Z0-9_-]+/,
+        behance: /^(https?:\/\/)?(www\.)?(behance\.com)\/[a-zA-Z0-9_-]+/,
+    }
+    const isValidSocialLink = (value,type) => {
+        if (value === ''){
+            return true;
+        }
+        return SocialLinkpatterns[type]?.test(value);
+    }
+    const AllValidSocialLink = () => {
+        return Object.keys(SocialLinkpatterns).every(type => 
+            isValidSocialLink(profileFormData[type], type)
+        );
+    };
+
+    // Input Validation for Contacts
+    const isValid = (value, type) => {
+        if(value === ''){
+            return true;
+        }
+        if (type === 'url'){
+            const valid = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
+            return valid.test(value);
+        }
+        else if ( type === 'secondary_email'){
+            const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return valid.test(value);
+        }
+    }
 
     const handleChange = (e) => {
         var { name, value } = e.target;
+
+        // Prevent Input of Future Dates
+        if (name === "date_of_birth") {
+            const today = new Date().toISOString().split("T")[0];
+
+            if (value > today) {
+                return; 
+            }
+        }
 
         if (name == "country") {
             const country = Object.values(CountryData).find(country => country.name === value);
@@ -1157,7 +1204,7 @@ const EditProfile = () => {
                                                         <Col lg="6">
                                                             <Form.Group className='mb-3'>
                                                                 <Form.Label>Date of Birth</Form.Label>
-                                                                <FormControl type='date' name='date_of_birth' value={profileFormData.date_of_birth} className='mr-sm-2' onChange={handleChange} />
+                                                                <FormControl type='date' name='date_of_birth' value={profileFormData.date_of_birth} className='mr-sm-2' onChange={handleChange} max={new Date().toISOString().split("T")[0]} />
                                                             </Form.Group>
                                                         </Col>
                                                         <Col lg="3">
@@ -1199,10 +1246,11 @@ const EditProfile = () => {
                                                                 :
                                                                 null
                                                             } */}
-                                                            <Form.Group className='mb-4'>
+                                                            <Form.Group>
                                                                 <Form.Label>Short Bio <span className='text-gray'>(title)</span></Form.Label>
-                                                                <FormControl type='text' name='short_bio' value={profileFormData.short_bio} className='mr-sm-2' onChange={handleChange} placeholder='' />
+                                                                <FormControl type='text' name='short_bio' maxLength='250' value={profileFormData.short_bio} className='mr-sm-2' onChange={handleChange} placeholder='' />
                                                             </Form.Group>
+                                                            <p className="text-muted ms-1 fs-12 mb-4">Your short bio is limited to 250 characters. ({250 - profileFormData.short_bio.length} characters left)</p>
                                                             <Form.Group className='mb-3'>
                                                                 <Form.Label>Long Bio <span className='text-gray'>(profile overview)</span></Form.Label>
                                                                 <FormControl as="textarea"
@@ -1354,6 +1402,11 @@ const EditProfile = () => {
                                                         <Form.Group className='mb-4'>
                                                             <Form.Label>Website</Form.Label>
                                                             <FormControl type='text' name='website' value={profileFormData.website} className='mr-sm-2' onChange={handleChange} placeholder='' />
+                                                            {profileFormData.website && profileFormData.website != '' && !isValid(profileFormData.website, 'url') && (
+                                                                <div className="text-danger mt-1 fs-12">
+                                                                    Please enter a valid website link.
+                                                                </div>
+                                                            )}
                                                         </Form.Group>
                                                     </Col>
                                                     <Row>
@@ -1399,6 +1452,11 @@ const EditProfile = () => {
                                                             <Form.Group className='mb-4'>
                                                                 <Form.Label>Secondary Email</Form.Label>
                                                                 <FormControl type='email' name='secondary_email_address' value={profileFormData.secondary_email_address} className='mr-sm-2' onChange={handleChange} placeholder='' />
+                                                                {profileFormData.secondary_email_address && profileFormData.secondary_email_address !== "" && !isValid(profileFormData.secondary_email_address, 'secondary_email') && (
+                                                                    <div className="text-danger mt-1 fs-12">
+                                                                        Please enter a valid Email.
+                                                                    </div>
+                                                                )}
                                                             </Form.Group>
                                                         </Col>
                                                     </Row>
@@ -1406,7 +1464,7 @@ const EditProfile = () => {
                                                         {profileFormLoading ?
                                                             <Button type='button' className="btn-save">Saving...</Button>
                                                             :
-                                                            <Button type='submit' className="btn-save">Save</Button>
+                                                            <Button type='submit' className="btn-save" disabled={!isValid(profileFormData.website, 'url') || !isValid(profileFormData.secondary_email_address, 'secondary_email')}>Save</Button>
                                                         }
                                                     </div>
                                                 </div>
@@ -1420,26 +1478,56 @@ const EditProfile = () => {
                                                         <Form.Group className='mb-4'>
                                                             <Form.Label>Facebook</Form.Label>
                                                             <FormControl type='text' name='facebook' value={profileFormData.facebook} className='mr-sm-2' onChange={handleChange} placeholder='' />
+                                                            {profileFormData.facebook && profileFormData.facebook !== "" && !isValidSocialLink(profileFormData.facebook, 'facebook') && (
+                                                                <div className="text-danger mt-1 fs-12">
+                                                                    Please enter a valid Facebook Link.
+                                                                </div>
+                                                            )}
                                                         </Form.Group>
                                                         <Form.Group className='mb-4'>
                                                             <Form.Label>Twitter</Form.Label>
                                                             <FormControl type='text' name='twitter' value={profileFormData.twitter} className='mr-sm-2' onChange={handleChange} placeholder='' />
+                                                            {profileFormData.twitter && profileFormData.twitter !== "" && !isValidSocialLink(profileFormData.twitter, 'twitter') && (
+                                                                <div className="text-danger mt-1 fs-12">
+                                                                    Please enter a valid Twitter Link.
+                                                                </div>
+                                                            )}
                                                         </Form.Group>
                                                         <Form.Group className='mb-4'>
                                                             <Form.Label>Instagram</Form.Label>
                                                             <FormControl type='text' name='instagram' value={profileFormData.instagram} className='mr-sm-2' onChange={handleChange} placeholder='' />
+                                                            {profileFormData.instagram && profileFormData.instagram !== "" && !isValidSocialLink(profileFormData.instagram, 'instagram') && (
+                                                                <div className="text-danger mt-1 fs-12">
+                                                                    Please enter a valid Instagram Link.
+                                                                </div>
+                                                            )}
                                                         </Form.Group>
                                                         <Form.Group className='mb-4'>
                                                             <Form.Label>LinkedIn</Form.Label>
                                                             <FormControl type='text' name='linkedin' value={profileFormData.linkedin} className='mr-sm-2' onChange={handleChange} placeholder='' />
+                                                            {profileFormData.linkedin && profileFormData.linkedin !== "" && !isValidSocialLink(profileFormData.linkedin, 'linkedin') && (
+                                                                <div className="text-danger mt-1 fs-12">
+                                                                    Please enter a valid LinkedIn Link.
+                                                                </div>
+                                                            )}
                                                         </Form.Group>
                                                         <Form.Group className='mb-4'>
                                                             <Form.Label>Pinterest</Form.Label>
                                                             <FormControl type='text' name='pinterest' value={profileFormData.pinterest} className='mr-sm-2' onChange={handleChange} placeholder='' />
+                                                            {profileFormData.pinterest && profileFormData.pinterest !== "" && !isValidSocialLink(profileFormData.pinterest, 'pinterest') && (
+                                                                <div className="text-danger mt-1 fs-12">
+                                                                    Please enter a valid Pinterest Link.
+                                                                </div>
+                                                            )}
                                                         </Form.Group>
                                                         <Form.Group className='mb-4'>
                                                             <Form.Label>Behance</Form.Label>
                                                             <FormControl type='text' name='behance' value={profileFormData.behance} className='mr-sm-2' onChange={handleChange} placeholder='' />
+                                                            {profileFormData.behance && profileFormData.behance !== "" && !isValidSocialLink(profileFormData.behance, 'behance') && (
+                                                                <div className="text-danger mt-1 fs-12">
+                                                                    Please enter a valid Behance Link.
+                                                                </div>
+                                                            )}
                                                         </Form.Group>
                                                         {/* <Form.Group className='mb-4'>
                                                             <Form.Label>YouTube</Form.Label>
@@ -1449,7 +1537,7 @@ const EditProfile = () => {
                                                             {profileFormLoading ?
                                                                 <Button type='button' className="btn-save">Saving...</Button>
                                                                 :
-                                                                <Button type='submit' className="btn-save">Save</Button>
+                                                                <Button type='submit' disabled={!AllValidSocialLink()} className="btn-save">Save</Button>
                                                             }
                                                         </div>
                                                     </Col>

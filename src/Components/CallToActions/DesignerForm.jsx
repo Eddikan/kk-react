@@ -382,9 +382,10 @@ const BecomeDesignerForm = (props) => {
                                                                     </Col>
                                                                     <Col lg="4">
                                                                         <Form.Control
-                                                                            type="text"
+                                                                            type="number"
+                                                                            min="1"
                                                                             value={item.price}
-                                                                            onChange={(e) => editPricingStructure(index, { ...item, price: e.target.value })}
+                                                                            onChange={(e) => editPricingStructure(index, { ...item, price: parseFloat(e.target.value) })}
                                                                             placeholder="Price"
                                                                         />
                                                                     </Col>
@@ -414,9 +415,10 @@ const BecomeDesignerForm = (props) => {
                                                                     </Col>
                                                                     <Col lg="4">
                                                                         <Form.Control
-                                                                            type="text"
+                                                                            type="number"
+                                                                            min="1"
                                                                             value={item.price}
-                                                                            onChange={(e) => editPricingStructure(index, { ...item, price: e.target.value })}
+                                                                            onChange={(e) => editPricingStructure(index, { ...item, price: parseFloat(e.target.value) })}
                                                                             placeholder="Price"
                                                                         />
                                                                     </Col>
