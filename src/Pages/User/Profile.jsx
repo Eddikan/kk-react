@@ -8,7 +8,7 @@ import Loading from 'Assets/images/loading.gif'
 import GetUserData from 'Utils/GetUserData';
 import { FaArrowRightLong } from "react-icons/fa6";
 import { CiShop } from "react-icons/ci";
-import { FaLocationDot, FaPhone, FaFacebookF, FaLinkedinIn, FaInstagram } from "react-icons/fa6";
+import { FaLocationDot, FaPhone, FaFacebookF, FaLinkedinIn, FaInstagram, FaPinterest, FaXTwitter } from "react-icons/fa6";
 import { PiTrashThin } from "react-icons/pi";
 import { AiOutlineClose } from 'react-icons/ai';
 import { FaLink, FaBehance, FaPen } from "react-icons/fa";
@@ -1233,50 +1233,69 @@ const Profile = () => {
                                                     </div>
                                                     <div className='profile-details social'>
                                                         <p className='social-profile'>Social</p>
-                                                        {user.behance ?
-                                                            <div className='icons-d-flex'>
-                                                                <FaBehance size="20px" color="#1769ff" className='profile-icon' />
-                                                                <p className='information-font ellipsis-profile fs-14'><a href={user.behance} target="_blank">{user.behance}</a></p>
-                                                            </div>
-                                                            :
-                                                            <div className='icons-d-flex'>
-                                                                <FaBehance size="20px" color="#1769ff" className='profile-icon' />
-                                                                <p><a href="#" target="_blank">-</a></p>
-                                                            </div>
-                                                        }
-                                                        {user.facebook ?
+                                                        {user.facebook &&(
                                                             <div className='icons-d-flex'>
                                                                 <FaFacebookF size="20px" color="#3b5998" className='profile-icon' />
-                                                                <p className='information-font ellipsis-profile fs-14'><a href={user.facebook} target="_blank">{user.facebook}</a></p>
+                                                                <p className='information-font ellipsis-profile fs-14'>
+                                                                    {/* Redirects the user to the correct link if the given link doesnt have https */}
+                                                                    <a href={user.facebook.startsWith('http') ? user.facebook : `https://${user.facebook}`} target="_blank" rel="noopener noreferrer">
+                                                                        {user.facebook}
+                                                                    </a>
+                                                                </p>
                                                             </div>
-                                                            :
+                                                        )}
+                                                        {user.twitter &&(
                                                             <div className='icons-d-flex'>
-                                                                <FaFacebookF size="20px" color="#3b5998" className='profile-icon' />
-                                                                <p><a href="#">-</a></p>
+                                                                <FaXTwitter size="20px" color="#000000" className='profile-icon' />
+                                                                <p className='information-font ellipsis-profile fs-14'>
+                                                                    {/* Redirects the user to the correct link if the given link doesnt have https */}
+                                                                    <a href={user.twitter.startsWith('http') ? user.twitter : `https://${user.twitter}`} target="_blank" rel="noopener noreferrer">
+                                                                        {user.twitter}
+                                                                    </a>
+                                                                </p>
                                                             </div>
-                                                        }
-                                                        {user.linkedin ?
-                                                            <div className='icons-d-flex'>
-                                                                <FaLinkedinIn size="20px" color="#0a66c2" className='profile-icon' />
-                                                                <p className='information-font ellipsis-profile fs-14'><a href={user.linkedin} target="_blank">{user.linkedin}</a></p>
-                                                            </div>
-                                                            :
-                                                            <div className='icons-d-flex'>
-                                                                <FaLinkedinIn size="20px" color="#0a66c2" className='profile-icon' />
-                                                                <p><a href="#">-</a></p>
-                                                            </div>
-                                                        }
-                                                        {user.instagram ?
-                                                            <div className='icons-d-flex'>
-                                                                <FaInstagram size="20px" color="#E1306C" className='profile-icon' />
-                                                                <p className='information-font ellipsis-profile fs-14'><a href={user.instagram} target="_blank">{user.instagram}</a></p>
-                                                            </div>
-                                                            :
+                                                        )}
+                                                        {user.instagram &&(
                                                             <div className='icons-d-flex'>
                                                                 <FaInstagram size="20px" color="#E1306C" className='profile-icon' />
-                                                                <p><a href="#">-</a></p>
+                                                                <p className='information-font ellipsis-profile fs-14'>
+                                                                    <a href={user.instagram.startsWith('http') ? user.instagram : `https://${user.instagram}`} target="_blank" rel="noopener noreferrer">
+                                                                        {user.instagram}
+                                                                    </a>
+                                                                </p>
                                                             </div>
-                                                        }
+                                                        )}
+                                                        {user.linkedin &&(
+                                                            <div className='icons-d-flex'>
+                                                                <FaLinkedinIn size="20px" color="#0a66c2" className='profile-icon' />
+                                                                <p className='information-font ellipsis-profile fs-14'>
+                                                                    <a href={user.linkedin.startsWith('http') ? user.linkedin : `https://${user.linkedin}`} target="_blank" rel="noopener noreferrer">
+                                                                        {user.linkedin}
+                                                                    </a>
+                                                                </p>
+                                                            </div>
+                                                        )}
+                                                        {user.pinterest &&(
+                                                            <div className='icons-d-flex'>
+                                                                <FaPinterest size="20px" color="#E60023" className='profile-icon' />
+                                                                <p className='information-font ellipsis-profile fs-14'>
+                                                                    <a href={user.pinterest.startsWith('http') ? user.pinterest : `https://${user.pinterest}`} target="_blank" rel="noopener noreferrer">
+                                                                        {user.pinterest}
+                                                                    </a>
+                                                                </p>
+                                                            </div>
+                                                        )}
+                                                        {user.behance &&(
+                                                            <div className='icons-d-flex'>
+                                                                <FaBehance size="20px" color="#1769ff" className='profile-icon' />
+                                                                <p className='information-font ellipsis-profile fs-14'>
+                                                                    <a href={user.behance.startsWith('http') ? user.behance : `https://${user.behance}`} target="_blank" rel="noopener noreferrer">
+                                                                        {user.behance}
+                                                                    </a>
+                                                                </p>
+                                                            </div>
+                                                        )}
+                                                        
                                                         {/* {user.youtube ?
                                                             <div className='icons-d-flex'>
                                                                 <img src={YoutubeIcon} alt="youtube pin" className='profile-icon' />

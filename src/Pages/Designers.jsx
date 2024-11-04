@@ -332,7 +332,7 @@ const Designers = (props) => {
                                                                 {user.is_seller == 1 ?
                                                                     <Link to="/user/profile?tab=fabrics&tab_group=fabrics">
                                                                         <button className="ddf-button fs-12 btn bg-white border-black text-black bg-white-hover border-gold-hover text-black-hover">
-                                                                            <img src={ShopIcon} className="ddf-button-icon" alt="Designers" /> Create Your Shop
+                                                                            <img src={ShopIcon} className="ddf-button-icon" alt="Designers" /> Visit Your Shop
                                                                         </button>
                                                                     </Link>
                                                                     :

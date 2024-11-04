@@ -832,13 +832,13 @@ const EditProfile = () => {
     };
     // Input Validation for Social
     const SocialLinkpatterns = {
-        facebook: /^(https?:\/\/)?(www\.)?(facebook\.com\/|fb\.com\/)([a-zA-Z0-9(\.\?)?]+)?\/?$/,
-        twitter: /^(https?:\/\/)?(www\.)?(twitter\.com)\/[a-zA-Z0-9_]+/,
-        instagram: /^(https?:\/\/)?(www\.)?(instagram\.com)\/[a-zA-Z0-9_.]+/,
-        linkedin: /^(https?:\/\/)?(www\.)?(linkedin\.com)\/in\/[a-zA-Z0-9_-]+/,
-        pinterest: /^(https?:\/\/)?(www\.)?(pinterest\.com)\/[a-zA-Z0-9_-]+/,
-        behance: /^(https?:\/\/)?(www\.)?(behance\.com)\/[a-zA-Z0-9_-]+/,
-    };
+        facebook: /^(https?:\/\/)?(www\.)?(facebook\.com|fb\.com)\/([a-zA-Z0-9_.]+)\/?$/,
+        twitter: /^(https?:\/\/)?(www\.)?(twitter\.com|x\.com)\/[a-zA-Z0-9_]+\/?$/,
+        instagram: /^(https?:\/\/)?(www\.)?(instagram\.com)\/([a-zA-Z0-9_.]+)\/?$/,
+        linkedin: /^(https?:\/\/)?(www\.)?(linkedin\.com)\/in\/([a-zA-Z0-9_-]+)\/?$/,
+        pinterest: /^(https?:\/\/)?(www\.)?(pinterest\.com)\/([a-zA-Z0-9_-]+)\/?$/,
+        behance: /^(https?:\/\/)?(www\.)?(behance\.net)\/([a-zA-Z0-9_-]+)\/?$/,
+    };    
     // Check if all Social Link is Valid
     const isValidSocialLink = (value,type) => {
         if (value === ''){

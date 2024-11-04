@@ -440,9 +440,9 @@ const NewProductNormal = (props) => {
                             :
                             <>
                                 {productData.video_demo_type === "Youtube" || productData.video_demo_type === "Vimeo" ?
-                                    <Button className='btn-primary' disabled = {!isValidUrl(productData.video_demo_url, productData.video_demo_type)} type="submit">{size == "small" ? "Upload" : "Save" }</Button>
+                                    <Button className='btn-primary' disabled = {!isValidUrl(productData.video_demo_url, productData.video_demo_type)} type="button" onClick={ProductSubmit}>{size == "small" ? "Upload" : "Save" }</Button>
                                     :
-                                    <Button className='btn-primary' type="submit">{size == "small" ? "Upload" : "Save" }</Button>
+                                    <Button className='btn-primary' type="button" onClick={ProductSubmit} >{size == "small" ? "Upload" : "Save" }</Button>
                                 }
                             </>
                         }

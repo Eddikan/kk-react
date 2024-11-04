@@ -271,6 +271,11 @@ const SignUp = () => {
     setInfoModalShow(!infoModalShow);
   }
 
+  const isValidEmail = (email) => {
+    const emailregex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
+    return emailregex.test(email);
+  }
+
   useEffect(() => {
     if (currentUser && currentUser !== "") {
       // toast.error("You are already logged in!");
@@ -571,7 +576,7 @@ const SignUp = () => {
                         :
                         null
                       } */}
-                      <Form.Group className='mb-3' controlId='formBasicEmail'>
+                      <Form.Group controlId='formBasicEmail'>
                         <Form.Label className="fs-15">Email Address</Form.Label>
                         <Email
                           baseList={baseList}
@@ -583,7 +588,12 @@ const SignUp = () => {
                         />
                         {/* <FormControl type='email' name='email' onChange={handleChange} className='mr-sm-2' required /> */}
                       </Form.Group>
-                      <Form.Group className='mb-3'>
+                      {registerFormData.email && registerFormData.email != '' && !isValidEmail(registerFormData.email) && (
+                        <div className="text-danger mt-0 fs-12">
+                          Please enter a valid Email Address.
+                        </div>
+                      )}
+                      <Form.Group className='my-3'>
                         <Form.Label className="fs-15">Password</Form.Label>
                         <div className="show-password">
                           <FormControl type={showPassword ? 'text' : 'password'} name='password' onChange={handleChange} className='mr-sm-2 custom-form' required />
@@ -611,7 +621,7 @@ const SignUp = () => {
                       {registerFormLoading ?
                         <Button className='w-100 mt-4' variant='primary' type='submit'>Signing up...</Button>
                         :
-                        <Button className='w-100 mt-4' variant='primary' type='submit'>Sign up</Button>
+                        <Button className='w-100 mt-4' variant='primary' type='submit' disabled={!isValidEmail(registerFormData.email)}>Sign up</Button>
                       }
                       {/* {googleLoginLoading ?
                         <Button className='w-100 mt-3' variant='secondary' type='button'>Signing up using Google...</Button>
