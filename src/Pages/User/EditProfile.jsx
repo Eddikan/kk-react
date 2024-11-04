@@ -832,13 +832,14 @@ const EditProfile = () => {
     };
     // Input Validation for Social
     const SocialLinkpatterns = {
-        facebook: /^(https?:\/\/)?(www\.)?(facebook\.com\/|fb\.com\/)[a-zA-Z0-9(\.\?)?]/,
+        facebook: /^(https?:\/\/)?(www\.)?(facebook\.com\/|fb\.com\/)([a-zA-Z0-9(\.\?)?]+)?\/?$/,
         twitter: /^(https?:\/\/)?(www\.)?(twitter\.com)\/[a-zA-Z0-9_]+/,
         instagram: /^(https?:\/\/)?(www\.)?(instagram\.com)\/[a-zA-Z0-9_.]+/,
         linkedin: /^(https?:\/\/)?(www\.)?(linkedin\.com)\/in\/[a-zA-Z0-9_-]+/,
         pinterest: /^(https?:\/\/)?(www\.)?(pinterest\.com)\/[a-zA-Z0-9_-]+/,
         behance: /^(https?:\/\/)?(www\.)?(behance\.com)\/[a-zA-Z0-9_-]+/,
-    }
+    };
+    // Check if all Social Link is Valid
     const isValidSocialLink = (value,type) => {
         if (value === ''){
             return true;
@@ -1480,7 +1481,7 @@ const EditProfile = () => {
                                                             <FormControl type='text' name='facebook' value={profileFormData.facebook} className='mr-sm-2' onChange={handleChange} placeholder='' />
                                                             {profileFormData.facebook && profileFormData.facebook !== "" && !isValidSocialLink(profileFormData.facebook, 'facebook') && (
                                                                 <div className="text-danger mt-1 fs-12">
-                                                                    Please enter a valid Facebook Link.
+                                                                    Please enter a valid link.
                                                                 </div>
                                                             )}
                                                         </Form.Group>
@@ -1489,7 +1490,7 @@ const EditProfile = () => {
                                                             <FormControl type='text' name='twitter' value={profileFormData.twitter} className='mr-sm-2' onChange={handleChange} placeholder='' />
                                                             {profileFormData.twitter && profileFormData.twitter !== "" && !isValidSocialLink(profileFormData.twitter, 'twitter') && (
                                                                 <div className="text-danger mt-1 fs-12">
-                                                                    Please enter a valid Twitter Link.
+                                                                    Please enter a valid link.
                                                                 </div>
                                                             )}
                                                         </Form.Group>
@@ -1498,7 +1499,7 @@ const EditProfile = () => {
                                                             <FormControl type='text' name='instagram' value={profileFormData.instagram} className='mr-sm-2' onChange={handleChange} placeholder='' />
                                                             {profileFormData.instagram && profileFormData.instagram !== "" && !isValidSocialLink(profileFormData.instagram, 'instagram') && (
                                                                 <div className="text-danger mt-1 fs-12">
-                                                                    Please enter a valid Instagram Link.
+                                                                    Please enter a valid link.
                                                                 </div>
                                                             )}
                                                         </Form.Group>
@@ -1507,7 +1508,7 @@ const EditProfile = () => {
                                                             <FormControl type='text' name='linkedin' value={profileFormData.linkedin} className='mr-sm-2' onChange={handleChange} placeholder='' />
                                                             {profileFormData.linkedin && profileFormData.linkedin !== "" && !isValidSocialLink(profileFormData.linkedin, 'linkedin') && (
                                                                 <div className="text-danger mt-1 fs-12">
-                                                                    Please enter a valid LinkedIn Link.
+                                                                    Please enter a valid link.
                                                                 </div>
                                                             )}
                                                         </Form.Group>
@@ -1516,7 +1517,7 @@ const EditProfile = () => {
                                                             <FormControl type='text' name='pinterest' value={profileFormData.pinterest} className='mr-sm-2' onChange={handleChange} placeholder='' />
                                                             {profileFormData.pinterest && profileFormData.pinterest !== "" && !isValidSocialLink(profileFormData.pinterest, 'pinterest') && (
                                                                 <div className="text-danger mt-1 fs-12">
-                                                                    Please enter a valid Pinterest Link.
+                                                                    Please enter a valid link.
                                                                 </div>
                                                             )}
                                                         </Form.Group>
@@ -1525,7 +1526,7 @@ const EditProfile = () => {
                                                             <FormControl type='text' name='behance' value={profileFormData.behance} className='mr-sm-2' onChange={handleChange} placeholder='' />
                                                             {profileFormData.behance && profileFormData.behance !== "" && !isValidSocialLink(profileFormData.behance, 'behance') && (
                                                                 <div className="text-danger mt-1 fs-12">
-                                                                    Please enter a valid Behance Link.
+                                                                    Please enter a valid link.
                                                                 </div>
                                                             )}
                                                         </Form.Group>
