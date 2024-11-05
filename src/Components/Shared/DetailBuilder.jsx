@@ -85,6 +85,22 @@ const DetailBuilder = (props) => {
             return updatedElements;
         });
     };
+    
+    const isValidUrl = (url, type) => {
+        if (!url || typeof url !== 'string' || url.trim() === "") {
+            return false; // return false if the URL is empty or invalid
+        }
+    
+        if (type === "YouTube Embed Link") {
+            const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
+            return youtubeRegex.test(url);
+        } else if (type === "Vimeo Embed Link") {
+            const vimeoRegex = /^(https?:\/\/)?(www\.)?vimeo\.com\/.+$/;
+            return vimeoRegex.test(url);
+        }
+        
+        return true; 
+    };
 
     return (
         <div>
@@ -186,7 +202,14 @@ const DetailBuilder = (props) => {
                                                     : elementType == "Image" ?
                                                         <ImageDragAndDrop type="product" onImagesChange={(e) => { handleImagesChange(e); }} size={size} />
                                                         : elementType === 'YouTube Embed Link' || elementType === 'Vimeo Embed Link' ?
-                                                            <Form.Control id="elementValue" type='text' name='element_name' value={elementValue} onChange={(e) => setElementValue(e.target.value)} required placeholder='' />
+                                                            <>
+                                                                <Form.Control id="elementValue" type='text' name='element_name' value={elementValue} onChange={(e) => setElementValue(e.target.value)} required placeholder='' />
+                                                                {!isValidUrl(elementValue, elementType) && (
+                                                                    <div className="text-danger mt-1 fs-12">
+                                                                        Please enter a valid link.
+                                                                    </div>
+                                                                )}
+                                                            </>
                                                             : elementType === 'Video' ?
                                                                 <VideoDragAndDrop type="product" onVideoChange={(e) => { handleVideoChange(e); }} />
                                                                 :
@@ -205,7 +228,13 @@ const DetailBuilder = (props) => {
                         {elementType == "Line Break" ?
                             <Button className='btn-primary mt-2 btn-style' type="button" onClick={handleAddElement}>Add</Button>
                             :
-                            <Button className='btn-primary mt-2 btn-style' type="button" onClick={handleAddElement} disabled={!elementType || !elementValue} >Add</Button>
+                            <>
+                                {elementType == "YouTube Embed Link" || elementType == "Vimeo Embed Link" ? 
+                                    <Button className='btn-primary mt-2 btn-style' type="button" onClick={handleAddElement} disabled={!elementType || !elementValue || !isValidUrl(elementValue, elementType)} >Add</Button>
+                                    :
+                                    <Button className='btn-primary mt-2 btn-style' type="button" onClick={handleAddElement} disabled={!elementType || !elementValue} >Add</Button>
+                                }
+                            </>
                         }
                     </div>
                 </>

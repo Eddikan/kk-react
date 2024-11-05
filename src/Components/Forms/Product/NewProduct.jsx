@@ -177,9 +177,8 @@ const NewProduct = (props) => {
         }else if(type === "Vimeo"){
             const vimeoRegex = /^(https?:\/\/)?(www\.)?vimeo\.com\/.+$/;
             return vimeoRegex.test(url);
-        }else{
-            toast.error('Invalid Video Type');
         }
+        return true;
     };
 
     useEffect(() => {
@@ -627,11 +626,11 @@ const NewProduct = (props) => {
                                 <FormControl type='number' name='weight' value={productData.weight} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                             </Form.Group>
                             <Form.Group className='my-4'>
-                                <Form.Label>Price (per {otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement})</Form.Label>
+                                <Form.Label>Price (per {otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement})<span className='text-danger'>*</span></Form.Label>
                                 <FormControl type='number' name='price' min='1' value={productData.price} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                             </Form.Group>
                             <Form.Group className='my-4'>
-                                <Form.Label>Stock Quantity</Form.Label>
+                                <Form.Label>Stock Quantity<span className='text-danger'>*</span></Form.Label>
                                 <FormControl type='number' name='quantity' min='1' value={productData.quantity} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                             </Form.Group>
                             <Form.Group className='my-4'>

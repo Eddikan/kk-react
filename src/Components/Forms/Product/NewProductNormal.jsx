@@ -41,8 +41,8 @@ const initialProductData = Object.freeze({
     video_demo_url: '',
     video_demo_type: '',
     ideal_clothing_type: '',
-    wrinkle_resistant: '',
-    cut_to_size: '',
+    wrinkle_resistant: 0,
+    cut_to_size: 0,
     color_fastness: '',
 });
 
@@ -120,9 +120,8 @@ const NewProductNormal = (props) => {
         }else if(type === "Vimeo"){
             const vimeoRegex = /^(https?:\/\/)?(www\.)?vimeo\.com\/.+$/;
             return vimeoRegex.test(url);
-        }else{
-            toast.error('Invalid Video Type');
-        }
+        } 
+        return true;
     };
 
     const handleChangeComposition = (e) => {
