@@ -39,8 +39,8 @@ const initialProductData = Object.freeze({
     video_demo_url: '',
     video_demo_type: '',
     ideal_clothing_type: '',
-    wrinkle_resistant: '',
-    cut_to_size: '',
+    wrinkle_resistant: 0,
+    cut_to_size: 0,
     color_fastness: '',
 });
 
@@ -588,7 +588,7 @@ const NewProduct = (props) => {
                                 </Row>
                             </Form.Group>
                             <Form.Group className='my-4'>
-                                <Form.Label>Care Instructions</Form.Label>
+                                <Form.Label>Care Instructions<span className='text-danger'>*</span></Form.Label>
                                 <FormControl as="textarea"
                                     name="care_instructions"
                                     rows={3} // You can adjust the number of rows as needed
@@ -628,11 +628,11 @@ const NewProduct = (props) => {
                             </Form.Group>
                             <Form.Group className='my-4'>
                                 <Form.Label>Price (per {otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement})</Form.Label>
-                                <FormControl type='number' name='price' value={productData.price} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                <FormControl type='number' name='price' min='1' value={productData.price} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                             </Form.Group>
                             <Form.Group className='my-4'>
                                 <Form.Label>Stock Quantity</Form.Label>
-                                <FormControl type='number' name='quantity' value={productData.quantity} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                <FormControl type='number' name='quantity' min='1' value={productData.quantity} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                             </Form.Group>
                             <Form.Group className='my-4'>
                                 <Form.Label>Certifications (Organic, sustainable, etc)</Form.Label>
