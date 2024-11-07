@@ -92,15 +92,25 @@ const DetailBuilder = (props) => {
         }
     
         if (type === "YouTube Embed Link") {
-            const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
+            const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/(?:watch\?v=|v\/)|youtu\.be\/)[\w-]+$/;
             return youtubeRegex.test(url);
         } else if (type === "Vimeo Embed Link") {
-            const vimeoRegex = /^(https?:\/\/)?(www\.)?vimeo\.com\/.+$/;
+            const vimeoRegex = /^(https?:\/\/)?(www\.)?vimeo\.com\/[a-zA-Z0-9_-]+$/;
             return vimeoRegex.test(url);
         }
         
         return true; 
     };
+
+    // Check if all the YouTube and Vimeo links are valid
+    const isFormValid = elements.every(element => {
+        if (element.type === 'YouTube Embed Link' || element.type === 'Vimeo Embed Link') {
+        return isValidUrl(element.value, element.type);
+        }else {
+            // For other types, check if the field is not empty
+            return element.value !== ''; // Ensures the field is not empty
+        }
+    });
 
     return (
         <div>
@@ -109,10 +119,10 @@ const DetailBuilder = (props) => {
                     <div>
                         {elements && elements.length > 0 && (
                             <>
-                                {/* Input fields based on selected input type */}
-                                {elements.map((element, index) => (
-                                    <Card className='mb-3'>
-                                        <Card.Body className='p-4'>
+                                <Card className='mb-3'>
+                                    <Card.Body className='p-4'>
+                                        {/* Input fields based on selected input type */}
+                                        {elements.map((element, index) => (
                                             <Card className={`${elements.length > 1 ? "mb-3" : ""}`}>
                                                 <Card.Body className="bg-lgray">
                                                     <Row key={index}>
@@ -120,11 +130,32 @@ const DetailBuilder = (props) => {
                                                             <Form.Group className='mb-3 mt-2'>
                                                                 <Form.Label>{element.type}</Form.Label>
                                                                 {element.type === 'YouTube Embed Link' || element.type === 'Vimeo Embed Link' ? (
-                                                                    <Form.Control type='text' value={element.value} onChange={(e) => handleInputChange(index, e.target.value)} placeholder='' />
+                                                                    <>
+                                                                        <Form.Control type='text' value={element.value} onChange={(e) => handleInputChange(index, e.target.value)} placeholder='' />
+                                                                        {!isValidUrl(element.value, element.type) && (
+                                                                            <div className="text-danger mt-1 fs-12">
+                                                                                Please enter valid links.
+                                                                            </div>
+                                                                        )}
+                                                                    </>
                                                                 ) : element.type === 'Paragraph' ? (
-                                                                    <Form.Control rows={5} as="textarea" value={element.value} onChange={(e) => handleInputChange(index, e.target.value)} placeholder='' />
+                                                                    <>
+                                                                        <Form.Control rows={5} as="textarea" value={element.value} onChange={(e) => handleInputChange(index, e.target.value)} placeholder='' />
+                                                                        {element.value === '' && (
+                                                                            <div className="text-danger mt-1 fs-12">
+                                                                                This field cannot be empty
+                                                                            </div>
+                                                                        )}
+                                                                    </>
                                                                 ) : element.type === 'Heading' ? (
-                                                                    <Form.Control type="text" value={element.value} onChange={(e) => handleInputChange(index, e.target.value)} placeholder='' />
+                                                                    <>
+                                                                        <Form.Control type="text" value={element.value} onChange={(e) => handleInputChange(index, e.target.value)} placeholder='' />
+                                                                        {element.value === '' && (
+                                                                            <div className="text-danger mt-1 fs-12">
+                                                                                This field cannot be empty
+                                                                            </div>
+                                                                        )}
+                                                                    </>
                                                                 ) : element.type === 'Image' ? (
                                                                     <ImageUploader type="product" images={element.value} onImagesChange={(e) => { handleElementImagesChange(index, e); }} size={size} />
                                                                 ) : element.type === 'Video' ? (
@@ -157,16 +188,15 @@ const DetailBuilder = (props) => {
                                                     </Row>
                                                 </Card.Body>
                                             </Card>
-                                        </Card.Body>
-                                    </Card>
-                                ))}
-
+                                        ))}
+                                    </Card.Body>
+                                 </Card>
                             </>
                         )}
 
                         <div className="text-right">
                             {/* Done button */}
-                            <button className='btn-primary mt-2' type="button" onClick={handleDone} style={{ minWidth: '100px', padding: '9px 20px' }}>Save</button>
+                            <Button className='btn-primary mt-2 btn-style' disabled={!isFormValid} type="button" onClick={handleDone} style={{ minWidth: '100px', padding: '9px 20px' }}>Save</Button>
                         </div>
                     </div>
                 </>

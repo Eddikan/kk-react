@@ -174,9 +174,9 @@ const MeasurementGuide = (props) => {
 
                                             <Col lg={4} className="text-right">
                                                 {elements && elements.length > 0 && (
-                                                    <Button className='btn-primary bg-transparent border-black text-black bg-black-hover border-black-hover text-white-hover me-3' type="button" onClick={() => { toggleGuideModal(); handleActionType("edit"); }}><GoPencil size="20px" className='me-2' /> Edit</Button>
+                                                    <Button className='btn-primary btn-width bg-transparent border-black text-black bg-black-hover border-black-hover text-white-hover me-3' type="button" onClick={() => { toggleGuideModal(); handleActionType("edit"); }}><GoPencil size="20px" className='me-2' /> Edit</Button>
                                                 )}
-                                                <Button className='btn-primary bg-gold-hover border-gold-hover text-white-hover' type="button" onClick={() => { toggleGuideModal(); handleActionType("add"); }}><GoPlus size="20px" className='me-2' /> New Element</Button>
+                                                <Button className='btn-primary btn-width bg-gold-hover border-gold-hover text-white-hover' type="button" onClick={() => { toggleGuideModal(); handleActionType("add"); }}><GoPlus size="20px" className='me-2' /> New Element</Button>
 
                                             </Col>
                                         </Row>
@@ -213,7 +213,10 @@ const MeasurementGuide = (props) => {
                                                                                             {(element.type == "YouTube Embed Link" || element.type == "Vimeo Embed Link") && element.value != "" ?
                                                                                                 <>
                                                                                                     <div className="mb-3">
-                                                                                                        <ResponsiveEmbedVideo src={element.value} title={element.type} />
+                                                                                                        <ResponsiveEmbedVideo 
+                                                                                                            src={element.value.startsWith('http') ? element.value : `https://${element.value}`} 
+                                                                                                            title={element.type} 
+                                                                                                        />
                                                                                                     </div>
                                                                                                 </>
                                                                                                 : element.type == "Video" && element.value != "" ?

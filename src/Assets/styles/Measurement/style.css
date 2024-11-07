@@ -1,3 +1,6 @@
 .guide-border-bottom {
     border-bottom: 1px solid;
 }
+.btn-width{
+    min-width: 159px;
+}

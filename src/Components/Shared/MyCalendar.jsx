@@ -170,24 +170,60 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
         setSelectedEvent(null);
     }
 
-    const handleChangeConsultation = (e) => {
-        var { name, value } = e.target;
-        setConsultationFormData({
-            ...consultationFormData,
+    // const handleChangeConsultation = (e) => {
+    //     var { name, value } = e.target;
+    //     setConsultationFormData({
+    //         ...consultationFormData,
 
+    //         email: currentUserDetails.email,
+    //         first_name: currentUserDetails.first_name,
+    //         last_name: currentUserDetails.last_name,
+    //         timezone: currentTimezone,
+    //         // consultation_date_time: convertToIsoDatetime(selectedDate),
+    //         consultation_date: convertToIsoDatetime(selectedDate),
+    //         consultation_details: 'Self added Appointment',
+    //         [name]: value,
+
+    //     });
+    // }
+    const handleChangeConsultation = (e) => {
+        let { name, value } = e.target;
+        const updatedFormData = {
+            ...consultationFormData,
             email: currentUserDetails.email,
             first_name: currentUserDetails.first_name,
             last_name: currentUserDetails.last_name,
             timezone: currentTimezone,
-            // consultation_date_time: convertToIsoDatetime(selectedDate),
             consultation_date: convertToIsoDatetime(selectedDate),
             consultation_details: 'Self added Appointment',
             [name]: value,
-
-        });
-    }
+        };
+    
+        // Validation logic for time fields
+        if (name === 'consultation_hour_start' && updatedFormData.consultation_hour_end) {
+            if (value >= updatedFormData.consultation_hour_end) {
+                toast.error("Start time must be before the end time.");
+                return; 
+            }
+        } else if (name === 'consultation_hour_end' && updatedFormData.consultation_hour_start) {
+            if (value <= updatedFormData.consultation_hour_start) {
+                toast.error("End time must be after the start time.");
+                return; 
+            }
+        }
+    
+        // Update the state with validated data
+        setConsultationFormData(updatedFormData);
+    };
+    
 
     const handleDateClick = ({ start }) => {
+
+        if (moment(start).isBefore(moment(), 'day')) {
+            toast.error("You can't select a past date!");
+            return; 
+        }
+        
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
 
         const formattedDate = new Intl.DateTimeFormat('en-US', options).format(start);

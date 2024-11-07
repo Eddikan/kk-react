@@ -172,7 +172,7 @@ const NewProduct = (props) => {
     
     const isValidUrl = (url, type) => {
         if (type === "Youtube"){
-            const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
+            const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/(?:watch\?v=|v\/)|youtu\.be\/)[\w-]+$/;
             return youtubeRegex.test(url)
         }else if(type === "Vimeo"){
             const vimeoRegex = /^(https?:\/\/)?(www\.)?vimeo\.com\/.+$/;

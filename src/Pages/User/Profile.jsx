@@ -1200,36 +1200,24 @@ const Profile = () => {
                                                 <Col lg="6">
                                                     <div className='profile-details address mb-4 pt-0'>
                                                         <p className='profile-details-title fw-bold'>Contact Information</p>
-                                                        <div className='icons-d-flex'>
-                                                            <FaLocationDot size="15px" color="#cea835" className='profile-icon' />
-                                                            {user.city || user.province || user.country ?
-                                                                <p className='information-font fs-14'>{user.city ? user.city + ',' : "-"} {user.province ? user.province + "," : "-"} {user.country ? user.country + "," : "-"}</p>
-                                                                :
-                                                                <p className='information-font fs-14'>-</p>
-                                                            }
-                                                        </div>
-                                                        {user.website ?
+                                                        {(user.city || user.province || user.country) && (
+                                                            <div className='icons-d-flex'>
+                                                                <FaLocationDot size="15px" color="#cea835" className='profile-icon' />
+                                                                    <p className='information-font fs-14'>{user.city ? user.city + ',' : "-"} {user.province ? user.province + "," : "-"} {user.country ? user.country + "," : "-"}</p>
+                                                            </div>
+                                                        )}
+                                                        {user.website && (
                                                             <div className='icons-d-flex'>
                                                                 <FaLink size="15px" color="#cea835" className='profile-icon' />
                                                                 <p className='information-font fs-14'><a href={user.website} target="_blank">{user.website}</a></p>
                                                             </div>
-                                                            :
-                                                            <div className='icons-d-flex'>
-                                                                <FaLink size="15px" color="#cea835" className='profile-icon' />
-                                                                <p className='information-font fs-14'><a href="#">-</a></p>
-                                                            </div>
-                                                        }
-                                                        {user.phone_number ?
+                                                        )}
+                                                        {user.phone_number && (
                                                             <div className='icons-d-flex'>
                                                                 <FaPhone size="15px" color="#cea835" className='profile-icon' />
                                                                 <p className='information-font mb-0 fs-14'><a href={`tel:${user.phone_number}"`}>{user.phone_number}</a></p>
                                                             </div>
-                                                            :
-                                                            <div className='icons-d-flex'>
-                                                                <FaPhone size="15px" color="#cea835" className='profile-icon' />
-                                                                <p className='information-font mb-0 fs-14'><a href="#">-</a></p>
-                                                            </div>
-                                                        }
+                                                        )}
                                                     </div>
                                                     <div className='profile-details social'>
                                                         <p className='social-profile'>Social</p>

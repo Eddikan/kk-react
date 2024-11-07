@@ -144,11 +144,23 @@ const VideoDragAndDrop = (props) => {
     e.preventDefault();
   };
 
+  // const handleFileInput = (e) => {
+  //   const selectedFiles = e.target.files;
+  //   handleFiles(selectedFiles);
+  // };
   const handleFileInput = (e) => {
     const selectedFiles = e.target.files;
-    handleFiles(selectedFiles);
+  
+    // Optionally, check the file types (if you want extra validation)
+    const validFiles = Array.from(selectedFiles).filter((file) => file.type.startsWith('video/'));
+  
+    if (validFiles.length > 0) {
+      handleFiles(validFiles); // Pass valid files to your handler
+    } else {
+      toast.error('Please select valid video files');
+    }
   };
-
+  
   useEffect(() => {
     if (videoLink && videoLink != "") {
       setVideoUrl(videoLink);
