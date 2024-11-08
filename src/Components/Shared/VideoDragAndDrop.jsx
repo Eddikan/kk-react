@@ -40,7 +40,15 @@ const VideoDragAndDrop = (props) => {
     e.preventDefault();
 
     const droppedFiles = e.dataTransfer.files;
-    handleFiles(droppedFiles);
+    
+    // Optionally, check the file types (if you want extra validation)
+    const validFiles = Array.from(droppedFiles).filter((file) => file.type.startsWith('video/'));
+
+    if (validFiles.length > 0) {
+      handleFiles(validFiles); // Pass valid files to your handler
+    } else {
+      toast.error('Please select valid video files');
+    }
   };
 
   const handleRemove = (e) => {

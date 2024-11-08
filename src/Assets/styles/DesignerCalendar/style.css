@@ -179,3 +179,13 @@ button.rbc-button-link {
     border-radius: 50%;
 }
 
+.event-cancelled{
+    background-color: #d9534f !important; /* red color with !important */
+    color: white !important;
+};
+
+.event-normal {
+    background-color: black !important; /* default color with !important */
+    color: white !important;
+}
+

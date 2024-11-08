@@ -605,7 +605,7 @@ const Fabrics = (props) => {
             // Set the component as mounted
             setMounted(true);
         }
-    }, [unitMeasurement, opacitySearch, patternSearch, textureSearch, selectedColorFastness, cutToSize, wrinkleResistant, ecoFriendly, selectedCompositions, selectedWeaves, selectedColors, width, length, selectedSustainabilities, priceRange, reloadCount, searchValue, country, headerSearch]);
+    }, [unitMeasurement, opacitySearch, primaryColorSearch, patternSearch, textureSearch, selectedColorFastness, cutToSize, wrinkleResistant, ecoFriendly, selectedCompositions, selectedWeaves, selectedColors, width, length, selectedSustainabilities, priceRange, reloadCount, searchValue, country, headerSearch]);
 
     useEffect(() => {
         setSelectedCountry(cookies.selectedCountry ?? '');

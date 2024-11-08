@@ -1209,7 +1209,11 @@ const Profile = () => {
                                                         {user.website && (
                                                             <div className='icons-d-flex'>
                                                                 <FaLink size="15px" color="#cea835" className='profile-icon' />
-                                                                <p className='information-font fs-14'><a href={user.website} target="_blank">{user.website}</a></p>
+                                                                <p className='information-font fs-14'>
+                                                                    <a href={user.website.startsWith('http') ? user.website : `https://${user.website}`} target="_blank" rel="noopener noreferrer">
+                                                                        {user.website}
+                                                                    </a>
+                                                                </p>
                                                             </div>
                                                         )}
                                                         {user.phone_number && (

@@ -70,6 +70,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
     const [selectedHoursArray, setSelectedHoursArray] = useState([]);
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
+    const [scheduledAppointments, setScheduledAppointments] = useState([]);
 
 
     const postSetAppointment = async (data) => {
@@ -150,7 +151,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
             end: formattedTimeEnd,
             date: formattedDate,
             desc: event.desc,
-
+            status: event.status,
         });
         setAppointmentModalIsOpen(true);
 
@@ -319,9 +320,28 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
             return updatedTimes;
         });
     }
-
+    const isOverlapping = (start1, end1, start2, end2) => {
+        return (start1 < end2) && (end1 > start2);
+    };
+    
     const addAppointmentSubmit = (e) => {
         e.preventDefault();
+
+        const newStart = new Date(convertHoursToDatetime(consultationFormData.consultation_hour_start, consultationFormData.consultation_date));
+        const newEnd = new Date(convertHoursToDatetime(consultationFormData.consultation_hour_end, consultationFormData.consultation_date));
+    
+        // Check for overlap with existing appointments
+        const hasOverlap = scheduledAppointments.some(appointment => {
+            const existingStart = new Date(appointment.start);
+            const existingEnd = new Date(appointment.end);
+            return isOverlapping(newStart, newEnd, existingStart, existingEnd);
+        });
+    
+        if (hasOverlap) {
+            toast.error('Time slot unavailable. Please choose another time.');
+            return;
+        }
+
         setFormStatus('loading');
         postSetAppointment({ ...consultationFormData })
             .then(response => {
@@ -385,11 +405,13 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                                 start: new Date(appointmentStartIso),
                                 end: new Date(appointmentEndIso),
                                 desc: appointment.consultation_details,
+                                status: appointment.status,
                             };
                             apiEventDataArray.push(eventData);
                         }
                     }
                     setEvents(apiEventDataArray);
+                    setScheduledAppointments(apiEventDataArray);
                 } else {
                     const errors = response.data.errors;
                     if (errors && errors.length > 0) {
@@ -419,6 +441,10 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                     selectable
                     onSelectEvent={handleSelectEvent}
                     views={views}
+                    eventPropGetter={(event) => {
+                        const className = event.status === "Cancelled" ? "event-cancelled" : "event-normal";
+                        return { className };
+                    }}
                 />
 
                 <Modal
@@ -594,6 +620,13 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                                             <>
                                                 <div>
                                                     <p className="current-date fs-16 poppins-ft mb-0 fw-400 text-black">{selectedEvent.desc}</p>
+                                                </div>
+                                            </>
+                                        }
+                                        {selectedEvent.status != "" &&
+                                            <>
+                                                <div>
+                                                    <p className="current-date fs-16 poppins-ft mb-0 fw-400 text-black">Status: {selectedEvent.status}</p>
                                                 </div>
                                             </>
                                         }

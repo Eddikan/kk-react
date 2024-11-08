@@ -858,7 +858,7 @@ const EditProfile = () => {
             return true;
         }
         if (type === 'url'){
-            const valid = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
+            const valid = /^(https?:\/\/)?(ftp:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/\S*)?$/i;
             return valid.test(value);
         }
         else if ( type === 'secondary_email'){
