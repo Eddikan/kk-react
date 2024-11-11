@@ -224,6 +224,11 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
             toast.error("You can't select a past date!");
             return; 
         }
+        const selectedTime = moment(start);
+        if (selectedTime.isBefore(moment(), 'minute')) {
+            toast.error("You can't select a past time!");
+            return;
+        }
         
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
 
@@ -330,6 +335,15 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
         const newStart = new Date(convertHoursToDatetime(consultationFormData.consultation_hour_start, consultationFormData.consultation_date));
         const newEnd = new Date(convertHoursToDatetime(consultationFormData.consultation_hour_end, consultationFormData.consultation_date));
     
+        // Convert available startTime and endTime to comparable Date objects
+        const availableStart = new Date(convertHoursToDatetime(startTime, consultationFormData.consultation_date));
+        const availableEnd = new Date(convertHoursToDatetime(endTime, consultationFormData.consultation_date));
+
+        // Check if the new appointment falls within the available time range
+        if (newStart < availableStart || newEnd > availableEnd) {
+            toast.error("Appointment time is outside of available hours. Please choose a valid time.");
+            return;
+        }
         // Check for overlap with existing appointments
         const hasOverlap = scheduledAppointments.some(appointment => {
             const existingStart = new Date(appointment.start);
@@ -562,11 +576,14 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                         </Modal.Body>
                         <Modal.Footer className='border-none pt-0'>
                             <div className='text-right'>
+                                {(!startTime || !endTime) &&(
+                                    <p className='text-danger text-right fs-12'>Store is not available on this date</p>
+                                )}
                                 <button className="btn btn-secondary border-black bg-white text-black me-3 btn-style" type="button" onClick={handleModalClose}>Cancel</button>
                                 {formStatus != "standby" ?
                                     <button className="btn btn-primary btn-style" type="button">Saving...</button>
                                     :
-                                    <button className="btn btn-primary btn-style" type="submit">Save</button>
+                                    <button className="btn btn-primary btn-style" disabled={!startTime || !endTime} type="submit">Save</button>
                                 }
                             </div>
                         </Modal.Footer>

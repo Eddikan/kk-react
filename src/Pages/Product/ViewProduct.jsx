@@ -382,48 +382,58 @@ const ViewProduct = () => {
         setBuyNowLoading(true);
         const itemIndex = tempCart.findIndex(item => item.id === e.id); // Assuming each item has a unique 'id'
 
-        let updatedCart;
+        if (parseInt(e.quantity) > 0){
+            let updatedCart;
 
-        if (itemIndex !== -1) {
-            // Item exists, update the quantity
-            updatedCart = tempCart.map((item, index) => {
-                if (index === itemIndex) {
-                    return {
-                        ...item,
-                        quantity: parseInt(item.quantity) + parseInt(e.quantity) // Update the quantity
-                    };
-                }
-                return item;
-            });
-        } else {
-            // Item does not exist, add it to the cart
-            updatedCart = [...tempCart, e];
+            if (itemIndex !== -1) {
+                // Item exists, update the quantity
+                updatedCart = tempCart.map((item, index) => {
+                    if (index === itemIndex) {
+                        return {
+                            ...item,
+                            quantity: parseInt(item.quantity) + parseInt(e.quantity) // Update the quantity
+                        };
+                    }
+                    return item;
+                });
+            } else {
+                // Item does not exist, add it to the cart
+                updatedCart = [...tempCart, e];
+            }
+
+            setTempCart(updatedCart);
+            setCookie('tempCart', JSON.stringify(updatedCart), { path: '/' });
+            setTimeout(function () {
+                setBuyNowLoading(false);
+                navigate("/cart?item=" + e.id);
+            }, 500);
+        }else{
+            toast.error('Measurement should be greater than 0');
+            setAddToCartLoading(false)
         }
-
-        setTempCart(updatedCart);
-        setCookie('tempCart', JSON.stringify(updatedCart), { path: '/' });
-        setTimeout(function () {
-            setBuyNowLoading(false);
-            navigate("/cart?item=" + e.id);
-        }, 500);
     }
 
     async function buyNow(e) {
         setBuyNowLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart', e).then((response) => {
-            const success = response.data.status;
-            const data = response.data.data;
-            if (success == 'Success') {
-                const cart_item_id = data.cart_item.id;
-                navigate("/cart?item=" + cart_item_id);
-            } else {
+        if (parseInt(e.quantity) > 0){
+            axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart', e).then((response) => {
+                const success = response.data.status;
+                const data = response.data.data;
+                if (success == 'Success') {
+                    const cart_item_id = data.cart_item.id;
+                    navigate("/cart?item=" + cart_item_id);
+                } else {
+                    toast.error('Something went wrong, please contact the administrator!');
+                }
+                setBuyNowLoading(false);
+            }).catch((error) => {
                 toast.error('Something went wrong, please contact the administrator!');
-            }
+                setBuyNowLoading(false);
+            });
+        }else{
+            toast.error('Measurement should be greater than 0');
             setBuyNowLoading(false);
-        }).catch((error) => {
-            toast.error('Something went wrong, please contact the administrator!');
-            setBuyNowLoading(false);
-        });
+        }
     }
 
     const getProductReview = async (e) => {
