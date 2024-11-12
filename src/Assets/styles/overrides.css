@@ -264,7 +264,19 @@ p {
     border-color: var(--purple-red);
     color: var(--purple-red);
 }
-
+.btn-profile {
+    font-size: 15px;
+    padding: 10px 20px;
+    min-width: 190px;
+    border-radius: 5px;
+    border-width: 1px;
+    color: black;
+    background-color: transparent;
+    border-color: #ddd;
+}
+.btn-profile:hover{
+    border-color: var(--gold);
+}
 .btn-secondary {
     font-size: 15px;
     padding: 10px 20px;

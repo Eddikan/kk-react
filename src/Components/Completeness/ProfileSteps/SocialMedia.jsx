@@ -18,9 +18,33 @@ const SocialMediaStep = ({ user, currentUser, reload, token }) => {
             [name]: value
         });
     }
+    const SocialLinkpatterns = {
+        facebook: /^(https?:\/\/)?(www\.)?(facebook\.com|fb\.com)\/([a-zA-Z0-9_.]+)\/?$/,
+        twitter: /^(https?:\/\/)?(www\.)?(twitter\.com|x\.com)\/[a-zA-Z0-9_]+\/?$/,
+        instagram: /^(https?:\/\/)?(www\.)?(instagram\.com)\/([a-zA-Z0-9_.]+)\/?$/,
+        linkedin: /^(https?:\/\/)?(www\.)?(linkedin\.com)\/in\/([a-zA-Z0-9_-]+)\/?$/,
+        pinterest: /^(https?:\/\/)?(www\.)?(pinterest\.com)\/([a-zA-Z0-9_-]+)\/?$/,
+        behance: /^(https?:\/\/)?(www\.)?(behance\.net)\/([a-zA-Z0-9_-]+)\/?$/,
+    };    
+    // Check if all Social Link is Valid
+    const isValidSocialLink = (value,type) => {
+        if (value === ''){
+            return true;
+        }
+        return SocialLinkpatterns[type]?.test(value);
+    }
+    const AllValidSocialLink = () => {
+        return Object.keys(SocialLinkpatterns).every(type => 
+            isValidSocialLink(profileFormData[type], type)
+        );
+    };
 
     async function submitProfile(e) {
         e.preventDefault();
+        if(!AllValidSocialLink()){
+            toast.error("Please ensure all social media links are valid URLs or leave them blank.")
+            return
+        }
         setFormStatus(true);
         axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, { ...profileFormData, social_media_complete: 1, profile_complete: 1 }).then((response) => {
             const success = response.data.status;
@@ -69,26 +93,56 @@ const SocialMediaStep = ({ user, currentUser, reload, token }) => {
                     <Form.Group className='mb-4'>
                         <Form.Label>Facebook</Form.Label>
                         <FormControl type='text' name='facebook' value={profileFormData.facebook} className='mr-sm-2' onChange={handleChange} placeholder='' />
+                        {profileFormData.facebook && profileFormData.facebook !== "" && !isValidSocialLink(profileFormData.facebook, 'facebook') && (
+                            <div className="text-danger mt-1 fs-12">
+                                Please enter a valid link.
+                            </div>
+                        )}
                     </Form.Group>
                     <Form.Group className='mb-4'>
                         <Form.Label>Twitter</Form.Label>
                         <FormControl type='text' name='twitter' value={profileFormData.twitter} className='mr-sm-2' onChange={handleChange} placeholder='' />
+                        {profileFormData.twitter && profileFormData.twitter !== "" && !isValidSocialLink(profileFormData.twitter, 'twitter') && (
+                            <div className="text-danger mt-1 fs-12">
+                                Please enter a valid link.
+                            </div>
+                        )}
                     </Form.Group>
                     <Form.Group className='mb-4'>
                         <Form.Label>Instagram</Form.Label>
                         <FormControl type='text' name='instagram' value={profileFormData.instagram} className='mr-sm-2' onChange={handleChange} placeholder='' />
+                        {profileFormData.instagram && profileFormData.instagram !== "" && !isValidSocialLink(profileFormData.instagram, 'instagram') && (
+                            <div className="text-danger mt-1 fs-12">
+                                Please enter a valid link.
+                            </div>
+                        )}
                     </Form.Group>
                     <Form.Group className='mb-4'>
                         <Form.Label>LinkedIn</Form.Label>
                         <FormControl type='text' name='linkedin' value={profileFormData.linkedin} className='mr-sm-2' onChange={handleChange} placeholder='' />
+                        {profileFormData.linkedin && profileFormData.linkedin !== "" && !isValidSocialLink(profileFormData.linkedin, 'linkedin') && (
+                            <div className="text-danger mt-1 fs-12">
+                                Please enter a valid link.
+                            </div>
+                        )}
                     </Form.Group>
                     <Form.Group className='mb-4'>
                         <Form.Label>Pinterest</Form.Label>
                         <FormControl type='text' name='pinterest' value={profileFormData.pinterest} className='mr-sm-2' onChange={handleChange} placeholder='' />
+                        {profileFormData.pinterest && profileFormData.pinterest !== "" && !isValidSocialLink(profileFormData.pinterest, 'pinterest') && (
+                            <div className="text-danger mt-1 fs-12">
+                                Please enter a valid link.
+                            </div>
+                        )}
                     </Form.Group>
                     <Form.Group className='mb-4'>
                         <Form.Label>Behance</Form.Label>
                         <FormControl type='text' name='behance' value={profileFormData.behance} className='mr-sm-2' onChange={handleChange} placeholder='' />
+                        {profileFormData.behance && profileFormData.behance !== "" && !isValidSocialLink(profileFormData.behance, 'behance') && (
+                            <div className="text-danger mt-1 fs-12">
+                                Please enter a valid link.
+                            </div>
+                        )}
                     </Form.Group>
                     {/* <Form.Group className='mb-4'>
                         <Form.Label>YouTube</Form.Label>

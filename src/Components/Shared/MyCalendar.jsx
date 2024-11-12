@@ -201,17 +201,17 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
         };
     
         // Validation logic for time fields
-        if (name === 'consultation_hour_start' && updatedFormData.consultation_hour_end) {
-            if (value >= updatedFormData.consultation_hour_end) {
-                toast.error("Start time must be before the end time.");
-                return; 
-            }
-        } else if (name === 'consultation_hour_end' && updatedFormData.consultation_hour_start) {
-            if (value <= updatedFormData.consultation_hour_start) {
-                toast.error("End time must be after the start time.");
-                return; 
-            }
-        }
+        // if (name === 'consultation_hour_start' && updatedFormData.consultation_hour_end) {
+        //     if (value >= updatedFormData.consultation_hour_end) {
+        //         toast.error("Start time must be before the end time.");
+        //         return; 
+        //     }
+        // } else if (name === 'consultation_hour_end' && updatedFormData.consultation_hour_start) {
+        //     if (value <= updatedFormData.consultation_hour_start) {
+        //         toast.error("End time must be after the start time.");
+        //         return; 
+        //     }
+        // }
     
         // Update the state with validated data
         setConsultationFormData(updatedFormData);
@@ -224,11 +224,12 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
             toast.error("You can't select a past date!");
             return; 
         }
-        const selectedTime = moment(start);
-        if (selectedTime.isBefore(moment(), 'minute')) {
-            toast.error("You can't select a past time!");
-            return;
-        }
+        
+        // const selectedTime = moment(start);
+        // if (selectedTime.isBefore(moment(), 'minute')) {
+        //     toast.error("You can't select a past time!");
+        //     return;
+        // }
         
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
 
@@ -334,7 +335,28 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
 
         const newStart = new Date(convertHoursToDatetime(consultationFormData.consultation_hour_start, consultationFormData.consultation_date));
         const newEnd = new Date(convertHoursToDatetime(consultationFormData.consultation_hour_end, consultationFormData.consultation_date));
-    
+         
+        // Validation for start time and end time
+        if (newStart >= newEnd) {
+            toast.error("Start time must be before the end time.");
+            return;
+        }
+
+        // Get the current time for comparison
+        const currentTime = new Date();
+
+        // Check if the selected start time is in the past
+        if (newStart < currentTime) {
+            toast.error("You can't schedule an appointment in the past!");
+            return;
+        }
+
+        // Check if the selected end time is in the past
+        if (newEnd < currentTime) {
+            toast.error("You can't schedule an appointment that ends in the past!");
+            return;
+        }
+
         // Convert available startTime and endTime to comparable Date objects
         const availableStart = new Date(convertHoursToDatetime(startTime, consultationFormData.consultation_date));
         const availableEnd = new Date(convertHoursToDatetime(endTime, consultationFormData.consultation_date));

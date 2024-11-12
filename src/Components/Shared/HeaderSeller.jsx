@@ -794,12 +794,13 @@ const Header = () => {
                                     <>
                                         {(userDetails.is_seller == 1 || userDetails.is_designer == 1) &&
                                         <>
-                                            <a href={`/user/shop/setup`}>
-                                            <button type="button" className="btn-shop btn"><BsShopWindow size={23} /> <span className="ms-2">Shop Manager</span></button>
-                                            {/* <div className="nav-link header-tooltip cursor-pointer">
-                                                <span className="icon-tooltiptext fs-14">Shop Manager</span>
-                                                <BsShopWindow size={23} />
-                                            </div> */}
+                                            {/* <a href={`/user/shop/setup`}> */}
+                                            <a href={`/${userType}/profile`}>
+                                              <button type="button" className="btn-profile btn"><img src={UserIcon} width='18px' alt="profile-icon"/> <span className="ms-2">Profile</span></button>
+                                              {/* <div className="nav-link header-tooltip cursor-pointer">
+                                                  <span className="icon-tooltiptext fs-14">Shop Manager</span>
+                                                  <BsShopWindow size={23} />
+                                              </div> */}
                                             </a>
                                         </>
                                         }
@@ -808,12 +809,13 @@ const Header = () => {
                                     <>
                                         {(userDetails.is_seller == 1 || userDetails.is_designer == 1) &&
                                         <>
-                                            <a href={`${userDetails.is_designer == 1 ? '/user/center/calendar' : '/user/center/products'}`}>
-                                            <button type="button" className="btn-shop btn"><BsShopWindow size={23} /> <span className="ms-2">Shop Manager</span></button>
-                                            {/* <div className="nav-link header-tooltip cursor-pointer">
-                                                <span className="icon-tooltiptext fs-14">Shop Manager</span>
-                                                <BsShopWindow size={23} />
-                                            </div> */}
+                                            {/* <a href={`${userDetails.is_designer == 1 ? '/user/center/calendar' : '/user/center/products'}`}> */}
+                                            <a href={`/${userType}/profile`}>
+                                              <button type="button" className="btn-profile btn"><img src={UserIcon} width='18px' alt="profile-icon"/> <span className="ms-2">Profile</span></button>
+                                              {/* <div className="nav-link header-tooltip cursor-pointer">
+                                                  <span className="icon-tooltiptext fs-14">Shop Manager</span>
+                                                  <BsShopWindow size={23} />
+                                              </div> */}
                                             </a>
                                         </>
                                         }

@@ -28,7 +28,33 @@ const ContactStep = ({ user, currentUser, reload, token }) => {
         });
     };
 
+    // Input Validation for Contacts
+    const isValid = (value, type) => {
+        if(value === ''){
+            return true;
+        }
+        if (type === 'url'){
+            const valid = /^(https?:\/\/)?(ftp:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/\S*)?$/i;
+            return valid.test(value);
+        }
+        else if ( type === 'secondary_email'){
+            const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return valid.test(value);
+        }
+    }
+
     async function submitProfile(e) {
+        // Validate website and secondary email
+        if (profileFormData.website && !isValid(profileFormData.website, 'url')) {
+            toast.error('Please enter a valid website link!');
+            return;
+        }
+
+        if (profileFormData.secondary_email_address && !isValid(profileFormData.secondary_email_address, 'secondary_email')) {
+            toast.error('Please enter a valid secondary email address!');
+            return;
+        }
+
         if (profileFormData.phone_number === '' || profileFormData.phone_number == null) {
             toast('Phone Number is required!', {
                 icon: '⚠️',
@@ -84,6 +110,11 @@ const ContactStep = ({ user, currentUser, reload, token }) => {
                     <Form.Group className='mb-4'>
                         <Form.Label>Website</Form.Label>
                         <FormControl type='text' name='website' value={profileFormData.website} className='mr-sm-2' onChange={handleChange} placeholder='' />
+                        {profileFormData.website && profileFormData.website != '' && !isValid(profileFormData.website, 'url') && (
+                            <div className="text-danger mt-1 fs-12">
+                                Please enter a valid website link.
+                            </div>
+                        )}
                     </Form.Group>
                 </Col>
                 <Row>
@@ -129,6 +160,11 @@ const ContactStep = ({ user, currentUser, reload, token }) => {
                         <Form.Group className='mb-4'>
                             <Form.Label>Secondary Email</Form.Label>
                             <FormControl type='email' name='secondary_email_address' value={profileFormData.secondary_email_address} className='mr-sm-2' onChange={handleChange} placeholder='' />
+                            {profileFormData.secondary_email_address && profileFormData.secondary_email_address !== "" && !isValid(profileFormData.secondary_email_address, 'secondary_email') && (
+                                <div className="text-danger mt-1 fs-12">
+                                    Please enter a valid Email.
+                                </div>
+                            )}
                         </Form.Group>
                     </Col>
                 </Row>
