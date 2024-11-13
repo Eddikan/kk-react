@@ -62,7 +62,7 @@ const EmailConfirmation = () => {
                 if (selectedUser.email_verified_at != "" && selectedUser.email_verified_at) {
                     setCookie('currentUser', JSON.stringify(selectedUser.id), { path: '/' });
                     setCookie('userRole', JSON.stringify(selectedUser.role), { path: '/' });
-                    const user_details = { currentUser: selectedUser.id, id: selectedUser.id, first_name: selectedUser.first_name, last_name: selectedUser.last_name, image: selectedUser.image, email_verified_at: selectedUser.email_verified_at, signup_type: selectedUser.signup_type, email: selectedUser.email }
+                    const user_details = { currentUser: selectedUser.id, id: selectedUser.id, first_name: selectedUser.first_name, last_name: selectedUser.last_name, image: selectedUser.image, email_verified_at: selectedUser.email_verified_at, signup_type: selectedUser.signup_type, email: selectedUser.email, is_seller: selectedUser.is_seller, is_designer: selectedUser.is_designer }
                     setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
                     setCookie('isLoggedIn', true, { path: '/' });
                     setCookie('token', selectedUser.token, { path: '/' });

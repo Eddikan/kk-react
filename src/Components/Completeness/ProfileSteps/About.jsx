@@ -123,7 +123,7 @@ const AboutStep = ({ user, currentUser, reload, token }) => {
                             </Form.Group> */}
                             <Form.Group className='mb-4'>
                                 <Form.Label>Short Bio <span className='text-gray'>(title)</span></Form.Label>
-                                <FormControl type='text' name='short_bio' value={profileFormData.short_bio} className='mr-sm-2' onChange={handleChange} placeholder='' />
+                                <FormControl type='text' maxLength='250' name='short_bio' value={profileFormData.short_bio} className='mr-sm-2' onChange={handleChange} placeholder='' />
                             </Form.Group>
                             <p className="text-muted ms-1 fs-12 mb-4">Your short bio is limited to 250 characters. ({250 - profileFormData.short_bio?.length} characters left)</p>
                             <Form.Group className='mb-3'>

@@ -190,7 +190,7 @@ const AdminAppointments = (props) => {
                 const data = response.data;
                 const result = data.data;
                 setCurrentPage(pageNumber);
-                const selectedAppointments = response.data.data;
+                const selectedAppointments = response.data.data.data;
                 if (selectedAppointments) {
                     setAppointments(selectedAppointments);
                     setCurrentPage(() => data.meta.current_page);
@@ -212,7 +212,7 @@ const AdminAppointments = (props) => {
             getAppointments()
                 .then((response) => {
                     setAppointmentLoading(false);
-                    const selectedAppointments = response.data.data;
+                    const selectedAppointments = response.data.data.data;
                     if (selectedAppointments) {
                         setAppointments(selectedAppointments);
                         setPageCount(() => response.data.meta.total);
@@ -226,8 +226,7 @@ const AdminAppointments = (props) => {
                     setAppointmentLoading(false);
                 });
         }
-    },
-        [reloadCount]);
+    },[reloadCount]);
 
     useEffect(() => {
         const getTimezone = () => {

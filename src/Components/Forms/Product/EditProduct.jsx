@@ -14,6 +14,7 @@ import { GoPlus } from 'react-icons/go';
 import axios from 'axios';
 import Countries from 'Utils/Countries';
 import VideoDragAndDrop from 'Components/Shared/VideoDragAndDrop';
+import ResponsiveEmbedVideo from 'Components/Shared/ResponsiveEmbeddedVideo';
 
 const initialProductData = Object.freeze({
     image_urls: [],
@@ -571,19 +572,19 @@ const EditProduct = (props) => {
                     </Form.Group>
                     <Form.Group className='my-4'>
                         <Form.Label>Width ({otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement})</Form.Label>
-                        <FormControl type='number' name='width' value={productData.width} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                        <FormControl type='number' min='1' name='width' value={productData.width} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                     </Form.Group>
                     <Form.Group className='my-4'>
                         <Form.Label>Weight (KG per sq. {otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement})</Form.Label>
-                        <FormControl type='number' name='weight' value={productData.weight} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                        <FormControl type='number' min='1' name='weight' value={productData.weight} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                     </Form.Group>
                     <Form.Group className='my-4'>
                         <Form.Label>Price (per {otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement})</Form.Label>
-                        <FormControl type='number' name='price' value={productData.price} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                        <FormControl type='number' min='1' name='price' value={productData.price} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                     </Form.Group>
                     <Form.Group className='my-4'>
                         <Form.Label>Stock Quantity</Form.Label>
-                        <FormControl type='number' name='quantity' value={productData.quantity} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                        <FormControl type='number' min='1' name='quantity' value={productData.quantity} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                     </Form.Group>
                     <Form.Group className='my-4'>
                         <Form.Label>Certifications (Organic, sustainable, etc)</Form.Label>
