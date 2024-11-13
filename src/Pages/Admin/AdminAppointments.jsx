@@ -315,10 +315,10 @@ const AdminAppointments = (props) => {
                                                                                 <Row className="align-items-center">
                                                                                     <Col lg={4}>
                                                                                         <div className='d-flex appointment-user-image'>
-                                                                                            {appointment.designer?.image != '' && appointment.designer?.image != null ? (
+                                                                                            {appointment.designer?.user?.image != '' && appointment.designer?.user?.image != null ? (
                                                                                                 <div
                                                                                                     className='user-photo-appointment'
-                                                                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${appointment.designer?.image})` }}
+                                                                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${appointment.designer?.user?.image})` }}
                                                                                                 >
                                                                                                 </div>
                                                                                             ) : (
@@ -326,13 +326,13 @@ const AdminAppointments = (props) => {
                                                                                             )}
 
                                                                                             <div>
-                                                                                                <span className='d-flex ms-3 mt-0 mb-1 fs-18 text-black fw-500'>
-                                                                                                    {appointment.designer?.first_name}
+                                                                                                <p className='d-flex ms-3 mt-0 mb-1 fs-18 text-black fw-500'>
+                                                                                                    {appointment.designer?.user?.first_name}
                                                                                                     &nbsp;
-                                                                                                    {appointment.designer?.last_name}
-                                                                                                </span>
+                                                                                                    {appointment.designer?.user?.last_name}
+                                                                                                </p>
                                                                                                 <div className='ms-3 fs-16 text-black'>
-                                                                                                    <span className='me-1'>Created:</span>&nbsp;{today}
+                                                                                                    <p className='me-1'>Created: {today}</p>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
