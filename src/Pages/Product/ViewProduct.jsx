@@ -17,7 +17,7 @@ import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import MalePlaceholder from 'Assets/images/placeholders/male-placeholder.jpg';
 import FemalePlaceholder from 'Assets/images/placeholders/female-placeholder.jpg';
 import Loading from 'Components/Shared/Loading';
-import { ImLeaf } from 'react-icons/im';
+import { ImLeaf, ImEmbed2 } from 'react-icons/im';
 import { Rating } from 'react-simple-star-rating';
 import UserPlaceholder from 'Assets/images/user.png';
 import { BsArrowUpRightSquare } from "react-icons/bs";
@@ -27,6 +27,9 @@ import axios from 'axios';
 import CurrencyConverter from 'Utils/CurrencyConverter';
 import { TiArrowForwardOutline } from "react-icons/ti";
 import { BsCartPlus } from 'react-icons/bs';
+import CopyTo from 'Utils/CopyLink';
+import { FaFacebookF, FaInstagram, FaXTwitter } from "react-icons/fa6";
+import Messenger from "Assets/images/icons/messenger.png";
 
 const initialReviewData = Object.freeze({
     rating: 0,
@@ -48,6 +51,7 @@ const ViewProduct = () => {
     const [userWishlist, setUserWishlist] = useState(false);
     const [addedToCartShow, setAddedToCartShow] = useState(false);
     const [shareModalShow, setShareModalShow] = useState(false);
+    const [copyEmbedLink, setCopyEmbedLink] = useState(false);
     const [productReviews, setProductReviews] = useState([]);
     const [productReviewsLoading, setProductReviewsLoading] = useState(true);
     const [productReviewsPages, setProductReviewsPages] = useState([]);
@@ -120,6 +124,11 @@ const ViewProduct = () => {
     function toggleUnderConstruction(message) {
         setUnderConstructionShow(true);
         setModalHeading(message);
+    }
+
+    function toggleCopyEmbedLinkModal() {
+        setCopyEmbedLink(true);
+        setShareModalShow(false);
     }
 
     const handleChange = (e) => {
@@ -1379,9 +1388,38 @@ const ViewProduct = () => {
                     <h4 className='fs-22 mb-3'>Share Product</h4>
                     <Card>
                         <Card.Body className="text-center py-5">
-                            <GoAlertFill size="60px" className="mb-2 text-gold" />
-                            <p className="fs-20 text-black">Under Construction</p>
-                            {/* <DateTimePicker onTimeChange={handleTimeChange} onDone={handleDoneTimeChange} availability={currentAvailability} /> */}
+                            <Col lg='12' className="mb-3">
+                                <a className="px-2" href={`https://www.facebook.com/sharer/sharer.php?u=https://kouturekonectv2.web.app/product/${productId}`} target="_blank" rel="noopener noreferrer">
+                                    <FaFacebookF size="30px" color="#3b5998"/>
+                                </a>
+                                <a className="px-2" href={`https://twitter.com/share?url=https://kouturekonectv2.web.app/product/${productId}&via=TWITTER_HANDLE&text=TEXT`}>
+                                    <FaXTwitter size="30px"/>
+                                </a>
+                                {/* <a className="px-2" href={`https://fb-messenger://share/?link=https://kouturekonectv2.web.app/product/${productId}`}>
+                                    <img src={Messenger} width='30px' height='30px' alt="messenger" />
+                                </a> */}
+                            </Col>
+                            <Col lg='12' className='text-center'>
+                                <CopyTo
+                                    text={`https://kouturekonectv2.web.app/product/${productId}`}
+                                    classes="btn btn-copy-link border-black bg-white text-black mt-2 w-100"
+                                    standbyTitle="Copy Link"
+                                    icon={true}
+                                    closeModal={() => setShareModalShow(false)}
+                                />
+
+                                {/* <button
+                                    className="btn btn-copy-link border-black bg-white text-black mt-2 w-100"
+                                    type="button"
+                                    onClick={() => {
+                                        toggleCopyEmbedLinkModal();
+                                        setShareModalShow(false);
+                                    }}
+                                >
+                                    <ImEmbed2 className='me-2' size={17} />
+                                    Copy Embed Code
+                                </button> */}
+                            </Col >
                         </Card.Body>
                     </Card>
                 </Modal.Body>

@@ -357,7 +357,7 @@ const AdminAppointments = (props) => {
                                                                                                                 <BiSolidPencil className='video-cam me-3' color='#0000005c' size={20} />
                                                                                                             </div>
                                                                                                         ) : (
-                                                                                                            <Link to={`/designer/${appointment.designer.designer_id}/appointment/schedule/${appointment.id}`}>
+                                                                                                            <Link to={`/designer/${appointment.designer_id}/appointment/schedule/${appointment.id}`}>
                                                                                                             <div
                                                                                                                 className="cursor-pointer appointments-tooltip"
                                                                                                                 // onClick={() => toggleEditAppointmentModal(appointment.id)}
