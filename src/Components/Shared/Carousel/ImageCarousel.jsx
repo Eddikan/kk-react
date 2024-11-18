@@ -13,6 +13,7 @@ import 'Assets/styles/Carousel/image-slider.css';
 
 // import required modules
 import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
+import ReactImageZoom from 'react-image-zoom';
 
 const ImageSlider = (props) => {
     const images = props.images;
@@ -21,6 +22,15 @@ const ImageSlider = (props) => {
 
     const [allImages, setAllImages] = useState([]);
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
+
+    const zoomProps = {
+        width: 500,  
+        height: 400, 
+        img: '', 
+        zoomPosition: 'original',
+        scale: 1.5, // Increase this scale value to zoom in more
+        zoomWidth: 1000, // Optional: Increase zoomWidth for more zoom
+    };
 
     useEffect(() => {
         if (finalProductImages && finalProductImages.length > 0) {
@@ -73,28 +83,32 @@ const ImageSlider = (props) => {
                     </Swiper>
                 </Col>
                 <Col lg="10">
-                    <Swiper
-                        style={{
-                            '--swiper-navigation-color': '#fff',
-                            '--swiper-pagination-color': '#fff',
-                        }}
-                        spaceBetween={10}
-                        navigation={true}
-                        thumbs={{ swiper: thumbsSwiper }}
-                        modules={[FreeMode, Navigation, Thumbs]}
-                        className="mySwiper2"
-                        initialSlide={0}
-                    >
-                        {allImages.map((image, index) => (
+                <Swiper
+                    style={{
+                        '--swiper-navigation-color': '#fff',
+                        '--swiper-pagination-color': '#fff',
+                    }}
+                    spaceBetween={10}
+                    navigation={true}
+                    thumbs={{ swiper: thumbsSwiper }}
+                    modules={[FreeMode, Navigation, Thumbs]}
+                    className="mySwiper2"
+                    initialSlide={0}
+                >
+                    {allImages.map((image, index) => {
+                        // Set image URL for zooming
+                        zoomProps.img = process.env.REACT_APP_STORAGE_URL + (type === 'product' ? 'product/' : 'portfolio/') + image.image_url;
+
+                        return (
                             <SwiperSlide key={index}>
-                                {type == 'product' ?
-                                    <div className="slider-image cursor-pointer" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")" }}></div>
-                                    :
-                                    <div className="slider-image cursor-pointer" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image.image_url + ")" }}></div>
-                                }
+                                <div className="slider-image cursor-pointer">
+                                    {/* Using ReactImageZoom for zoom functionality */}
+                                    <ReactImageZoom {...zoomProps} />
+                                </div>
                             </SwiperSlide>
-                        ))}
-                    </Swiper>
+                        );
+                    })}
+                </Swiper>
                 </Col>
             </Row>
         </div>

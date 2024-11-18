@@ -181,6 +181,16 @@ const EditProductNormal = (props) => {
             video_demo_url: url,
         });
     }
+    const isValidUrl = (url, type) => {
+        if (type === "Youtube"){
+            const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/(?:watch\?v=|v\/)|youtu\.be\/)[\w-]+$/;
+            return youtubeRegex.test(url)
+        }else if(type === "Vimeo"){
+            const vimeoRegex = /^(https?:\/\/)?(www\.)?vimeo\.com\/.+$/;
+            return vimeoRegex.test(url);
+        } 
+        return true;
+    };
 
     const submitDocumentsSequentially = async (images) => {
         setUploadStatus("loading");
@@ -815,7 +825,7 @@ const EditProductNormal = (props) => {
                                     onChange={handleChange} required />
                             </Form.Group>
                             <Form.Group className='my-3'>
-                                <Form.Label>Care Instructions</Form.Label>
+                                <Form.Label>Care Instructions<span className='text-danger'>*</span></Form.Label>
                                 <FormControl as="textarea"
                                     name="care_instructions"
                                     rows={3} // You can adjust the number of rows as needed
@@ -919,7 +929,13 @@ const EditProductNormal = (props) => {
                         {productLoading ?
                             <Button className='btn-primary' type="button">{size == "small" ? "Uploading..." : "Saving..."}</Button>
                             :
-                            <Button className='btn-primary' type="submit">{size == "small" ? "Upload" : "Save"}</Button>
+                            <>
+                            {productData.video_demo_type === "Youtube" || productData.video_demo_type === "Vimeo" ?
+                                <Button className='btn-primary' disabled = {!isValidUrl(productData.video_demo_url, productData.video_demo_type)} type="button" onClick={ProductSubmit}>{size == "small" ? "Upload" : "Save" }</Button>
+                                :
+                                <Button className='btn-primary' type="button" onClick={ProductSubmit} >{size == "small" ? "Upload" : "Save" }</Button>
+                            }
+                        </>
                         }
                         {withDraft ?
                             <>
@@ -1085,7 +1101,7 @@ const EditProductNormal = (props) => {
                                 }
                             </Form.Group> */}
                             <Form.Group className='mb-3 mt-2'>
-                                <Form.Label>Weave</Form.Label>
+                                <Form.Label>Weave<span className='text-danger'>*</span></Form.Label>
                                 <Form.Control as='select' name='weave' value={weave} className='mr-sm-2 mb-2' onChange={handleChangeWeave} required>
                                     <option value=''>Select Weave</option>
                                     <option value='Plain'>Plain</option>
@@ -1105,15 +1121,15 @@ const EditProductNormal = (props) => {
                                 }
                             </Form.Group>
                             <Form.Group className='my-3'>
-                                <Form.Label>Pattern</Form.Label>
+                                <Form.Label>Pattern<span className='text-danger'>*</span></Form.Label>
                                 <FormControl type='text' name='pattern' value={productData.pattern} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                             </Form.Group>
                             <Form.Group className='my-3'>
-                                <Form.Label>Texture</Form.Label>
+                                <Form.Label>Texture<span className='text-danger'>*</span></Form.Label>
                                 <FormControl type='text' name='texture' value={productData.texture} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                             </Form.Group>
                             <Form.Group className='my-3'>
-                                <Form.Label>Opacity</Form.Label>
+                                <Form.Label>Opacity<span className='text-danger'>*</span></Form.Label>
                                 <FormControl type='text' name='opacity' value={productData.opacity} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                             </Form.Group>
                             <Form.Group className='my-3'>
@@ -1281,13 +1297,21 @@ const EditProductNormal = (props) => {
                                                 {productData.video_demo_type == "Youtube" || productData.video_demo_type == "Vimeo" ?
                                                     <>
                                                         <FormControl type='text' name='video_demo_url' value={productData.video_demo_url} className='mr-sm-2 mt-3' onChange={handleChange} placeholder={`Insert ${productData.video_demo_type} embed link`} />
-                                                        {productData.video_demo_url && productData.video_demo_url != "" ?
+                                                        {productData.video_demo_url === "" && (
+                                                            <div className="text-danger mt-1 fs-12">
+                                                                Please enter a {productData.video_demo_type} link.
+                                                            </div>
+                                                        )}
+                                                        {productData.video_demo_url && productData.video_demo_url !== "" && !isValidUrl(productData.video_demo_url, productData.video_demo_type) && (
+                                                            <div className="text-danger mt-1 fs-12">
+                                                                Please enter a valid {productData.video_demo_type} link.
+                                                            </div>
+                                                        )}
+                                                        {productData.video_demo_url && productData.video_demo_url != "" && isValidUrl(productData.video_demo_url, productData.video_demo_type) && (
                                                             <div className="mt-3">
                                                                 <ResponsiveEmbedVideo src={productData.video_demo_url} title={productData.name} />
                                                             </div>
-                                                            :
-                                                            null
-                                                        }
+                                                        )}
                                                     </>
                                                     : productData.video_demo_type == "Upload" ?
                                                         <div className="mt-3">

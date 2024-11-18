@@ -28,7 +28,7 @@ import CurrencyConverter from 'Utils/CurrencyConverter';
 import { TiArrowForwardOutline } from "react-icons/ti";
 import { BsCartPlus } from 'react-icons/bs';
 import CopyTo from 'Utils/CopyLink';
-import { FaFacebookF, FaInstagram, FaXTwitter } from "react-icons/fa6";
+import { FaFacebookF, FaInstagram, FaXTwitter, FaPinterest, FaRegEnvelope } from "react-icons/fa6";
 import Messenger from "Assets/images/icons/messenger.png";
 
 const initialReviewData = Object.freeze({
@@ -1373,7 +1373,7 @@ const ViewProduct = () => {
             {/* Share to  */}
             <Modal
                 show={shareModalShow}
-                className='modal-preview'
+                className='modal-preview share-modal'
                 fade={false}
                 centered
                 size="sm"
@@ -1387,17 +1387,31 @@ const ViewProduct = () => {
                 <Modal.Body>
                     <h4 className='fs-22 mb-3'>Share Product</h4>
                     <Card>
-                        <Card.Body className="text-center py-5">
+                        <Card.Body className="text-center py-4">
+                            <Col lg='12'>
+                                <p className="text-left">Share with:</p>
+                            </Col>
                             <Col lg='12' className="mb-3">
-                                <a className="px-2" href={`https://www.facebook.com/sharer/sharer.php?u=https://kouturekonectv2.web.app/product/${productId}`} target="_blank" rel="noopener noreferrer">
-                                    <FaFacebookF size="30px" color="#3b5998"/>
-                                </a>
-                                <a className="px-2" href={`https://twitter.com/share?url=https://kouturekonectv2.web.app/product/${productId}&via=TWITTER_HANDLE&text=TEXT`}>
-                                    <FaXTwitter size="30px"/>
-                                </a>
-                                {/* <a className="px-2" href={`https://fb-messenger://share/?link=https://kouturekonectv2.web.app/product/${productId}`}>
-                                    <img src={Messenger} width='30px' height='30px' alt="messenger" />
-                                </a> */}
+                                <div className = "d-flex justify-content-center">
+                                    <a className="px-2 mx-2 share-icon" href={`https://www.facebook.com/sharer/sharer.php?u=https://kouturekonectv2.web.app/product/${productId}`} target="_blank" rel="noopener noreferrer">
+                                        <FaFacebookF className="my-2" size="30px" color="#3b5998"/>
+                                    </a>
+                                    <a className="px-2 mx-2 share-icon" href={`https://twitter.com/share?url=https://kouturekonectv2.web.app/product/${productId}`} target="_blank" rel="noopener noreferrer">
+                                        <FaXTwitter className="my-2" size="30px"/>
+                                    </a>
+                                    <a className="px-2 mx-2 share-icon" href={`https://www.facebook.com/dialog/send?link=https://kouturekonectv2.web.app/product/${productId}`} target="_blank" rel="noopener noreferrer">
+                                       <img src={Messenger} style={{ height: "30px", width: "30px" }}className="my-2" alt="messenger-icon"/> 
+                                    </a>
+                                    <a className="px-2 mx-2 share-icon" href={`https://pinterest.com/pin/create/button/?url=https://kouturekonectv2.web.app/product/${productId}`} target="_blank" rel="noopener noreferrer">
+                                        <FaPinterest className="my-2" size="30px" color="#E60023" />
+                                    </a>
+                                    <a className="px-2 mx-2 share-icon" href={`mailto:?subject=Kouture Konect&body=https://kouturekonectv2.web.app/product/${productId}`} target="_blank" rel="noopener noreferrer">
+                                        <FaRegEnvelope className="my-2" size="30px" />
+                                    </a>
+                                </div>
+                            </Col>
+                            <Col lg='12'>
+                                <p className="mb-0 text-left">or</p>
                             </Col>
                             <Col lg='12' className='text-center'>
                                 <CopyTo

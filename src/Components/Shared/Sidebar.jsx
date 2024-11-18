@@ -137,7 +137,7 @@ const Sidebar = ({ currentTab, onChangeTab }) => {
                             <Card.Body>
                                 <p className="text-center fw-600">Help Us Improve <br /> <p className="mb-0 fw-400">Share Your Experience</p></p>
                                 <Link to="/vendor-feedback-survey">
-                                    <button className="btn btn-primary w-100">
+                                    <button className="btn bg-black text-white w-100">
                                         Start Survey
                                     </button>
                                 </Link>
