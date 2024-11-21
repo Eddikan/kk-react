@@ -22,6 +22,7 @@ import CountryCodes from 'Utils/CountryCodes';
 import axios from "axios";
 import toast from 'react-hot-toast';
 import CurrencyConverter from 'Utils/CurrencyConverter';
+import GooglePayButton from "@google-pay/button-react";
 
 const initialCheckOut = {
     card_name: '',
@@ -2983,6 +2984,46 @@ const Cart = ({ props }) => {
                                                         }
                                                         <div className='mt-4'>
                                                             <Row>
+                                                                <Col lg="12" className="mb-2">
+                                                                    <GooglePayButton
+                                                                        environment="TEST" // For Testing (Change to Production after testing)
+                                                                        buttonType="checkout"
+                                                                        paymentRequest={{
+                                                                            apiVersion: 2,
+                                                                            apiVersionMinor: 0,
+                                                                            allowedPaymentMethods: [
+                                                                            {
+                                                                                type: 'CARD',
+                                                                                parameters: {
+                                                                                allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
+                                                                                allowedCardNetworks: ['MASTERCARD', 'VISA'],
+                                                                                },
+                                                                                tokenizationSpecification: {
+                                                                                type: 'PAYMENT_GATEWAY',
+                                                                                parameters: {
+                                                                                    gateway: 'example', // Change to actual Gateway Info
+                                                                                    gatewayMerchantId: 'exampleGatewayMerchantId', 
+                                                                                },
+                                                                                },
+                                                                            },
+                                                                            ],
+                                                                            merchantInfo: {
+                                                                                merchantId: '12345678901234567890', // Change to actual Merchant Info
+                                                                                merchantName: 'Sample Merchant',
+                                                                            },
+                                                                            transactionInfo: {
+                                                                                totalPriceStatus: 'FINAL',
+                                                                                totalPriceLabel: 'Total',
+                                                                                totalPrice: totalAmount.toString(),
+                                                                                currencyCode: currency,
+                                                                                countryCode: 'US', // Change country code
+                                                                            },
+                                                                        }}
+                                                                        onLoadPaymentData={paymentRequest => {
+                                                                            console.log('load payment data', paymentRequest);
+                                                                        }}
+                                                                    />
+                                                                </Col>
                                                                 <Col lg="12">
                                                                     {errors && (errors.shipment_errors || errors.recipient_errors || shipmentError) ?
                                                                         <button type="button" className='btn btn-primary' disabled={true}>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>

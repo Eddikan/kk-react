@@ -24,7 +24,7 @@
 }
 
 .swiper-slide {
-    background-size: contain;
+    background-size: cover;
     background-position: center;
 }
 
@@ -37,6 +37,13 @@
 
 .mySwiper2 .slider-image {
     min-height: 420px;
+    min-width: 500px;
+    object-fit: cover; /* Keep aspect ratio */
+    width: 100%; /* Make sure the image takes up the full container width */
+    height: 100%; /* Ensure the height is consistent */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .mySwiper {
@@ -62,7 +69,7 @@
     display: block;
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
     position: relative;
     border-radius: 5px;
 }
