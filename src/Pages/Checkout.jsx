@@ -9,7 +9,7 @@ import { useCookies } from 'react-cookie';
 import GoBack from 'Components/Shared/GoBack';
 import SignUp from 'Components/Forms/InsideAuth/Signup';
 import Login from 'Components/Forms/InsideAuth/Login';
-import { FaCcVisa, FaCcMastercard, FaCcPaypal, FaTruck, FaCcStripe } from "react-icons/fa";
+import { FaCcVisa, FaCcMastercard, FaCcPaypal, FaTruck, FaCcStripe, FaGooglePay } from "react-icons/fa";
 import LoadingPage from 'Components/Shared/LoadingPage';
 import 'Assets/styles/Cart/style.css';
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
@@ -1969,7 +1969,6 @@ const Cart = ({ props }) => {
         setTempCartItems(filteredTempCartItems);
 
     }, [selectedCartItems]);
-
     return (
         <LayoutNoFooter>
             {cartLoading || userLoading ?
@@ -2743,7 +2742,7 @@ const Cart = ({ props }) => {
                                                                                                 //     const shipment_errors = errors.shipment_errors;
                                                                                                 //     item_errors = shipment_errors[index];
                                                                                                 // }
-
+                                                                                                
                                                                                                 return (
                                                                                                     <Card className="mb-2">
                                                                                                         <Card.Body className="py-3">
@@ -2925,6 +2924,25 @@ const Cart = ({ props }) => {
                                                                 <input
                                                                     type="radio"
                                                                     name="payment_method"
+                                                                    value="Google Pay"
+                                                                    onChange={(e) => { setRadioButtonValue("Google Pay"); handleChangePaymentInfo(e); }}
+                                                                    required
+                                                                />
+                                                            </div>
+                                                            <div className='ms-3'>
+                                                                <FaGooglePay size={20} />
+                                                            </div>
+
+                                                            <div className='ms-2'>
+                                                               Google Pay
+                                                            </div>
+                                                        </label>
+
+                                                        <label className='mt-2 d-flex cursor-pointer'>
+                                                            <div className='d-flex'>
+                                                                <input
+                                                                    type="radio"
+                                                                    name="payment_method"
                                                                     value="Cash on Delivery"
                                                                     onChange={(e) => { setRadioButtonValue("Cash on Delivery"); handleChangePaymentInfo(e); }}
                                                                     required
@@ -2939,7 +2957,7 @@ const Cart = ({ props }) => {
                                                             </div>
                                                         </label>
 
-                                                        {radioButtonValue != "" && radioButtonValue != "Cash on Delivery" && radioButtonValue != "Paypal" && radioButtonValue != "Stripe" ?
+                                                        {radioButtonValue != "" && radioButtonValue != "Cash on Delivery" && radioButtonValue != "Paypal" && radioButtonValue != "Stripe" && radioButtonValue != "Google Pay" ?
                                                             <div>
                                                                 <hr />
                                                                 <div className='mb-4'>
@@ -2984,46 +3002,6 @@ const Cart = ({ props }) => {
                                                         }
                                                         <div className='mt-4'>
                                                             <Row>
-                                                                <Col lg="12" className="mb-2">
-                                                                    <GooglePayButton
-                                                                        environment="TEST" // For Testing (Change to Production after testing)
-                                                                        buttonType="checkout"
-                                                                        paymentRequest={{
-                                                                            apiVersion: 2,
-                                                                            apiVersionMinor: 0,
-                                                                            allowedPaymentMethods: [
-                                                                            {
-                                                                                type: 'CARD',
-                                                                                parameters: {
-                                                                                allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
-                                                                                allowedCardNetworks: ['MASTERCARD', 'VISA'],
-                                                                                },
-                                                                                tokenizationSpecification: {
-                                                                                type: 'PAYMENT_GATEWAY',
-                                                                                parameters: {
-                                                                                    gateway: 'example', // Change to actual Gateway Info
-                                                                                    gatewayMerchantId: 'exampleGatewayMerchantId', 
-                                                                                },
-                                                                                },
-                                                                            },
-                                                                            ],
-                                                                            merchantInfo: {
-                                                                                merchantId: '12345678901234567890', // Change to actual Merchant Info
-                                                                                merchantName: 'Sample Merchant',
-                                                                            },
-                                                                            transactionInfo: {
-                                                                                totalPriceStatus: 'FINAL',
-                                                                                totalPriceLabel: 'Total',
-                                                                                totalPrice: totalAmount.toString(),
-                                                                                currencyCode: currency,
-                                                                                countryCode: 'US', // Change country code
-                                                                            },
-                                                                        }}
-                                                                        onLoadPaymentData={paymentRequest => {
-                                                                            console.log('load payment data', paymentRequest);
-                                                                        }}
-                                                                    />
-                                                                </Col>
                                                                 <Col lg="12">
                                                                     {errors && (errors.shipment_errors || errors.recipient_errors || shipmentError) ?
                                                                         <button type="button" className='btn btn-primary' disabled={true}>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
@@ -3097,8 +3075,63 @@ const Cart = ({ props }) => {
                                                                                                                     // <button type="button" onClick={toggleAuthModal} className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
                                                                                                                 }
                                                                                                             </>
-                                                                                                            :
-
+                                                                                                            : radioButtonValue == "Google Pay" ?
+                                                                                                                <>
+                                                                                                                    {currentUser ?
+                                                                                                                        <>
+                                                                                                                        {user?.profile_complete == 1 ?
+                                                                                                                            <>
+                                                                                                                                <GooglePayButton
+                                                                                                                                environment="TEST"  // Ensure this is set to TEST
+                                                                                                                                buttonType="checkout"
+                                                                                                                                paymentRequest={{
+                                                                                                                                    apiVersion: 2,
+                                                                                                                                    apiVersionMinor: 0,
+                                                                                                                                    allowedPaymentMethods: [
+                                                                                                                                        {
+                                                                                                                                            type: 'CARD',
+                                                                                                                                            parameters: {
+                                                                                                                                                allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
+                                                                                                                                                allowedCardNetworks: ['MASTERCARD', 'VISA'],
+                                                                                                                                            },
+                                                                                                                                            tokenizationSpecification: {
+                                                                                                                                                type: 'PAYMENT_GATEWAY',
+                                                                                                                                                parameters: {
+                                                                                                                                                    gateway: 'example',  // Mock gateway
+                                                                                                                                                    gatewayMerchantId: 'exampleGatewayMerchantId',
+                                                                                                                                                },
+                                                                                                                                            },
+                                                                                                                                        },
+                                                                                                                                    ],
+                                                                                                                                    merchantInfo: {
+                                                                                                                                        merchantId: 'TEST',  // Mock merchant ID
+                                                                                                                                        merchantName: 'Sample Merchant',
+                                                                                                                                    },
+                                                                                                                                    transactionInfo: {
+                                                                                                                                        totalPriceStatus: 'FINAL',
+                                                                                                                                        totalPrice: '10.00',
+                                                                                                                                        currencyCode: 'USD',
+                                                                                                                                        countryCode: 'US',
+                                                                                                                                    },
+                                                                                                                                }}
+                                                                                                                                onLoadPaymentData={(paymentData) => {
+                                                                                                                                    console.log('Payment data loaded:', paymentData);
+                                                                                                                                }}
+                                                                                                                                />
+                                                                                                                            </>
+                                                                                                                            :
+                                                                                                                            <Link to="/user/complete-profile">
+                                                                                                                                <button type="button" className='btn btn-primary'>Complete Profile to Check Out</button>
+                                                                                                                            </Link>
+                                                                                                                        }
+                                                                                                                        </>
+                                                                                                                        :
+                                                                                                                        <Link to="/login?redirect_to=/checkout">
+                                                                                                                            <button type="button" className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
+                                                                                                                        </Link>
+                                                                                                                    }
+                                                                                                                </>
+                                                                                                                :
                                                                                                             <>
                                                                                                                 {currentUser ?
                                                                                                                     <>
