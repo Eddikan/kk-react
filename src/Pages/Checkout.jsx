@@ -3109,13 +3109,19 @@ const Cart = ({ props }) => {
                                                                                                                                     },
                                                                                                                                     transactionInfo: {
                                                                                                                                         totalPriceStatus: 'FINAL',
-                                                                                                                                        totalPrice: '10.00',
+                                                                                                                                        totalPrice: totalAmountDisplay,
                                                                                                                                         currencyCode: 'USD',
-                                                                                                                                        countryCode: 'US',
+                                                                                                                                        countryCode: countryCode,
                                                                                                                                     },
                                                                                                                                 }}
                                                                                                                                 onLoadPaymentData={(paymentData) => {
                                                                                                                                     console.log('Payment data loaded:', paymentData);
+                                                                                                                                }}
+                                                                                                                                onError={(reason) => {
+                                                                                                                                    console.log('Payment Error:', reason);
+                                                                                                                                }}
+                                                                                                                                onCancel={(reason) => {
+                                                                                                                                    console.log('Payment Cancelled:', reason);
                                                                                                                                 }}
                                                                                                                                 />
                                                                                                                             </>

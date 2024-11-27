@@ -3,18 +3,24 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import firestore from "../../firebaseConfig";
 import { AiOutlineSend } from "react-icons/ai";
+import { FaRegImage } from "react-icons/fa";
 import LoadingIcon from "../Icons/Loading";
 import Loading from "Components/Shared/Loading";
 import UserPlaceholder from 'Assets/images/user.png';
+import axios from "axios";
+import toast from 'react-hot-toast';
 
 const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
     const [chatMessages, setChatMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
     const [formStatus, setFormStatus] = useState("standby");
     const [chatLoading, setChatLoading] = useState(loading != "" ? loading : true);
+    const [attachedImage, setAttachedImage] = useState(null);
     const userImage = user?.image;
     const chatContainerRef = useRef(null);
     const scrollableDivRef = useRef(null);
+    const [uploadStatus, setUploadStatus] = useState("standby");
+    const hiddenFileInputImg = useRef(null);
 
     useEffect(() => {
         // Fetch chat messages of the given meeting from Firestore
@@ -56,9 +62,55 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
         }
     });
 
+    const submitDocument = (event) => {
+        // event.preventDefault();
+        setUploadStatus("loading");
+        const dataArray = new FormData();
+        dataArray.append("image", event);
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'user/image?user_id=' + currentUser.id + '&token=' + currentUser.token, dataArray, {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        }).then((response) => {
+            if (response.data.status == "Success") {
+                var media_id = response.data.data.id;
+                var attached_image = response.data.data.image;
+                setAttachedImage(attached_image);
+
+                let reader = new FileReader();
+                let file = event;
+
+                reader.onloadend = () => {
+                    // setDocuments(documents => [...documents, { media_id: media_id, name: event.name, url: reader.result, type: event.type }]);
+                    // setUserImage(reader.result);
+                }
+                reader.readAsDataURL(file);
+                setUploadStatus("standby");
+            }
+        })
+            .catch(() => {
+                toast.error("An error occured. Please try again or contact the administrator.");
+                setUploadStatus("standby");
+            });
+    };
+
+    const handleClickImg = event => {
+        hiddenFileInputImg.current.click();
+    };
+
+    const handleChangeImg = ({ target }) => {
+        if (target.files < 1 || !target.validity.valid) {
+            return
+        }
+        if (target.files[0]) {
+            submitDocument(target.files[0]);
+        }
+    }
+
     const handleSendMessage = async (e) => {
         e.preventDefault();
         setNewMessage("");
+        setAttachedImage('');
         try {
             await firestore.collection("meetings").doc(appointmentId).collection("appointment_chats").add({
                 user_id: currentUser,
@@ -67,6 +119,7 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
                 email: user.email,
                 message: newMessage,
                 image: userImage,
+                attached_image: attachedImage, 
                 timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
                 status: "unread"
             });
@@ -119,6 +172,9 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
                                                             </div>
                                                             <div className="msg-text">
                                                                 {chat.message}
+                                                                {chat.attached_image &&
+                                                                    <img src={`${process.env.REACT_APP_STORAGE_URL}user/${chat.attached_image}`} className="w-100"/>
+                                                                }
                                                             </div>
                                                         </div>
                                                     </div>
@@ -138,6 +194,9 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
                                                             </div>
                                                             <div className="msg-text">
                                                                 {chat.message}
+                                                                {chat.attached_image &&
+                                                                    <img src={`${process.env.REACT_APP_STORAGE_URL}user/${chat.attached_image}`} className="w-100"/>
+                                                                }
                                                             </div>
                                                         </div>
                                                     </div>
@@ -164,15 +223,30 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
                     onChange={(e) => setNewMessage(e.target.value)}
                     required
                 />
-                {formStatus != "standby" ?
+               
+                {formStatus != "standby" ||  uploadStatus != "standby" ?
                     <button type="button" className="msger-send-btn">
                         <LoadingIcon size="30px" />
                     </button>
                     :
-                    <button type="submit" className="msger-send-btn">
-                        <AiOutlineSend size="30px" color="#393c41" />
-                    </button>
+                    <div>
+                        {/* <button type="button" className="msger-send-btn" onClick={handleClickImg}>
+                            <FaRegImage size="28px" color="#393c41" />
+                        </button> */}
+                        <button type="submit" className="msger-send-btn">
+                            <AiOutlineSend size="30px" color="#393c41" />
+                        </button>
+                     </div>
+                    
                 }
+                {/* <input type="file"
+                    ref={hiddenFileInputImg}
+                    onChange={handleChangeImg}
+                    style={{ display: 'none' }}
+                    accept="image/*"
+                    name="attached_image"
+                    required
+                /> */}
             </form>
         </div>
     );
