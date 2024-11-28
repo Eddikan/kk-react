@@ -3,12 +3,13 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import firestore from "../../firebaseConfig";
 import { AiOutlineSend } from "react-icons/ai";
-import { FaRegImage } from "react-icons/fa";
+import { GrAttachment } from "react-icons/gr";
 import LoadingIcon from "../Icons/Loading";
 import Loading from "Components/Shared/Loading";
 import UserPlaceholder from 'Assets/images/user.png';
 import axios from "axios";
 import toast from 'react-hot-toast';
+import { TiDelete } from "react-icons/ti";
 
 const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
     const [chatMessages, setChatMessages] = useState([]);
@@ -16,11 +17,13 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
     const [formStatus, setFormStatus] = useState("standby");
     const [chatLoading, setChatLoading] = useState(loading != "" ? loading : true);
     const [attachedImage, setAttachedImage] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
     const userImage = user?.image;
     const chatContainerRef = useRef(null);
     const scrollableDivRef = useRef(null);
     const [uploadStatus, setUploadStatus] = useState("standby");
     const hiddenFileInputImg = useRef(null);
+    const textInputRef = useRef(null);
 
     useEffect(() => {
         // Fetch chat messages of the given meeting from Firestore
@@ -43,7 +46,7 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
                                 .doc(doc.id)
                                 .update({ status: "read" })
                                 .catch((error) => {
-                                    console.error("Error updating chat status:", error);
+                                    toast.error("Error updating chat status:", error);
                                 });
                         }
                         return chat;
@@ -94,8 +97,11 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
             });
     };
 
-    const handleClickImg = event => {
-        hiddenFileInputImg.current.click();
+    const handleClickImg = () => {
+        hiddenFileInputImg.current.click(); 
+        if (textInputRef.current) {
+            textInputRef.current.focus();
+        }
     };
 
     const handleChangeImg = ({ target }) => {
@@ -103,31 +109,59 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
             return
         }
         if (target.files[0]) {
-            submitDocument(target.files[0]);
+            setAttachedImage(target.files[0]);
+            setImagePreview(URL.createObjectURL(target.files[0]));
         }
     }
 
+    const clearImagePreview = () => {
+        setImagePreview(null);
+        setAttachedImage(null);
+    };
+
     const handleSendMessage = async (e) => {
         e.preventDefault();
-        setNewMessage("");
-        setAttachedImage('');
+        setFormStatus("loading");
+    
+        let uploadedImageUrl = null;
+        if (attachedImage) {
+            try {
+                const dataArray = new FormData();
+                dataArray.append("image", attachedImage);
+                const response = await axios.post(
+                    `${process.env.REACT_APP_API_ENDPOINT}user/image?user_id=${currentUser.id}&token=${currentUser.token}`,
+                    dataArray,
+                    { headers: { "Content-Type": "multipart/form-data" } }
+                );
+                if (response.data.status === "Success") {
+                    uploadedImageUrl = response.data.data.image; 
+                }
+            } catch (error) {
+                toast.error("Failed to upload image. Please try again.");
+                setFormStatus("standby");
+                return;
+            }
+        }
+    
         try {
             await firestore.collection("meetings").doc(appointmentId).collection("appointment_chats").add({
-                user_id: currentUser,
-                first_name: user.first_name,
-                last_name: user.last_name,
-                email: user.email,
-                message: newMessage,
-                image: userImage,
-                attached_image: attachedImage, 
-                timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
-                status: "unread"
-            });
-            if (chatMessages && chatMessages.length > 2) {
-                chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
-            }
+                    user_id: currentUser,
+                    first_name: user.first_name,
+                    last_name: user.last_name,
+                    email: user.email,
+                    message: newMessage,
+                    image: userImage,
+                    attached_image: uploadedImageUrl, // Use the uploaded image URL
+                    timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
+                    status: "unread"
+                });
+            setNewMessage("");
+            setAttachedImage(null);
+            setImagePreview(null);
         } catch (error) {
-            console.error("Error sending message:", error);
+            toast.error("Error sending message:", error);
+        } finally {
+            setFormStatus("standby");
         }
     };
 
@@ -214,40 +248,48 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
 
                 </div>
             </section>
-            <form className="msger-inputarea mb-3 mt-4" onSubmit={handleSendMessage}>
-                <input
-                    type="text"
-                    className="form-control form-control-bg text-left msger-input"
-                    placeholder="Type your message..."
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    required
-                />
-               
-                {formStatus != "standby" ||  uploadStatus != "standby" ?
-                    <button type="button" className="msger-send-btn">
-                        <LoadingIcon size="30px" />
-                    </button>
-                    :
-                    <div>
-                        {/* <button type="button" className="msger-send-btn" onClick={handleClickImg}>
-                            <FaRegImage size="28px" color="#393c41" />
-                        </button> */}
-                        <button type="submit" className="msger-send-btn">
-                            <AiOutlineSend size="30px" color="#393c41" />
+            <div class="message-input-submit">
+                <form className="msger-inputarea my-2" onSubmit={handleSendMessage}>
+                    <input
+                        type="text"
+                        className="form-control form-control-bg text-left msger-input"
+                        placeholder="Type your message..."
+                        value={newMessage}
+                        onChange={(e) => setNewMessage(e.target.value)}
+                        required={!attachedImage}
+                        id="text-message-input"
+                        ref={textInputRef}
+                    />
+                    {formStatus != "standby" ||  uploadStatus != "standby" ?
+                        <button type="button" className="msger-send-btn">
+                            <LoadingIcon size="30px" />
                         </button>
-                     </div>
-                    
-                }
-                {/* <input type="file"
-                    ref={hiddenFileInputImg}
-                    onChange={handleChangeImg}
-                    style={{ display: 'none' }}
-                    accept="image/*"
-                    name="attached_image"
-                    required
-                /> */}
-            </form>
+                        :
+                        <div>
+                            <button type="button" className="msger-send-btn" onClick={handleClickImg}>
+                                <GrAttachment size="28px" color="#393c41" />
+                            </button>
+                            <button type="submit" className="msger-send-btn">
+                                <AiOutlineSend size="30px" color="#393c41" />
+                            </button>
+                        </div>
+                        
+                    }
+                    <input type="file"
+                        ref={hiddenFileInputImg}
+                        onChange={handleChangeImg}
+                        style={{ display: 'none' }}
+                        name="attached_image"
+                        required
+                    />
+                </form>
+                {imagePreview && (
+                    <div className="preview-container ms-2 mb-2" style={{width: '150px' , height: '150px'}}>
+                        <img src={imagePreview} alt="Selected Preview" className="preview-image w-100 h-100"/>
+                        <TiDelete className="delete-image-message-attachment-btn cursor-pointer" size={30} color="red" onClick={clearImagePreview}/>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

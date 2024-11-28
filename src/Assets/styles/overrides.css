@@ -3508,3 +3508,14 @@ span.rti--tag {
 .dotted-hr{
     border-top: dashed 2px #eeeeee;
 }
+.message-input-submit{
+    border: solid 1px #DFDFDF;
+}
+.delete-image-message-attachment-btn{
+    left: 150px;
+    position: absolute;
+    opacity: 0.7;
+}
+.preview-attachments-container{
+    position: relative;
+}
