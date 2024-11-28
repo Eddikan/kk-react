@@ -281,6 +281,7 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
                         style={{ display: 'none' }}
                         name="attached_image"
                         required
+                        accept="image/*"
                     />
                 </form>
                 {imagePreview && (
