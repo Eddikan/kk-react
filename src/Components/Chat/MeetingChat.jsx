@@ -108,6 +108,12 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
         if (target.files < 1 || !target.validity.valid) {
             return
         }
+        const file = target.files[0];
+
+        if (!file.type.startsWith("image/")) {
+            toast.error("Please upload a valid image file.");
+            return;
+        }
         if (target.files[0]) {
             setAttachedImage(target.files[0]);
             setImagePreview(URL.createObjectURL(target.files[0]));
