@@ -3,18 +3,33 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import firestore from "../../firebaseConfig";
 import { AiOutlineSend } from "react-icons/ai";
+import { GrAttachment } from "react-icons/gr";
+import { FaFilePdf, FaFileWord, FaFileExcel, FaFileCsv, FaFilePowerpoint, FaFile } from 'react-icons/fa';
+import { FaRegFileZipper, FaImage  } from "react-icons/fa6";
+import { FiFileText } from "react-icons/fi";
+import { TiDelete } from "react-icons/ti";
 import LoadingIcon from "../Icons/Loading";
 import Loading from "Components/Shared/Loading";
 import UserPlaceholder from 'Assets/images/user.png';
+import toast from 'react-hot-toast';
+import axios from "axios";
 
 const LiveStreamChat = ({ livestreamId, user, currentUser, loading, status }) => {
     const [chatMessages, setChatMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
     const [formStatus, setFormStatus] = useState("standby");
     const [chatLoading, setChatLoading] = useState(loading != "" ? loading : true);
+    const [attachedImage, setAttachedImage] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
+    const [attachedFile, setAttachedFile] = useState(null);
+    const [filePreview, setFilePreview] = useState(null);
     const userImage = user?.image;
     const chatContainerRef = useRef(null);
     const scrollableDivRef = useRef(null);
+    const [uploadStatus, setUploadStatus] = useState("standby");
+    const hiddenFileInput = useRef(null);
+    const hiddenImgInput = useRef(null);
+    const textInputRef = useRef(null);
 
     useEffect(() => {
         // Fetch chat messages of the given meeting from Firestore
@@ -48,7 +63,7 @@ const LiveStreamChat = ({ livestreamId, user, currentUser, loading, status }) =>
         }
 
     }, [livestreamId, chatLoading]);
-
+    console.log(chatMessages);
     useEffect(() => {
         // Scroll to the bottom of the div when component mounts or updates
         if (scrollableDivRef.current) {
@@ -56,9 +71,115 @@ const LiveStreamChat = ({ livestreamId, user, currentUser, loading, status }) =>
         }
     });
 
+    const handleClickImg = () => {
+        hiddenImgInput.current.click(); 
+        if (textInputRef.current) {
+            textInputRef.current.focus();
+        }
+    };
+    const handleClickFile =() => {
+        hiddenFileInput.current.click();
+        if (textInputRef.current) {
+            textInputRef.current.focus();
+        }
+    }
+
+    const handleChangeImg = ({ target }) => {
+        if (target.files.length < 1 || !target.validity.valid) return;
+    
+        const selectedFile = target.files[0];
+        if (selectedFile.size > 5 * 1024 * 1024) {
+            toast.error("File size exceeds 5MB");
+            return;
+        }
+
+        if (selectedFile.type.startsWith("image/")) {
+            setAttachedImage(selectedFile);
+            setImagePreview(URL.createObjectURL(selectedFile));
+        } else {
+            toast.error("Please select a valid Image File")
+        }
+    
+        hiddenFileInput.current.value = ""; 
+        hiddenImgInput.current.value = "";
+    };
+
+    const handleChangeFile = ({ target }) => {
+        if (target.files.length < 1 || !target.validity.valid) return;
+    
+        const selectedFile = target.files[0];
+        if (selectedFile.size > 5 * 1024 * 1024) {
+            toast.error("File size exceeds 5MB");
+            return;
+        }
+
+        if (selectedFile.type.startsWith("image/")) {
+            setAttachedImage(selectedFile);
+            setImagePreview(URL.createObjectURL(selectedFile));
+        } else {
+            setAttachedFile(selectedFile);
+            setFilePreview(selectedFile.name);
+        }
+    
+        hiddenFileInput.current.value = ""; 
+        hiddenImgInput.current.value = "";
+    };
+
+    const getFileIcon = (fileType) => {
+        if (fileType.includes('pdf')) {
+            return <FaFilePdf size={80} color="red" />;
+        } else if (fileType.includes('msword') || fileType.includes('word') || fileType.includes('docx') ) {
+            return <FaFileWord size={80} color="blue" />;
+        } else if (fileType.includes('excel') || fileType.includes('spreadsheet') || fileType.includes('xlsx')) {
+            return <FaFileExcel size={80} color="green" />;
+        } else if (fileType.includes('csv')) {
+            return <FaFileCsv size={80} color="orange" />;
+        } else if (fileType.includes('plain')) {
+            return <FiFileText size={80} color="gray" />;
+        } else if (fileType.includes('powerpoint')) {
+            return <FaFilePowerpoint size={80} color="purple" />;
+        } else if (fileType.includes('zip') || fileType.includes('rar')) {
+            return <FaRegFileZipper size={80} color="blue" />;
+        } else {
+            return <FaFile size={80} color="gray" />;
+        }
+    };
+    
+    const clearFilePreview = () => {
+        setImagePreview(null);
+        setAttachedImage(null);
+        setAttachedFile(null);
+        setFilePreview(null);
+    };
+
     const handleSendMessage = async (e) => {
         e.preventDefault();
-        setNewMessage("");
+        setFormStatus("loading");
+    
+        let uploadedFileUrl = null;
+        let uploadedFileType = null;
+
+        if (attachedImage || attachedFile) {
+            try {
+                const dataArray = new FormData();
+                const fileToUpload = attachedImage || attachedFile;
+                dataArray.append("file", fileToUpload);
+    
+                const response = await axios.post(
+                    `${process.env.REACT_APP_API_ENDPOINT}user/file?user_id=${currentUser.id}&token=${currentUser.token}`,
+                    dataArray,
+                    { headers: { "Content-Type": "multipart/form-data" } }
+                );
+                if (response.data.status === "Success") {
+                    uploadedFileUrl = response.data.data.file; 
+                    uploadedFileType = fileToUpload.type;
+                }
+            } catch (error) {
+                toast.error("Failed to upload file. Please try again.");
+                setFormStatus("standby");
+                return;
+            }
+        }
         try {
             await firestore.collection("livestreams").doc(livestreamId).collection("livestream_chats").add({
                 user_id: currentUser,
@@ -67,14 +188,20 @@ const LiveStreamChat = ({ livestreamId, user, currentUser, loading, status }) =>
                 email: user.email,
                 message: newMessage,
                 image: userImage,
+                attached_file: uploadedFileUrl, 
+                file_type: uploadedFileType,
                 timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
                 status: "unread"
             });
+            setNewMessage("");
+            clearFilePreview();
             if (chatMessages && chatMessages.length > 2) {
                 chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
             }
         } catch (error) {
             console.error("Error sending message:", error);
+        }finally {
+            setFormStatus("standby");
         }
     };
 
@@ -119,6 +246,25 @@ const LiveStreamChat = ({ livestreamId, user, currentUser, loading, status }) =>
                                                             </div>
                                                             <div className="msg-text">
                                                                 {chat.message}
+                                                                {chat.attached_file && (
+                                                                    chat.file_type?.startsWith("image/") ? (
+                                                                        <img
+                                                                            src={`${process.env.REACT_APP_STORAGE_URL}file/${chat.attached_file}`}
+                                                                            alt="Attached"
+                                                                            className="w-100"
+                                                                        />
+                                                                    ) : (
+                                                                        <a
+                                                                            href={`${process.env.REACT_APP_STORAGE_URL}file/${chat.attached_file}`}
+                                                                            target="_blank"
+                                                                            rel="noopener noreferrer"
+                                                                            download = {chat.attached_file}
+                                                                        >
+                                                        
+                                                                            {chat.attached_file}
+                                                                        </a>
+                                                                    )
+                                                                )}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -138,6 +284,24 @@ const LiveStreamChat = ({ livestreamId, user, currentUser, loading, status }) =>
                                                             </div>
                                                             <div className="msg-text">
                                                                 {chat.message}
+                                                                {chat.attached_file && (
+                                                                    chat.file_type?.startsWith("image/") ? (
+                                                                        <img
+                                                                            src={`${process.env.REACT_APP_STORAGE_URL}file/${chat.attached_file}`}
+                                                                            alt="Attached"
+                                                                            className="w-100"
+                                                                        />
+                                                                    ) : (
+                                                                        <a
+                                                                            href={`${process.env.REACT_APP_STORAGE_URL}file/${chat.attached_file}`}
+                                                                            target="_blank"
+                                                                            rel="noopener noreferrer"
+                                                                            download = {chat.attached_file}
+                                                                        >   
+                                                                            {chat.attached_file}
+                                                                        </a>
+                                                                    )
+                                                                )}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -156,25 +320,70 @@ const LiveStreamChat = ({ livestreamId, user, currentUser, loading, status }) =>
                 </div>
             </section>
             {status != "Ended" ?
-                <form className="msger-inputarea mb-3 mt-4" onSubmit={handleSendMessage}>
-                    <input
-                        type="text"
-                        className="form-control form-control-bg text-left msger-input"
-                        placeholder="Type your message..."
-                        value={newMessage}
-                        onChange={(e) => setNewMessage(e.target.value)}
-                        required
-                    />
-                    {formStatus != "standby" ?
-                        <button type="button" className="msger-send-btn">
-                            <LoadingIcon size="30px" />
-                        </button>
-                        :
-                        <button type="submit" className="msger-send-btn">
-                            <AiOutlineSend size="30px" color="#393c41" />
-                        </button>
-                    }
-                </form>
+                <div class="message-input-submit">
+                    <form className="msger-inputarea my-2" onSubmit={handleSendMessage}>
+                        <input
+                            type="text"
+                            className="form-control form-control-bg bg-white text-left msger-input"
+                            placeholder="Type your message..."
+                            value={newMessage}
+                            onChange={(e) => setNewMessage(e.target.value)}
+                            required={!attachedImage && !attachedFile}
+                            id="text-message-input"
+                            ref={textInputRef}
+                            autocomplete="off"
+                        />
+                        {formStatus != "standby" ||  uploadStatus != "standby" ?
+                            <button type="button" className="msger-send-btn">
+                                <LoadingIcon size="30px" />
+                            </button>
+                            :
+                            <div>
+                                <button type="button" className="msger-send-btn" title="Upload image" onClick={handleClickImg}>
+                                    <FaImage size="28px" color="#393c41" />
+                                </button>
+                                <button type="button" className="msger-send-btn" title="Upload file" onClick={handleClickFile}>
+                                    <GrAttachment size="28px" color="#393c41" />
+                                </button>
+                                <button type="submit" className="msger-send-btn">
+                                    <AiOutlineSend size="30px" color="#393c41" />
+                                </button>
+                            </div>
+                            
+                        }
+                        <input type="file"
+                            ref={hiddenFileInput}
+                            onChange={handleChangeFile}
+                            style={{ display: 'none' }}
+                            name="attached_image"
+                        />
+                        <input type="file"
+                            ref={hiddenImgInput}
+                            onChange={handleChangeImg}
+                            style={{ display: 'none' }}
+                            name="attached_image"
+                            accept="image/*"
+                        />
+                    </form>
+                    {(imagePreview || filePreview) && (
+                        <div className="preview-attachments-container ms-2 mb-2" style={{ width: '150px', height: '150px' }}>
+                            {imagePreview ? (
+                                <img src={imagePreview} alt="Selected Preview" className="preview-image w-100 h-100" />
+                            ) : (                           
+                                <div className="file-preview-container rounded p-2 h-100 text-center bg-light">
+                                    {getFileIcon(filePreview)}
+                                    <p className="fs-14 mt-4 text-ellipsis">{filePreview}</p>
+                                </div>                         
+                            )}
+                            <TiDelete
+                                className="delete-image-message-attachment-btn cursor-pointer"
+                                size={30}
+                                color="red"
+                                onClick={clearFilePreview}
+                            />
+                        </div>
+                    )}
+                </div>                                  
                 :
                 null
             }

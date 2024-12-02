@@ -4,6 +4,9 @@ import "firebase/compat/firestore";
 import firestore from "../../firebaseConfig";
 import { AiOutlineSend } from "react-icons/ai";
 import { GrAttachment } from "react-icons/gr";
+import { FaFilePdf, FaFileWord, FaFileExcel, FaFileCsv, FaFilePowerpoint, FaFile } from 'react-icons/fa';
+import { FaRegFileZipper, FaImage  } from "react-icons/fa6";
+import { FiFileText } from "react-icons/fi";
 import LoadingIcon from "../Icons/Loading";
 import Loading from "Components/Shared/Loading";
 import UserPlaceholder from 'Assets/images/user.png';
@@ -18,13 +21,16 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
     const [chatLoading, setChatLoading] = useState(loading != "" ? loading : true);
     const [attachedImage, setAttachedImage] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
+    const [attachedFile, setAttachedFile] = useState(null);
+    const [filePreview, setFilePreview] = useState(null);
     const userImage = user?.image;
     const chatContainerRef = useRef(null);
     const scrollableDivRef = useRef(null);
     const [uploadStatus, setUploadStatus] = useState("standby");
-    const hiddenFileInputImg = useRef(null);
+    const hiddenFileInput = useRef(null);
+    const hiddenImgInput = useRef(null);
     const textInputRef = useRef(null);
-
+    console.log(filePreview);
     useEffect(() => {
         // Fetch chat messages of the given meeting from Firestore
         if (appointmentId) {
@@ -46,7 +52,7 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
                                 .doc(doc.id)
                                 .update({ status: "read" })
                                 .catch((error) => {
-                                    toast.error("Error updating chat status:", error);
+                                    console.error("Error updating chat status:", error);
                                 });
                         }
                         return chat;
@@ -98,52 +104,110 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
     };
 
     const handleClickImg = () => {
-        hiddenFileInputImg.current.click(); 
+        hiddenImgInput.current.click(); 
         if (textInputRef.current) {
             textInputRef.current.focus();
         }
     };
-
-    const handleChangeImg = ({ target }) => {
-        if (target.files < 1 || !target.validity.valid) {
-            return
-        }
-        const file = target.files[0];
-
-        if (!file.type.startsWith("image/")) {
-            toast.error("Please upload a valid image file.");
-            return;
-        }
-        if (target.files[0]) {
-            setAttachedImage(target.files[0]);
-            setImagePreview(URL.createObjectURL(target.files[0]));
+    const handleClickFile =() => {
+        hiddenFileInput.current.click();
+        if (textInputRef.current) {
+            textInputRef.current.focus();
         }
     }
 
-    const clearImagePreview = () => {
+    const handleChangeImg = ({ target }) => {
+        if (target.files.length < 1 || !target.validity.valid) return;
+    
+        const selectedFile = target.files[0];
+        if (selectedFile.size > 5 * 1024 * 1024) {
+            toast.error("File size exceeds 5MB");
+            return;
+        }
+
+        if (selectedFile.type.startsWith("image/")) {
+            setAttachedImage(selectedFile);
+            setImagePreview(URL.createObjectURL(selectedFile));
+        } else {
+            toast.error("Please select a valid Image File")
+        }
+    
+        hiddenFileInput.current.value = ""; 
+        hiddenImgInput.current.value = "";
+    };
+
+    const handleChangeFile = ({ target }) => {
+        if (target.files.length < 1 || !target.validity.valid) return;
+    
+        const selectedFile = target.files[0];
+        if (selectedFile.size > 5 * 1024 * 1024) {
+            toast.error("File size exceeds 5MB");
+            return;
+        }
+
+        if (selectedFile.type.startsWith("image/")) {
+            setAttachedImage(selectedFile);
+            setImagePreview(URL.createObjectURL(selectedFile));
+        } else {
+            setAttachedFile(selectedFile);
+            setFilePreview(selectedFile.name);
+        }
+    
+        hiddenFileInput.current.value = ""; 
+        hiddenImgInput.current.value = "";
+    };
+
+    const getFileIcon = (fileType) => {
+        if (fileType.includes('pdf')) {
+            return <FaFilePdf size={80} color="red" />;
+        } else if (fileType.includes('msword') || fileType.includes('word') || fileType.includes('docx') ) {
+            return <FaFileWord size={80} color="blue" />;
+        } else if (fileType.includes('excel') || fileType.includes('spreadsheet') || fileType.includes('xlsx')) {
+            return <FaFileExcel size={80} color="green" />;
+        } else if (fileType.includes('csv')) {
+            return <FaFileCsv size={80} color="orange" />;
+        } else if (fileType.includes('plain')) {
+            return <FiFileText size={80} color="gray" />;
+        } else if (fileType.includes('powerpoint')) {
+            return <FaFilePowerpoint size={80} color="purple" />;
+        } else if (fileType.includes('zip') || fileType.includes('rar')) {
+            return <FaRegFileZipper size={80} color="blue" />;
+        } else {
+            return <FaFile size={80} color="gray" />;
+        }
+    };
+    
+    const clearFilePreview = () => {
         setImagePreview(null);
         setAttachedImage(null);
+        setAttachedFile(null);
+        setFilePreview(null);
     };
 
     const handleSendMessage = async (e) => {
         e.preventDefault();
         setFormStatus("loading");
     
-        let uploadedImageUrl = null;
-        if (attachedImage) {
+        let uploadedFileUrl = null;
+        let uploadedFileType = null;
+
+        if (attachedImage || attachedFile) {
             try {
                 const dataArray = new FormData();
-                dataArray.append("image", attachedImage);
+                const fileToUpload = attachedImage || attachedFile;
+                dataArray.append("file", fileToUpload);
+    
                 const response = await axios.post(
-                    `${process.env.REACT_APP_API_ENDPOINT}user/image?user_id=${currentUser.id}&token=${currentUser.token}`,
+                    `${process.env.REACT_APP_API_ENDPOINT}user/file?user_id=${currentUser.id}&token=${currentUser.token}`,
                     dataArray,
                     { headers: { "Content-Type": "multipart/form-data" } }
                 );
                 if (response.data.status === "Success") {
-                    uploadedImageUrl = response.data.data.image; 
+                    uploadedFileUrl = response.data.data.file; 
+                    uploadedFileType = fileToUpload.type;
                 }
             } catch (error) {
-                toast.error("Failed to upload image. Please try again.");
+                toast.error("Failed to upload file. Please try again.");
                 setFormStatus("standby");
                 return;
             }
@@ -151,21 +215,21 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
     
         try {
             await firestore.collection("meetings").doc(appointmentId).collection("appointment_chats").add({
-                    user_id: currentUser,
-                    first_name: user.first_name,
-                    last_name: user.last_name,
-                    email: user.email,
-                    message: newMessage,
-                    image: userImage,
-                    attached_image: uploadedImageUrl, // Use the uploaded image URL
-                    timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
-                    status: "unread"
-                });
+                user_id: currentUser,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                email: user.email,
+                message: newMessage,
+                image: userImage,
+                attached_file: uploadedFileUrl, 
+                file_type: uploadedFileType,
+                timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
+                status: "unread"
+            });
             setNewMessage("");
-            setAttachedImage(null);
-            setImagePreview(null);
+            clearFilePreview();
         } catch (error) {
-            toast.error("Error sending message:", error);
+            console.error("Error sending message:", error);
         } finally {
             setFormStatus("standby");
         }
@@ -212,9 +276,25 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
                                                             </div>
                                                             <div className="msg-text">
                                                                 {chat.message}
-                                                                {chat.attached_image &&
-                                                                    <img src={`${process.env.REACT_APP_STORAGE_URL}user/${chat.attached_image}`} className="w-100"/>
-                                                                }
+                                                                {chat.attached_file && (
+                                                                    chat.file_type?.startsWith("image/") ? (
+                                                                        <img
+                                                                            src={`${process.env.REACT_APP_STORAGE_URL}file/${chat.attached_file}`}
+                                                                            alt="Attached"
+                                                                            className="w-100"
+                                                                        />
+                                                                    ) : (
+                                                                        <a
+                                                                            href={`${process.env.REACT_APP_STORAGE_URL}file/${chat.attached_file}`}
+                                                                            target="_blank"
+                                                                            rel="noopener noreferrer"
+                                                                            download = {chat.attached_file}
+                                                                        >
+                                                        
+                                                                            {chat.attached_file}
+                                                                        </a>
+                                                                    )
+                                                                )}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -234,9 +314,24 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
                                                             </div>
                                                             <div className="msg-text">
                                                                 {chat.message}
-                                                                {chat.attached_image &&
-                                                                    <img src={`${process.env.REACT_APP_STORAGE_URL}user/${chat.attached_image}`} className="w-100"/>
-                                                                }
+                                                                {chat.attached_file && (
+                                                                    chat.file_type?.startsWith("image/") ? (
+                                                                        <img
+                                                                            src={`${process.env.REACT_APP_STORAGE_URL}file/${chat.attached_file}`}
+                                                                            alt="Attached"
+                                                                            className="w-100"
+                                                                        />
+                                                                    ) : (
+                                                                        <a
+                                                                            href={`${process.env.REACT_APP_STORAGE_URL}file/${chat.attached_file}`}
+                                                                            target="_blank"
+                                                                            rel="noopener noreferrer"
+                                                                            download = {chat.attached_file}
+                                                                        >   
+                                                                            {chat.attached_file}
+                                                                        </a>
+                                                                    )
+                                                                )}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -258,13 +353,14 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
                 <form className="msger-inputarea my-2" onSubmit={handleSendMessage}>
                     <input
                         type="text"
-                        className="form-control form-control-bg text-left msger-input"
+                        className="form-control form-control-bg bg-white text-left msger-input"
                         placeholder="Type your message..."
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
-                        required={!attachedImage}
+                        required={!attachedImage && !attachedFile}
                         id="text-message-input"
                         ref={textInputRef}
+                        autocomplete="off"
                     />
                     {formStatus != "standby" ||  uploadStatus != "standby" ?
                         <button type="button" className="msger-send-btn">
@@ -272,7 +368,10 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
                         </button>
                         :
                         <div>
-                            <button type="button" className="msger-send-btn" onClick={handleClickImg}>
+                            <button type="button" className="msger-send-btn" title="Upload image" onClick={handleClickImg}>
+                                <FaImage size="28px" color="#393c41" />
+                            </button>
+                            <button type="button" className="msger-send-btn" title="Upload file" onClick={handleClickFile}>
                                 <GrAttachment size="28px" color="#393c41" />
                             </button>
                             <button type="submit" className="msger-send-btn">
@@ -282,18 +381,35 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
                         
                     }
                     <input type="file"
-                        ref={hiddenFileInputImg}
+                        ref={hiddenFileInput}
+                        onChange={handleChangeFile}
+                        style={{ display: 'none' }}
+                        name="attached_image"
+                    />
+                    <input type="file"
+                        ref={hiddenImgInput}
                         onChange={handleChangeImg}
                         style={{ display: 'none' }}
                         name="attached_image"
-                        required
                         accept="image/*"
                     />
                 </form>
-                {imagePreview && (
-                    <div className="preview-container ms-2 mb-2" style={{width: '150px' , height: '150px'}}>
-                        <img src={imagePreview} alt="Selected Preview" className="preview-image w-100 h-100"/>
-                        <TiDelete className="delete-image-message-attachment-btn cursor-pointer" size={30} color="red" onClick={clearImagePreview}/>
+                {(imagePreview || filePreview) && (
+                    <div className="preview-attachments-container ms-2 mb-2" style={{ width: '150px', height: '150px' }}>
+                        {imagePreview ? (
+                            <img src={imagePreview} alt="Selected Preview" className="preview-image w-100 h-100" />
+                        ) : (                           
+                            <div className="file-preview-container rounded p-2 h-100 text-center bg-light">
+                                {getFileIcon(filePreview)}
+                                <p className="fs-14 mt-4 text-ellipsis">{filePreview}</p>
+                            </div>                         
+                        )}
+                        <TiDelete
+                            className="delete-image-message-attachment-btn cursor-pointer"
+                            size={30}
+                            color="red"
+                            onClick={clearFilePreview}
+                        />
                     </div>
                 )}
             </div>
