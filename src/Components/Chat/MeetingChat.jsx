@@ -6,6 +6,7 @@ import { AiOutlineSend } from "react-icons/ai";
 import { GrAttachment } from "react-icons/gr";
 import { FaFilePdf, FaFileWord, FaFileExcel, FaFileCsv, FaFilePowerpoint, FaFile } from 'react-icons/fa';
 import { FaRegFileZipper, FaImage  } from "react-icons/fa6";
+import { RiFolderVideoFill } from "react-icons/ri";
 import { FiFileText } from "react-icons/fi";
 import LoadingIcon from "../Icons/Loading";
 import Loading from "Components/Shared/Loading";
@@ -30,7 +31,7 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
     const hiddenFileInput = useRef(null);
     const hiddenImgInput = useRef(null);
     const textInputRef = useRef(null);
-    console.log(filePreview);
+
     useEffect(() => {
         // Fetch chat messages of the given meeting from Firestore
         if (appointmentId) {
@@ -120,8 +121,10 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
         if (target.files.length < 1 || !target.validity.valid) return;
     
         const selectedFile = target.files[0];
-        if (selectedFile.size > 5 * 1024 * 1024) {
-            toast.error("File size exceeds 5MB");
+        const maxFileSize = 8 * 1024 * 1024; 
+
+        if (selectedFile.size > maxFileSize) {
+            toast.error("File size exceeds 8MB");
             return;
         }
 
@@ -140,8 +143,10 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
         if (target.files.length < 1 || !target.validity.valid) return;
     
         const selectedFile = target.files[0];
-        if (selectedFile.size > 5 * 1024 * 1024) {
-            toast.error("File size exceeds 5MB");
+        const maxFileSize = 8 * 1024 * 1024; 
+
+        if (selectedFile.size > maxFileSize) {
+            toast.error("File size exceeds 8MB");
             return;
         }
 
@@ -171,8 +176,10 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
         } else if (fileType.includes('powerpoint')) {
             return <FaFilePowerpoint size={80} color="purple" />;
         } else if (fileType.includes('zip') || fileType.includes('rar')) {
-            return <FaRegFileZipper size={80} color="blue" />;
-        } else {
+            return <FaRegFileZipper size={80} color="orange" />;
+        } else if (fileType.includes('mp4') || fileType.includes('mkv')) {
+            return <RiFolderVideoFill size={80} color="red" />;
+        }else {
             return <FaFile size={80} color="gray" />;
         }
     };
@@ -288,10 +295,12 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
                                                                             href={`${process.env.REACT_APP_STORAGE_URL}file/${chat.attached_file}`}
                                                                             target="_blank"
                                                                             rel="noopener noreferrer"
-                                                                            download = {chat.attached_file}
+                                                                            download
                                                                         >
-                                                        
-                                                                            {chat.attached_file}
+                                                                            <div className="file-message-container border rounded p-4 h-100 text-center bg-light">
+                                                                                {getFileIcon(chat.attached_file)}
+                                                                                <p className="fs-14 mt-4 text-ellipsis">{chat.attached_file}</p>
+                                                                            </div>
                                                                         </a>
                                                                     )
                                                                 )}
@@ -326,9 +335,12 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
                                                                             href={`${process.env.REACT_APP_STORAGE_URL}file/${chat.attached_file}`}
                                                                             target="_blank"
                                                                             rel="noopener noreferrer"
-                                                                            download = {chat.attached_file}
+                                                                            download
                                                                         >   
-                                                                            {chat.attached_file}
+                                                                            <div className="file-message-container border rounded p-4 h-100 text-center bg-light">
+                                                                                {getFileIcon(chat.attached_file)}
+                                                                                <p className="fs-14 mt-4 text-ellipsis">{chat.attached_file}</p>
+                                                                            </div>
                                                                         </a>
                                                                     )
                                                                 )}
@@ -353,7 +365,7 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
                 <form className="msger-inputarea my-2" onSubmit={handleSendMessage}>
                     <input
                         type="text"
-                        className="form-control form-control-bg bg-white text-left msger-input"
+                        className="form-control border-none bg-white text-left msger-input"
                         placeholder="Type your message..."
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
