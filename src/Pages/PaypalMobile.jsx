@@ -24,14 +24,21 @@ const PaypalMobile = () => {
     const order_email = searchParams.get('order_email');
     const order_amount = searchParams.get('order_amount');
     const order_currency = searchParams.get('order_currency');
-    const order_items = searchParams.get('order_items');
+    const order_currency_code = searchParams.get('order_currency_code');
     const user_id = searchParams.get('user_id');
     const checkoutData = JSON.parse(decodeURIComponent(searchParams.get('checkout_data')));
     const orderItems = JSON.parse(searchParams.get('order_items'));
+    const countryCode = searchParams.get('delivery_country_code');
+    const totalQuantity  = searchParams.get('product_count');
+    const subtotalAmount = searchParams.get('subtotal_amount');
+    const subtotalAmountConverted = searchParams.get('subtotal_amount_converted'); 
+    const totalAmountConverted = searchParams.get('total_amount_converted'); 
+    const totalShippingAmount = searchParams.get('shipping_amount'); 
+    const totalShippingAmountConverted = searchParams.get('shipping_amount_converted'); 
+    const shippingDetails = JSON.parse(decodeURIComponent(searchParams.get('shipping_details'))); 
 
     const [selectedCartItems, setSelectedCartItems] = useState(orderItems);
     const [productCount, setProductCount] = useState(0);
-    const [subtotalAmount, setSubtotalAmount] = useState(0);
     const [totalAmount, setTotalAmount] = useState(order_amount);
     const [checkOutFormData, setCheckOutFormData] = useState(checkoutData);
     const [formStatus, setFormStatus] = useState('loading');
@@ -45,10 +52,11 @@ const PaypalMobile = () => {
     const checkOutSubmitPaypal = (details, data) => {
         setFormStatus('loading');
 
-        postCheckOut({ ...checkOutFormData, user_id: user_id, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: orderItems, product_count: productCount, payment_status: 'Paid', payment_details: details }).then(response => {
+        // postCheckOut({ ...checkOutFormData, user_id: user_id, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: orderItems, product_count: productCount, payment_status: 'Paid', payment_details: details }).then(response => {
+            postCheckOut({ ...checkOutFormData, user_id: user_id, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: orderItems, product_count: totalQuantity, payment_status: 'Paid', payment_details: details, delivery_country_code: countryCode,product_count: totalQuantity, subtotal_amount: subtotalAmount, subtotal_amount_converted: subtotalAmountConverted,shipping_amount: totalShippingAmount, shipping_amount_converted: totalShippingAmountConverted,product_count: productCount, shipping_details: { ...shippingDetails },total_amount_converted: totalAmountConverted, currency: order_currency, currency_code: order_currency_code }).then(response => {
             const success = response.data.status;
             const data = response.data.data;
-            if (success == success) {
+            if (success == "Success") {
                 // toast.success('Order added successfully!');
                 setTimeout(() => {
                     setReloadCount(prevReloadCount => prevReloadCount + 1);
@@ -57,9 +65,11 @@ const PaypalMobile = () => {
                 }, 1000);
             } else {
                 toast.error('There has been an error adding the order, please try again!');
+                window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify('There has been an error adding the order, please try again!'));
             }
-        }).catch(() => {
+        }).catch((err) => {
             toast.error('There has been an error adding the order, please try again!');
+            window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify(err));
         });
     }
 
@@ -85,7 +95,7 @@ const PaypalMobile = () => {
                                                 return actions.order.create({
                                                     purchase_units: [{
                                                         amount: {
-                                                            value: totalAmount // Replace with the actual amount
+                                                            value: totalAmountConverted // Replace with the actual amount
                                                         },
                                                     }],
                                                 });
