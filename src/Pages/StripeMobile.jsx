@@ -51,9 +51,18 @@ const StripeMobile = () => {
     const order_email = searchParams.get('order_email');
     const order_amount = searchParams.get('order_amount');
     const order_currency = searchParams.get('order_currency');
+    const order_currency_code = searchParams.get('order_currency_code');
     const user_id = searchParams.get('user_id');
     const checkoutData = JSON.parse(decodeURIComponent(searchParams.get('checkout_data')));
     const orderItems = JSON.parse(searchParams.get('order_items'));
+    const countryCode = searchParams.get('delivery_country_code');
+    const totalQuantity  = searchParams.get('product_count');
+    const subtotalAmount = searchParams.get('subtotal_amount');
+    const subtotalAmountConverted = searchParams.get('subtotal_amount_converted'); 
+    const totalAmountConverted = searchParams.get('total_amount_converted'); 
+    const totalShippingAmount = searchParams.get('shipping_amount'); 
+    const totalShippingAmountConverted = searchParams.get('shipping_amount_converted'); 
+    const shippingDetails = JSON.parse(decodeURIComponent(searchParams.get('shipping_details'))); 
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
@@ -61,7 +70,6 @@ const StripeMobile = () => {
     const [selectedCartItems, setSelectedCartItems] = useState(orderItems);
     const [currentUser, setCurrentUser] = useState(cookies.currentUser ?? null);
     const [productCount, setProductCount] = useState(0);
-    const [subtotalAmount, setSubtotalAmount] = useState(0);
     const [totalAmount, setTotalAmount] = useState(order_amount);
     const [cartItems, setCartItems] = useState([]);
     const [cartItemId, setCartItemId] = useState('');
@@ -112,7 +120,7 @@ const StripeMobile = () => {
         try {
             const response = await axios.post(process.env.REACT_APP_API_ENDPOINT + 'create-intent', {
                 payment_method_id: paymentMethod.id,
-                total_amount: order_amount, // Example amount in cents (e.g., $50.00)
+                total_amount: totalAmountConverted, // Example amount in cents (e.g., $50.00)
                 currency: order_currency,
                 first_name: order_first_name,
                 last_name: order_last_name,
@@ -125,7 +133,8 @@ const StripeMobile = () => {
                 setErrorMessage(response.data.error);
             } else {
                 const details = response.data.data;
-                postCheckOut({ ...checkOutFormData, user_id: user_id, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: orderItems, product_count: productCount, payment_status: 'Paid', payment_details: details }).then(response => {
+                // postCheckOut({ ...checkOutFormData, user_id: user_id, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: orderItems, product_count: productCount, payment_status: 'Paid', payment_details: details }).then(response => {
+                postCheckOut({ ...checkOutFormData, user_id: user_id, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: orderItems, product_count: totalQuantity, payment_status: 'Paid', payment_details: details, delivery_country_code: countryCode,product_count: totalQuantity, subtotal_amount: subtotalAmount, subtotal_amount_converted: subtotalAmountConverted,shipping_amount: totalShippingAmount, shipping_amount_converted: totalShippingAmountConverted,product_count: productCount, shipping_details: { ...shippingDetails },total_amount_converted: totalAmountConverted, currency: order_currency, currency_code: order_currency_code }).then(response => {
                     const success = response.data.status;
                     const data = response.data.data;
                     if (success == success) {
@@ -184,7 +193,7 @@ const StripeMobile = () => {
                                                    
                                                 </Col>
                                                 <Col lg={12}>
-                                                    <p>Total Amount: ${totalAmount}</p>
+                                                    <p>Total Amount: {order_currency_code}{totalAmountConverted}</p>
                                                 </Col>
                                                 <Col lg='12'>
                                                     <label className='w-100'>
