@@ -100,3 +100,15 @@
     font-size: 10px;
     color: black;
 }
+.hover-product-image {
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.3s ease;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .hover-product-image:hover {
+    transform: scale(1.5);
+    cursor: zoom-in;
+  }

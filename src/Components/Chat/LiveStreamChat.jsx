@@ -91,6 +91,16 @@ const LiveStreamChat = ({ livestreamId, user, currentUser, loading, status }) =>
         const selectedFile = target.files[0];
         const maxFileSize = 8 * 1024 * 1024; 
 
+        const allowedTypes = [
+            'image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml'
+        ];
+
+        // Validate file type
+        if (!allowedTypes.includes(selectedFile.type)) {
+            toast.error('Invalid file type. Please upload a valid image file.');
+            return false;
+        }
+
         if (selectedFile.size > maxFileSize) {
             toast.error("File size exceeds 8MB");
             return;
@@ -112,6 +122,19 @@ const LiveStreamChat = ({ livestreamId, user, currentUser, loading, status }) =>
     
         const selectedFile = target.files[0];
         const maxFileSize = 8 * 1024 * 1024; 
+
+        const allowedFileTypes = [
+            'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'text/plain', 'application/zip', 'video/mp4', 'video/x-matroska',
+            'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+        ];
+    
+        // Validate file type
+        if (!allowedFileTypes.includes(selectedFile.type) && !allowedFileTypes.includes(selectedFile.type)) {
+            toast.error('Invalid file type. Please upload a valid file.');
+            return false;
+        }
 
         if (selectedFile.size > maxFileSize) {
             toast.error("File size exceeds 8MB");

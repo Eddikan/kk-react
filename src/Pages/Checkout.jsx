@@ -945,8 +945,6 @@ const Cart = ({ props }) => {
                             toast.success('Order added successfully!');
                             setTimeout(() => {
                                 setReloadCount(prevReloadCount => prevReloadCount + 1);
-                                removeCookie('setSelectedCartItems', { path: '/' });
-                                removeCookie('cookieCheckoutDesigner', { path: '/' });
                                 navigate(`/stripe?order_id=${data.order.id}`);
                             }, 1000);
                         } else {
@@ -992,8 +990,6 @@ const Cart = ({ props }) => {
                             toast.success('Order added successfully!');
                             setTimeout(() => {
                                 setReloadCount(prevReloadCount => prevReloadCount + 1);
-                                removeCookie('setSelectedCartItems', { path: '/' });
-                                removeCookie('cookieCheckoutDesigner', { path: '/' });
                                 navigate(`/stripe?order_id=${data.order.id}`);
                             }, 1000);
                         } else {
@@ -1034,8 +1030,6 @@ const Cart = ({ props }) => {
                     toast.success('Order added successfully!');
                     setTimeout(() => {
                         setReloadCount(prevReloadCount => prevReloadCount + 1);
-                        removeCookie('setSelectedCartItems', { path: '/' });
-                        removeCookie('cookieCheckoutDesigner', { path: '/' });
                         navigate(`/stripe?order_id=${data.order.id}`);
                     }, 1000);
                 } else {

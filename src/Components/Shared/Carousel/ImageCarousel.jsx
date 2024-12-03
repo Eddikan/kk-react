@@ -21,6 +21,14 @@ const ImageSlider = (props) => {
 
     const [allImages, setAllImages] = useState([]);
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
+    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+    const handleMouseMove = (e) => {
+      const { left, top, width, height } = e.target.getBoundingClientRect();
+      const x = ((e.clientX - left) / width) * 100;
+      const y = ((e.clientY - top) / height) * 100;
+      setMousePosition({ x, y });
+    };
 
     useEffect(() => {
         if (finalProductImages && finalProductImages.length > 0) {
@@ -88,9 +96,9 @@ const ImageSlider = (props) => {
                         {allImages.map((image, index) => (
                             <SwiperSlide key={index}>
                                 {type == 'product' ?
-                                    <div className="slider-image cursor-pointer" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")" }}></div>
+                                    <div className="slider-image hover-product-image cursor-pointer"  onMouseMove={handleMouseMove} style={{  backgroundPosition: `${mousePosition.x}% ${mousePosition.y}%`, backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")" }}></div>
                                     :
-                                    <div className="slider-image cursor-pointer" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image.image_url + ")" }}></div>
+                                    <div className="slider-image hover-product-image cursor-pointer"  onMouseMove={handleMouseMove} style={{  backgroundPosition: `${mousePosition.x}% ${mousePosition.y}%`, backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image.image_url + ")" }}></div>
                                 }
                             </SwiperSlide>
                         ))}
