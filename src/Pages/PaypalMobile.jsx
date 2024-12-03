@@ -16,31 +16,9 @@ const PaypalMobile = () => {
 
     // Parse search string to get query parameters
     const searchParams = new URLSearchParams(location.search);
-
-    // Access individual query parameters using get method
     const item = searchParams.get('item');
-    const order_first_name = searchParams.get('order_first_name');
-    const order_last_name = searchParams.get('order_last_name');
-    const order_email = searchParams.get('order_email');
-    const order_amount = searchParams.get('order_amount');
-    const order_currency = searchParams.get('order_currency');
-    const order_currency_code = searchParams.get('order_currency_code');
-    const user_id = searchParams.get('user_id');
-    const checkoutData = JSON.parse(decodeURIComponent(searchParams.get('checkout_data')));
-    const orderItems = JSON.parse(searchParams.get('order_items'));
-    const countryCode = searchParams.get('delivery_country_code');
-    const totalQuantity  = searchParams.get('product_count');
-    const subtotalAmount = searchParams.get('subtotal_amount');
-    const subtotalAmountConverted = searchParams.get('subtotal_amount_converted'); 
-    const totalAmountConverted = searchParams.get('total_amount_converted'); 
-    const totalShippingAmount = searchParams.get('shipping_amount'); 
-    const totalShippingAmountConverted = searchParams.get('shipping_amount_converted'); 
-    const shippingDetails = JSON.parse(decodeURIComponent(searchParams.get('shipping_details'))); 
-
-    const [selectedCartItems, setSelectedCartItems] = useState(orderItems);
-    const [productCount, setProductCount] = useState(0);
-    const [totalAmount, setTotalAmount] = useState(order_amount);
-    const [checkOutFormData, setCheckOutFormData] = useState(checkoutData);
+    const [totalAmount, setTotalAmount] = useState();
+    const [checkOutFormData, setCheckOutFormData] = useState();
     const [formStatus, setFormStatus] = useState('loading');
     const [reloadCount, setReloadCount] = useState(0);
 
@@ -53,7 +31,7 @@ const PaypalMobile = () => {
         setFormStatus('loading');
 
         // postCheckOut({ ...checkOutFormData, user_id: user_id, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: orderItems, product_count: productCount, payment_status: 'Paid', payment_details: details }).then(response => {
-            postCheckOut({ ...checkOutFormData, user_id: user_id, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: orderItems, product_count: totalQuantity, payment_status: 'Paid', payment_details: details, delivery_country_code: countryCode,product_count: totalQuantity, subtotal_amount: subtotalAmount, subtotal_amount_converted: subtotalAmountConverted,shipping_amount: totalShippingAmount, shipping_amount_converted: totalShippingAmountConverted,product_count: productCount, shipping_details: { ...shippingDetails },total_amount_converted: totalAmountConverted, currency: order_currency, currency_code: order_currency_code }).then(response => {
+            postCheckOut({ ...checkOutFormData, payment_status: 'Paid', payment_details: details }).then(response => {
             const success = response.data.status;
             const data = response.data.data;
             if (success == "Success") {
@@ -79,6 +57,28 @@ const PaypalMobile = () => {
     //     }
     // }, []);
 
+    useEffect(() => {
+        const handleMessage = (event) => {
+            try {
+                const message = JSON.parse(event.data);
+
+                if (message.type === 'FROM_RN') {
+                    setCheckOutFormData(message.payload);
+                    setTotalAmount(message.payload.total_amount_converted);
+                }
+            } catch (error) {
+                console.error('Error processing message:', error);
+            }
+        };
+
+        // Listen for messages
+        document.addEventListener('message', handleMessage);
+        return () => {
+            // Cleanup the event listener
+            document.removeEventListener('message', handleMessage);
+        };
+        
+    }, []);
 
     return (
         <>
@@ -87,7 +87,7 @@ const PaypalMobile = () => {
                     <Card style={{border:0}}>
                         <Card.Body>
                             <>
-                                {selectedCartItems && selectedCartItems.length > 0 ?
+                                {checkOutFormData ?
                                     <>
                                         <PayPalButtons
                                             fundingSource="paypal"
@@ -95,7 +95,7 @@ const PaypalMobile = () => {
                                                 return actions.order.create({
                                                     purchase_units: [{
                                                         amount: {
-                                                            value: totalAmountConverted // Replace with the actual amount
+                                                            value: totalAmount // Replace with the actual amount
                                                         },
                                                     }],
                                                 });
@@ -116,7 +116,7 @@ const PaypalMobile = () => {
                                                     <img src={KoutureLogo} className="kouture-icon" alt="Kouture Konect Logo" />
                                                 </Col>
                                                 <Col lg={12}>
-                                                    <p className="text-center">Order not found</p>
+                                                    <p className="text-center">No records found.</p>
                                                 </Col>
                                             </Row>
                                         </div>
