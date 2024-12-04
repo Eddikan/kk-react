@@ -8,6 +8,7 @@ import { useCookies } from 'react-cookie';
 import toast from 'react-hot-toast';
 import Loading from 'Components/Shared/Loading';
 import KoutureLogo from 'Assets/images/kouture-konect-icon.png';
+import CurrencyConverter from "Utils/CurrencyConverter";
 
 import useResponsiveFontSize from "../useResponsiveFontSize";
 
@@ -49,17 +50,15 @@ const StripeMobile = () => {
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'token', 'userDetails', 'userRole', 'selectedCartItems', 'tempCart', 'cookieCheckoutDesigner']);
-    const [currentUser, setCurrentUser] = useState(cookies.currentUser ?? null);
-    const [productCount, setProductCount] = useState(0);
     const [totalAmount, setTotalAmount] = useState();
     const [cartItems, setCartItems] = useState([]);
-    const [cartItemId, setCartItemId] = useState('');
-    const [reloadCount, setReloadCount] = useState(0);
-    const [cartLoading, setCartLoading] = useState(true);
     const [checkOutFormData, setCheckOutFormData] = useState([]);
     const [showErrorMessage, setShowErrorMessage] = useState(false);
     const [isPageLoading, setIsPageLoading] = useState(true);
+    const [shippingData, setShippingData] = useState([]);
+    const [errors, setErrors] = useState([]);
+    const [shippingRate, setShippingRate] = useState([]);
+    const [reloadCount, setReloadCount] = useState(0);
 
     const putCheckOut = async (data, orderID) => {
         return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'order/' + orderID, data);
@@ -73,6 +72,17 @@ const StripeMobile = () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'order/' + orderID);
     };
 
+    const createUpsInternationalShipment = async (data) => {
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'ups/v2/create/shipment/international', data);
+    };
+
+    const createGigmShipment = async (data) => {
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'gigm/v2/create/shipment', data);
+    };
+
+    const getUserCartItems = async (userID) => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + userID + '/cart');
+    };
 
     const checkOutSubmitStripe = async (event) => {
         event.preventDefault();
@@ -101,7 +111,7 @@ const StripeMobile = () => {
         }
 
         // Send payment method to your backend to create a payment intent
-        if(checkOutFormData) {
+        if (checkOutFormData) {
             try {
                 const response = await axios.post(process.env.REACT_APP_API_ENDPOINT + 'create-intent', {
                     payment_method_id: paymentMethod.id,
@@ -111,43 +121,250 @@ const StripeMobile = () => {
                     last_name: checkOutFormData.delivery_last_name,
                     receipt_email: checkOutFormData.delivery_email,
                     description: 'Payment for Order',
-    
+
                 });
-    
+
                 if (response.data.error) {
                     setErrorMessage(response.data.error);
-                    window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify(response.data.error));
+                    window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify({error: response.data.error}));
                 } else {
                     const details = response.data.data;
-                    // postCheckOut({ ...checkOutFormData, user_id: user_id, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: orderItems, product_count: productCount, payment_status: 'Paid', payment_details: details }).then(response => {
-                    postCheckOut({ ...checkOutFormData, payment_status: 'Paid', payment_details: details }).then(response => {
-                        const success = response.data.status;
-                        const data = response.data.data;
-                        if (success == success) {
-                            // toast.success('Order added successfully!');
-                            // console.log("data", data);
-                            setTimeout(() => {
-                                setReloadCount(prevReloadCount => prevReloadCount + 1);
-                                // navigate(`/stripe?order_id=${data.order.id}`);
-                                window.ReactNativeWebView &&
-                                    window.ReactNativeWebView.postMessage(JSON.stringify(data));
-                            }, 1000);
-                        } else {
+                    if (checkOutFormData.shipping_option == "UPS") {
+                        createUpsInternationalShipment(shippingData).then(response => {
+                            const status = response.data.status;
+                            const data = response.data;
+                            if (status == "Success" && data.shipment_errors.length == 0) {
+
+                                const checkOutOrderItems = cartItems.map((cartItem, index) => {
+                                    const cartItemShippingRate = shippingRate[index] || {};
+                                    const cartItemShipmentResults = data[index] || {};
+                                    const cartItemTrackingDetails = data.total_charges?.data[index] || {};
+
+                                    const cart_item_shipping_price = parseFloat(cartItemShippingRate?.RateResponse?.RatedShipment?.TotalCharges?.MonetaryValue) || 0;
+                                    const cart_item_shipping_currency = cartItemShippingRate?.RateResponse?.RatedShipment?.TotalCharges?.CurrencyCode || 'USD';
+                                    const cart_item_shipment_price = parseFloat(cartItemShipmentResults?.ShipmentResponse?.ShipmentResults?.ShipmentCharges?.TotalCharges?.MonetaryValue) || 0;
+                                    const cart_item_shipment_currency = cartItemShipmentResults?.ShipmentResponse?.ShipmentResults?.ShipmentCharges?.TotalCharges?.CurrencyCode || 'USD';
+                                    //no conversion yet
+                                    // const cart_item_shipping_price_converted = CurrencyConverter(cart_item_shipping_price, cart_item_shipping_currency, cookies);
+                                    // const cart_item_shipment_price_converted = CurrencyConverter(cart_item_shipment_price, cart_item_shipment_currency, cookies);
+                                    const cart_item_shipping_price_converted = cart_item_shipping_price;
+                                    const cart_item_shipment_price_converted = cart_item_shipment_price;
+                                    return {
+                                        product_id: cartItem.product.id,
+                                        quantity: cartItem.quantity,
+                                        tracking_details: cartItemTrackingDetails,
+                                        shipping_details: {
+                                            shipping_amount: cart_item_shipping_price,
+                                            // shipping_amount_converted: cart_item_shipping_price_converted.price_raw,
+                                            shipping_amount_converted: cart_item_shipping_price_converted,
+                                            shipment_amount: cart_item_shipment_price,
+                                            // shipment_amount_converted: cart_item_shipment_price_converted.price_raw,
+                                            shipment_amount_converted: cart_item_shipment_price_converted,
+                                            shipping_details: cartItemShippingRate,
+                                            shipment_details: cartItemShipmentResults,
+                                        }
+                                    };
+                                });
+
+                                // postCheckOut({ ...checkOutFormData, user_id: user_id, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: orderItems, product_count: productCount, payment_status: 'Paid', payment_details: details }).then(response => {
+                                postCheckOut({ ...checkOutFormData, payment_status: 'Paid', payment_details: details, checkout_order_items: checkOutOrderItems }).then(response => {
+                                    const status = response.data.status;
+                                    const data = response.data.data;
+                                    if (status == "Success") {
+                                        // toast.success('Order added successfully!');
+                                        // console.log("data", data);
+                                        setTimeout(() => {
+                                            setReloadCount(prevReloadCount => prevReloadCount + 1);
+                                            // navigate(`/stripe?order_id=${data.order.id}`);
+                                            window.ReactNativeWebView &&
+                                                window.ReactNativeWebView.postMessage(JSON.stringify(data));
+                                        }, 1000);
+                                    } else {
+                                        const errors = response.data.errors;
+                                        if (errors && errors.length > 0) {
+                                            errors.map((error, index) => {
+                                                toast.error(error);
+                                                return null; // React requires a return value, so we return null here
+                                            });
+                                            window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify({error:errors}));
+                                        } else {
+                                            toast.error('There has been an error adding the order, please try again!');
+                                            window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify('Checkout Error: There has been an error adding the order, please try again!'));
+                                        }
+                                    }
+                                }).catch((error) => {
+                                    const errorDetails = {
+                                        message: error.message,
+                                        stack: error.stack,
+                                        response: error.response ? {
+                                            status: error.response.status,
+                                            data: error.response.data,
+                                            headers: error.response.headers,
+                                        } : null,
+                                    };
+                                    toast.error('There has been an error adding the order, please try again!');
+                                    window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify({error:errorDetails}));
+                                });
+                            } else {
+                                const errors = response.data.shipment_errors;
+                                if (errors) {
+                                    window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify({error:errors}));
+                                } else {
+                                    toast.error('There has been an error adding the order, please try again!');
+                                    window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify('UPS error: There has been an error adding the order, please try again!'));
+                                }
+                            }
+                        }).catch((error) => {
+                            const errorDetails = {
+                                message: error.message,
+                                stack: error.stack,
+                                response: error.response ? {
+                                    status: error.response.status,
+                                    data: error.response.data,
+                                    headers: error.response.headers,
+                                } : null,
+                            };
                             toast.error('There has been an error adding the order, please try again!');
-                        }
-                    }).catch((error) => {
-                        toast.error('There has been an error adding the order, please try again!');
-                        window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify(error));
-                    });
+                            window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify({error:errorDetails}));
+                        });
+
+                    } else if (checkOutFormData.shipping_option == "GIGM") {
+                        createGigmShipment(shippingData).then(response => {
+                            const status = response.data.status;
+                            const data = response.data;
+                            const checkOutOrderItems = cartItems.map((cartItem, index) => {
+                                try {
+                                    const cartItemShippingRate = shippingRate.data[index] || {};
+                                    const cartItemShipmentResults = data.responses[index].data || {};
+                                    const cartItemTrackingDetails = data.responses[index].data || {};
+
+                                    const cart_item_shipping_price = parseFloat(cartItemShippingRate?.total_charges_amount) || 0;
+                                    const cart_item_shipping_currency = cartItemShippingRate?.currency_code || 'USD';
+
+                                    const cart_item_shipment_price = cart_item_shipping_price;
+                                    const cart_item_shipment_currency = cart_item_shipping_currency;
+
+                                    // Doesn't have conversion yet
+                                    // const cart_item_shipping_price_converted = CurrencyConverter(cart_item_shipping_price, cart_item_shipping_currency, cookies);
+                                    // const cart_item_shipment_price_converted = CurrencyConverter(cart_item_shipment_price, cart_item_shipment_currency, cookies);
+                                    const cart_item_shipping_price_converted = cart_item_shipping_price;
+                                    const cart_item_shipment_price_converted = cart_item_shipment_price;
+                                    // Return the object you're constructing for each cart item
+                                    return {
+                                        product_id: cartItem.product.id,
+                                        quantity: cartItem.quantity,
+                                        tracking_details: cartItemTrackingDetails,
+                                        shipping_details: {
+                                            shipping_amount: cart_item_shipping_price,
+                                            // shipping_amount_converted: cart_item_shipping_price_converted.price_raw,
+                                            shipping_amount_converted: cart_item_shipping_price_converted,
+                                            shipment_amount: cart_item_shipment_price,
+                                            // shipment_amount_converted: cart_item_shipment_price_converted.price_raw,
+                                            shipment_amount_converted: cart_item_shipment_price_converted,
+                                            shipping_details: cartItemShippingRate,
+                                            shipment_details: cartItemShipmentResults,
+                                        }
+                                    };
+                                } catch (error) {
+                                    const errorDetails = {
+                                        message: error.message,
+                                        stack: error.stack,
+                                        response: error.response ? {
+                                            status: error.response.status,
+                                            data: error.response.data,
+                                            headers: error.response.headers,
+                                        } : null,
+                                    };
+                                    window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify({error:errorDetails}));
+                                    console.error("Error in map function: ", error);
+                                    throw error;  // You can throw the error again to catch it outside the map
+                                }
+                            });
+                            if (status == "Success") {
+                                // postCheckOut({ ...checkOutFormData, user_id: user_id, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: orderItems, product_count: productCount, payment_status: 'Paid', payment_details: details }).then(response => {
+                                postCheckOut({ ...checkOutFormData, payment_status: 'Paid', payment_details: details, checkout_order_items: checkOutOrderItems }).then(response => {
+                                    const status = response.data.status;
+                                    const data = response.data.data;
+                                    if (status == "Success") {
+                                        // toast.success('Order added successfully!');
+                                        // console.log("data", data);
+                                        setTimeout(() => {
+                                            setReloadCount(prevReloadCount => prevReloadCount + 1);
+                                            // navigate(`/stripe?order_id=${data.order.id}`);
+                                            window.ReactNativeWebView &&
+                                                window.ReactNativeWebView.postMessage(JSON.stringify(data));
+                                        }, 1000);
+                                    } else {
+                                        const errors = response.data.errors;
+                                        if (errors && errors.length > 0) {
+                                            errors.map((error, index) => {
+                                                toast.error(error);
+                                                return null; // React requires a return value, so we return null here
+                                            });
+                                            window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify({error:errors}));
+                                        } else {
+                                            toast.error('There has been an error adding the order, please try again!');
+                                            window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify('There has been an error adding the order, please try again!'));
+                                        }
+                                    }
+                                }).catch((error) => {
+                                    const errorDetails = {
+                                        message: error.message,
+                                        stack: error.stack,
+                                        response: error.response ? {
+                                            status: error.response.status,
+                                            data: error.response.data,
+                                            headers: error.response.headers,
+                                        } : null,
+                                    };
+                                    toast.error('There has been an error adding the order, please try again!');
+                                    window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify({error:errorDetails}));
+                                });
+                            } else {
+                                const errors = response.data.errors;
+                                if (errors) {
+                                    const errors = response.data.errors;
+                                    if (errors) {
+                                        setErrors(errors);
+                                    }
+                                    window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify({error:errors}));
+                                } else {
+                                    toast.error('There has been an error adding the order, please try again!');
+                                    window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify('There has been an error adding the order, please try again!'));
+                                }
+                            }
+                        }).catch((error) => {
+                            const errorDetails = {
+                                message: error.message,
+                                stack: error.stack,
+                                response: error.response ? {
+                                    status: error.response.status,
+                                    data: error.response.data,
+                                    headers: error.response.headers,
+                                } : null,
+                            };
+                            toast.error('There has been an error adding the order, please try again!');
+                            window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify({error:errorDetails}));
+                            toast.error('There has been an error adding the order, please try again!');
+                        });
+                    }
                 }
-            } catch (err) {
+            } catch (error) {
+                const errorDetails = {
+                    message: error.message,
+                    stack: error.stack,
+                    response: error.response ? {
+                        status: error.response.status,
+                        data: error.response.data,
+                        headers: error.response.headers,
+                    } : null,
+                };
                 setErrorMessage('Payment failed. Please try again.');
-                
+                window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify({error:errorDetails}));
             }
         } else {
             window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify('Checkout form data is empty'));
         }
-        
 
         setIsSubmitting(false);
     };
@@ -168,19 +385,61 @@ const StripeMobile = () => {
                 if (message.type === 'FROM_RN') {
                     //   console.log('Received message from React Native:', message.payload);
                     //   alert(JSON.stringify(message.payload));
-                    setCheckOutFormData(message.payload);
-                    setTotalAmount(message.payload.total_amount_converted);
-                   
-                    // Send a response back to React Native
-                    //   window.ReactNativeWebView.postMessage(
-                    //     JSON.stringify({ type: 'FROM_WEB', payload: 'Data received!' })
-                    //   );
-                   
+                    if (message.payload.checkout_data) {
+                        setCheckOutFormData(message.payload.checkout_data);
+                        setTotalAmount(message.payload.checkout_data.total_amount_converted);
+                        if (message.payload.checkout_data.user_id) {
+                            getUserCartItems(message.payload.checkout_data.user_id)
+                                .then((response) => {
+                                    const cartItemsData = response.data.data;
+                                    if (cartItemsData) {
+                                        const filteredCartItems = cartItemsData.filter(item => message.payload.checkout_data.cart_item_ids.includes(item.id));
+                                        setCartItems(filteredCartItems);
+                                    } else {
+                                        toast.error('There has been an error getting the products, please try again!');
+                                        window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify('There has been an error getting the products, please try again!'));
+                                    }
+                                })
+                                .catch((error) => {
+                                    const errorDetails = {
+                                        message: error.message,
+                                        stack: error.stack,
+                                        response: error.response ? {
+                                            status: error.response.status,
+                                            data: error.response.data,
+                                            headers: error.response.headers,
+                                        } : null,
+                                    };
+                                    toast.error('There has been an error getting the products, please try again!');
+                                    window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify({error:errorDetails}));
+                                });
+                        } else {
+                            window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify('Undefined User ID'));
+                        }
+                    }
+
+                    if (message.payload.checkout_data.shipping_details) {
+                        setShippingData(message.payload.checkout_data.shipping_details);
+                    }
+
+                    if (message.payload.shipping_rate) {
+                        setShippingRate(message.payload.shipping_rate);
+                    }
                 }
             } catch (error) {
+                const errorDetails = {
+                    message: error.message,
+                    stack: error.stack,
+                    response: error.response ? {
+                        status: error.response.status,
+                        data: error.response.data,
+                        headers: error.response.headers,
+                    } : null,
+                };
+                window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify({error:errorDetails}));   
                 console.error('Error processing message:', error);
             }
-            
+
         };
 
         // Listen for messages
@@ -190,10 +449,9 @@ const StripeMobile = () => {
             document.removeEventListener('message', handleMessage);
             setIsPageLoading(false);
         };
-        
-    }, []);
 
-    // alert(JSON.stringify(checkOutFormData));
+    }, []);
+    // alert(JSON.stringify(shippingData));
 
     return (
         <>
@@ -201,69 +459,82 @@ const StripeMobile = () => {
                 <div className="Demo">
                     <Card>
                         <Card.Body>
-                                <>
-                                    {checkOutFormData ?
-                                        <>
-                                            <form onSubmit={checkOutSubmitStripe}>
-                                                <Row>
-                                                    <Col lg={12}>
-                                                        <img src={KoutureLogo} className="kouture-icon" alt="Kouture Konect Logo" />
-                                                        <div className="mb-3 mt-2">
-                                                            {showErrorMessage && (
-                                                                <p className="alert alert-danger mt-3 mb-0 text-center" style={{ fontSize: '14px' }}>{errorMessage}</p>
-                                                            )}
-                                                        </div>
+                            <>
+                                {checkOutFormData ?
+                                    <>
+                                        <form onSubmit={checkOutSubmitStripe}>
+                                            <Row>
+                                                <Col lg={12}>
+                                                    <img src={KoutureLogo} className="kouture-icon" alt="Kouture Konect Logo" />
+                                                    <div className="mb-3 mt-2">
+                                                        {showErrorMessage && (
+                                                            <p className="alert alert-danger mt-3 mb-0 text-center" style={{ fontSize: '14px' }}>{errorMessage}</p>
+                                                        )}
+                                                    </div>
+                                                    {errors && errors.length > 0 &&
+                                                        <>
+                                                            <div className="mb-3 mt-2">
+                                                                {errors.map((error, index) => (
+                                                                    <p className="alert alert-danger mt-3 mb-0 text-center" style={{ fontSize: '14px' }} key={index}>{error.message}</p>
+                                                                ))}
+                                                            </div>
+                                                        </>
+                                                    }
 
-                                                    </Col>
-                                                    <Col lg={12}>
+                                                </Col>
+                                                <Col lg={12}>
+                                                    {totalAmount && totalAmount != "" ?
                                                         <p>Total Amount: {checkOutFormData.currency_code ?? '$'}{totalAmount}</p>
-                                                    </Col>
-                                                    <Col lg='12'>
-                                                        <label className='w-100'>
-                                                            Card number
-                                                            <CardNumberElement
-                                                                options={options}
-                                                            />
-                                                        </label>
-                                                    </Col>
-                                                    <Col lg='8'>
-                                                        <label className='w-100'>
-                                                            Expiration date
-                                                            <CardExpiryElement
-                                                                options={options}
-                                                            />
-                                                        </label>
-                                                    </Col>
-                                                    <Col lg='4'>
-                                                        <label className='w-100'>
-                                                            CVC
-                                                            <CardCvcElement
-                                                                options={options}
-                                                            />
-                                                        </label>
-                                                    </Col>
-                                                </Row>
-                                                <button type="submit" className="w-100" disabled={!stripe} style={{ background: '#CEA835' }}>
-                                                    {isSubmitting ? 'Loading...' : 'Pay'}
-                                                </button>
-                                            </form>
-                                        </>
-                                        :
-                                        <div className='DemoWrapper'>
-                                            <div className="Demo">
-                                                <Row>
-                                                    <Col lg={12}>
-                                                        <img src={KoutureLogo} className="kouture-icon" alt="Kouture Konect Logo" />
-                                                    </Col>
-                                                    <Col lg={12}>
-                                                        <p className="text-center">No records found</p>
-                                                    </Col>
-                                                </Row>
-                                            </div>
+                                                        :
+                                                        <p>Total Amount: ...</p>
+                                                    }
+                                                </Col>
+                                                <Col lg='12'>
+                                                    <label className='w-100'>
+                                                        Card number
+                                                        <CardNumberElement
+                                                            options={options}
+                                                        />
+                                                    </label>
+                                                </Col>
+                                                <Col lg='8'>
+                                                    <label className='w-100'>
+                                                        Expiration date
+                                                        <CardExpiryElement
+                                                            options={options}
+                                                        />
+                                                    </label>
+                                                </Col>
+                                                <Col lg='4'>
+                                                    <label className='w-100'>
+                                                        CVC
+                                                        <CardCvcElement
+                                                            options={options}
+                                                        />
+                                                    </label>
+                                                </Col>
+                                            </Row>
+                                            <button type="submit" className="w-100" disabled={!stripe} style={{ background: '#CEA835' }}>
+                                                {isSubmitting ? 'Loading...' : 'Pay'}
+                                            </button>
+                                        </form>
+                                    </>
+                                    :
+                                    <div className='DemoWrapper'>
+                                        <div className="Demo">
+                                            <Row>
+                                                <Col lg={12}>
+                                                    <img src={KoutureLogo} className="kouture-icon" alt="Kouture Konect Logo" />
+                                                </Col>
+                                                <Col lg={12}>
+                                                    <p className="text-center">No records found</p>
+                                                </Col>
+                                            </Row>
                                         </div>
-                                    }
+                                    </div>
+                                }
 
-                                </>
+                            </>
 
 
                         </Card.Body>
