@@ -72,6 +72,11 @@ const ViewProduct = () => {
     const [tempCart, setTempCart] = useState(cookies.tempCart ?? []);
     const [convertedPrice, setConvertedPrice] = useState({currency_code: '$', price: 0.00});
 
+    //For Product Image Zoom
+    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    const [zoomedImage, setZoomedImage] = useState(null);
+    const [isHovered, setIsHovered] = useState(false);
+
     const currentUser = cookies.currentUser;
     const token = cookies.token;
     const userRole = cookies.userRole;
@@ -538,7 +543,14 @@ const ViewProduct = () => {
                                         <Col lg="12">
                                             {images && images.length > 0 ?
                                                 <>
-                                                    <ImageCarousel images={images} finalProductImages={finalProductImages} type="product" />
+                                                    <div style={{position: 'relative'}}>
+                                                        <ImageCarousel images={images} finalProductImages={finalProductImages} type="product" 
+                                                            onHover={(hovered, imageUrl, position) => {
+                                                            setIsHovered(hovered);
+                                                            setZoomedImage(imageUrl);
+                                                            setMousePosition(position);
+                                                        }}/>
+                                                    </div>
                                                     {/* <ImageSlider type="product" slidesToShow={4} images={images} finalProductImages={finalProductImages} onActiveImageChange={handleActiveImageChange} /> */}
                                                 </>
                                                 :
@@ -779,6 +791,21 @@ const ViewProduct = () => {
 
                                                 <Col lg="12">
                                                     <div className="d-flex justify-content-between">
+                                                        {/* Zoomed Image Container */}
+                                                        {isHovered && (
+                                                            <div className="zoomed-image-container">
+                                                                {zoomedImage && (
+                                                                    <div
+                                                                        className="zoomed-image"
+                                                                        style={{
+                                                                            backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}product/${zoomedImage})`,
+                                                                            backgroundPosition: `${mousePosition.x}% ${mousePosition.y}%`,
+                                                                            backgroundSize: '300%',
+                                                                        }}
+                                                                    />
+                                                                )}
+                                                            </div>
+                                                        )}
                                                         <div className='d-flex align-items-center mb-2'>
                                                             <h2 className="fw-600 fs-20 mb-0 ">{product.name ?? "-"}</h2>
                                                             <div className='d-flex align-items-center'>

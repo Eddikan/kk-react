@@ -18,16 +18,25 @@ const ImageSlider = (props) => {
     const images = props.images;
     const finalProductImages = props.finalProductImages;
     const type = props.type ?? 'portfolio';
+    const onHover = props.onHover;
 
     const [allImages, setAllImages] = useState([]);
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
-    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    
+    const handleMouseMove = (e, imageUrl) => {
+        const { clientX, clientY } = e;
+        const imageRect = e.target.getBoundingClientRect();
 
-    const handleMouseMove = (e) => {
-      const { left, top, width, height } = e.target.getBoundingClientRect();
-      const x = ((e.clientX - left) / width) * 100;
-      const y = ((e.clientY - top) / height) * 100;
-      setMousePosition({ x, y });
+        // Calculate relative mouse position
+        const x = ((clientX - imageRect.left) / imageRect.width) * 100;
+        const y = ((clientY - imageRect.top) / imageRect.height) * 100;
+
+        // Notify parent about hover state
+        if (onHover) onHover(true, imageUrl, { x, y });
+    };
+
+    const handleMouseLeave = () => {
+        if (onHover) onHover(false, null, { x: 0, y: 0 }); // Reset hover state
     };
 
     useEffect(() => {
@@ -95,11 +104,25 @@ const ImageSlider = (props) => {
                     >
                         {allImages.map((image, index) => (
                             <SwiperSlide key={index}>
-                                {type == 'product' ?
-                                    <div className="slider-image hover-product-image cursor-pointer"  onMouseMove={handleMouseMove} style={{  backgroundPosition: `${mousePosition.x}% ${mousePosition.y}%`, backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")" }}></div>
-                                    :
-                                    <div className="slider-image hover-product-image cursor-pointer"  onMouseMove={handleMouseMove} style={{  backgroundPosition: `${mousePosition.x}% ${mousePosition.y}%`, backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image.image_url + ")" }}></div>
-                                }
+                                {type === 'product' ? (
+                                    <div
+                                        className="slider-image hover-product-image cursor-pointer"
+                                        onMouseMove={(e) => handleMouseMove(e, image.image_url)}
+                                        onMouseLeave={handleMouseLeave}
+                                        style={{
+                                            backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}product/${image.image_url})`,
+                                        }}
+                                    />
+                                ) : (
+                                    <div
+                                        className="slider-image hover-product-image cursor-pointer"
+                                        onMouseMove={handleMouseMove}
+                                        onMouseLeave={handleMouseLeave}
+                                        style={{
+                                            backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}portfolio/${image.image_url})`,
+                                        }}
+                                    />
+                                )}
                             </SwiperSlide>
                         ))}
                     </Swiper>
