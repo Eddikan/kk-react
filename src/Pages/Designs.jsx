@@ -271,7 +271,7 @@ const Designs = (props) => {
     }, 1000); // 1000 milliseconds (2 seconds) delay
 
     const searchChangeDebounce = debounce((e) => {
-        setSearchValue(e);
+        setSearch(e);
     }, 1000); // 1000 milliseconds (2 seconds) delay
 
     const handleChangeAllCategories = (isChecked) => {
@@ -286,7 +286,7 @@ const Designs = (props) => {
 
         // Set a new debounce timer
         searchChangeDebounce(value);
-        setSearch(value);
+        setSearchValue(value);
     };
 
     const seasonChangeDebounce = debounce((e) => {

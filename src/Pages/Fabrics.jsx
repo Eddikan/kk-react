@@ -221,7 +221,8 @@ const Fabrics = (props) => {
         axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?page=' + currentPage + '&user_id=' + currentUser + '&token=' + token, data).then((response) => {
             const selectedDesigns = response.data.data;
             if (selectedDesigns) {
-                setFabrics(selectedDesigns);
+                const filteredDesigns = selectedDesigns.filter(fabric => fabric.price > 0);
+                setFabrics(filteredDesigns);
                 setFabricsLoading(false);
                 setPageCount(() => response.data.meta.total);
             } else {
