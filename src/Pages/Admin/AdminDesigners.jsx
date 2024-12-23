@@ -19,6 +19,8 @@ import axios from "axios";
 const AdminDesigners = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'token', 'userRole']);
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
+    const token = cookies.token;
     const userRole = cookies.userRole;
     const navigate = useNavigate();
     const [reloadCount, setReloadCount] = useState(0);
@@ -34,7 +36,7 @@ const AdminDesigners = (props) => {
     let PageSize = 10;
 
     const getDesigners = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer');
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const toggleGetUser = (e) => {
@@ -47,7 +49,7 @@ const AdminDesigners = (props) => {
     };
 
     const handleChangePage = (pageNumber) => {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer?page=' + pageNumber + '&user_id=' + currentUser)
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer?page=' + pageNumber + '&current_user_id=' + current_user_id + '&token=' + token)
             .then((response) => {
                 const data = response.data;
                 setCurrentPage(pageNumber);
@@ -70,7 +72,7 @@ const AdminDesigners = (props) => {
 
     async function designerDeleteSubmit(id) {
         setDesignerDeleteLoading(true);
-        axios.delete(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId).then((response) => {
+        axios.delete(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success('Designer deleted successfully!');

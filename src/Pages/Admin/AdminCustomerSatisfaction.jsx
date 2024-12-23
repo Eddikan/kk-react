@@ -15,8 +15,10 @@ import toast from 'react-hot-toast';
 import axios from "axios";
 
 const AdminCustomerSatisfaction = (props) => {
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
+    const token = cookies.token;
     const [reloadCount, setReloadCount] = useState(0);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
@@ -30,7 +32,7 @@ const AdminCustomerSatisfaction = (props) => {
     let PageSize = 10;
 
     const getCustomerSurvey = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'customer-satisfaction-survey');
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'customer-satisfaction-survey?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     function toggleUnderConstruction(message) {
@@ -39,7 +41,7 @@ const AdminCustomerSatisfaction = (props) => {
     };
 
     const handleChangePage = (pageNumber) => {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'customer-satisfaction-survey?page=' + pageNumber + '&user_id=' + currentUser)
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'customer-satisfaction-survey?page=' + pageNumber + '&current_user_id=' + current_user_id + '&token=' + token)
             .then((response) => {
                 const data = response.data;
                 setCurrentPage(pageNumber);

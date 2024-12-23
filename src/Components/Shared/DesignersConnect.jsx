@@ -19,7 +19,7 @@ import 'react-multi-carousel/lib/styles.css';
 
 const DesignersConnect = (props) => {
     const navigate = useNavigate();
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempDesignerWishlist', 'selectedCountry', 'selectedCountryCode']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token', 'isLoggedIn', 'userDetails', 'userRole', 'tempDesignerWishlist', 'selectedCountry', 'selectedCountryCode']);
     const [selectedItemIndex, setSelectedItemIndex] = useState('');
     const [designers, setDesigners] = useState([]);
     const [designersLoading, setDesignersLoading] = useState(true);
@@ -35,6 +35,8 @@ const DesignersConnect = (props) => {
 
     const [reloadCount, setReloadCount] = useState(0);
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
+    const token = cookies.token;
     const userRole = cookies.userRole;
 
     const [tempDesignerWishlist, setTempDesignerWishlist] = useState(cookies.tempDesignerWishlist ?? []);
@@ -45,7 +47,7 @@ const DesignersConnect = (props) => {
     ]);
 
     const getDesigners = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designers?country=' + selectedCountry + '&page=' + currentPage + '&user_id=' + currentUser);
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designers?country=' + selectedCountry + '&page=' + currentPage + '&current_user_id=' + current_user_id + '&token='+ token);
     };
 
     const toggleGetUser = (e) => {
@@ -63,7 +65,7 @@ const DesignersConnect = (props) => {
     }
 
     const handleChangePage = (pageNumber) => {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'designers?country=' + selectedCountry + '&page=' + pageNumber + '&user_id=' + currentUser)
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'designers?country=' + selectedCountry + '&page=' + pageNumber + '&current_user_id=' + current_user_id + '&token=' + token)
             .then((response) => {
                 const data = response.data;
                 setCurrentPage(pageNumber);
@@ -85,7 +87,7 @@ const DesignersConnect = (props) => {
     };
 
     async function wishlistDesignerUpdate(e) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/wishlist/update', e).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 setReloadCount(reloadCount + 1)

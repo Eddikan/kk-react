@@ -31,6 +31,7 @@ const Orders = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'token', 'userRole']);
     const token = cookies.token;
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
     const [reloadCount, setReloadCount] = useState(0);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
@@ -135,7 +136,7 @@ const Orders = (props) => {
     }
 
     const getOrders = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/order?status=' + orderStatus);
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/order?status=' + orderStatus + '&current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const chatBoxModal = (first_name, last_name, image) => {

@@ -51,6 +51,7 @@ const UploadProduct = ({ onStepPlusTwo, onStepMinusTwo, user, singleStep }) => {
 
     const token = cookies.token;
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
     const signupType = cookies.signup_type;
 
     const fetchData = async (e) => {
@@ -131,7 +132,7 @@ const UploadProduct = ({ onStepPlusTwo, onStepMinusTwo, user, singleStep }) => {
         setQuestionnaire3Loading(true);
 
         e.preventDefault();
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, { shop_completed: 1 }).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token, { shop_completed: 1 }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 const user = response.data.data.user;

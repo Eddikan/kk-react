@@ -36,6 +36,7 @@ const Orders = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['userCurrency', 'userCurrencyCode', 'currencyConversions', 'selectedCurrency', 'selectedCurrencyCode', 'currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'selectedCountry', 'tempCart', 'cartItemCount']);
     const token = cookies.token;
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
     const currencyConversions = cookies.currencyConversions ?? {};
     const selectedCurrencyCode = cookies.selectedCurrencyCode || cookies.userCurrencyCode || '$'
     const [reloadCount, setReloadCount] = useState(0);
@@ -63,7 +64,7 @@ const Orders = (props) => {
     }
 
     const getOrder = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'order/' + orderId);
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'order/' + orderId + '?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const chatBoxModal = (first_name, last_name, image) => {
@@ -78,7 +79,7 @@ const Orders = (props) => {
 
     async function reorderProducts(e) {
         // setReorderLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart/bulk', { order_items: e, user_id: currentUser }).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart/bulk?current_user_id=' + current_user_id + '&token=' + token, { order_items: e, user_id: currentUser }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 const data = response.data.data;

@@ -16,6 +16,7 @@ const initialBusinessHours = {
 const SetAvailability = ({ user, reload, token, onStepPlusOne }) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
     const designerId = cookies.currentUserDesigner;
     const [isSundayChecked, setIsSundayChecked] = useState(false);
     const [isMondayChecked, setIsMondayChecked] = useState(false);
@@ -52,15 +53,15 @@ const SetAvailability = ({ user, reload, token, onStepPlusOne }) => {
    
 
     const postBusinessHours = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/availability?user_id=' + currentUser, data);
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/availability?current_user_id=' + current_user_id + '&token=' + token, data);
     };
 
     const getBusinessHours = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/availability/' + designerId);
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/availability/' + designerId + '?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const putBusinessHourss = async (data) => {
-        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/availability/' + designerId, data);
+        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/availability/' + designerId + '?current_user_id=' + current_user_id + '&token=' + token, data);
     };
 
 

@@ -18,11 +18,13 @@ import { FaArrowRight } from "react-icons/fa6";
 import CurrencyConverter from 'Utils/CurrencyConverter';
 
 const Fabrics = (props) => {
-    const [cookies, setCookie, removeCookie] = useCookies(['userCurrency', 'userCurrencyCode', 'currencyConversions', 'selectedCurrency', 'selectedCurrencyCode', 'currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'selectedCountry', 'tempCart', 'cartItemCount']);
+    const [cookies, setCookie, removeCookie] = useCookies(['userCurrency', 'userCurrencyCode', 'currencyConversions', 'selectedCurrency', 'selectedCurrencyCode', 'currentUser', 'token', 'isLoggedIn', 'userDetails', 'userRole', 'selectedCountry', 'tempCart', 'cartItemCount']);
     const userRole = cookies.userRole;
     const navigate = useNavigate();
     const reloadCount = props.reloadCount;
     const currentUser = props.currentUser;
+    const current_user_id = cookies.currentUser;
+    const token = cookies.token;
     const limit = props.limit ?? 16;
     const [fabrics, setFabrics] = useState([]);
     const [fabricsLoading, setFabricsLoading] = useState(true);
@@ -58,7 +60,7 @@ const Fabrics = (props) => {
     };
 
     async function toggleSortFabrics(type, sort) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/fabric' + type + sort).then((response) => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/fabric' + type + sort + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const selectedFabrics = response.data.data;
             if (selectedFabrics) {
                 setFabrics(selectedFabrics);
@@ -75,7 +77,7 @@ const Fabrics = (props) => {
 
 
     async function toggleAddViewCount(id) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/view/' + id).then((response) => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/view/' + id + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
             } else {
@@ -91,7 +93,7 @@ const Fabrics = (props) => {
     }
 
     async function wishlistUpdate(e) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'wishlist/update', e).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 fetchData(currentUser);

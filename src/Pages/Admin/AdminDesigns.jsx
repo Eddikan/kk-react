@@ -26,6 +26,7 @@ import toast from 'react-hot-toast';
 const AdminDesigns = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'token', 'userRole']);
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
     const token = cookies.token;
     const userRole = cookies.userRole;
     const navigate = useNavigate();
@@ -74,7 +75,7 @@ const AdminDesigns = (props) => {
     };
 
     const getPortfolio = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/design');
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/design?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     function toggleShareModal() {
@@ -129,7 +130,7 @@ const AdminDesigns = (props) => {
     }
 
     const handleChangePage = (pageNumber) => {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/design?page=' + pageNumber + '&user_id=' + currentUser)
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/design?page=' + pageNumber + '&current_user_id=' + current_user_id)
             .then((response) => {
                 const data = response.data;
                 setCurrentPage(pageNumber);
@@ -152,7 +153,7 @@ const AdminDesigns = (props) => {
 
     async function PortfolioDeleteSubmit(e) {
         setPortfolioDeleteLoading(true);
-        axios.delete(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/' + portfolioId + '?user_id=' + currentUser + '&token=' + token).then((response) => {
+        axios.delete(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/' + portfolioId + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success('Design deleted successfully!');
@@ -193,7 +194,7 @@ const AdminDesigns = (props) => {
         [reloadCount]);
 
     async function toggleAddViewCount(id) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/' + id).then((response) => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/' + id + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 // toast.success('Design saved as draft successfully!');

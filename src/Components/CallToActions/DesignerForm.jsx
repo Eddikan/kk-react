@@ -56,6 +56,7 @@ const BecomeDesignerForm = (props) => {
 
     const token = cookies.token;
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
     const signupType = cookies.signup_type;
 
     const addPricingStructure = () => {
@@ -132,7 +133,7 @@ const BecomeDesignerForm = (props) => {
     async function questionnaire2Submit(e) {
         e.preventDefault();
         setQuestionnaire2Loading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer?user_id=' + currentUser + '&token=' + token, { ...questionnaire2Data, areas_of_specialization: selectedSpecialization, user_id: currentUser, portfolio_items: portfolioItems, availability: availability, pricing_structure: pricingStructure, post_type: postType }).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer?current_user_id=' + current_user_id + '&token=' + token, { ...questionnaire2Data, areas_of_specialization: selectedSpecialization, user_id: currentUser, portfolio_items: portfolioItems, availability: availability, pricing_structure: pricingStructure, post_type: postType }).then((response) => {
             const status = response.data.status;
             if (status == 'Success') {
                 const data = response.data.data;

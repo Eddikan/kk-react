@@ -26,6 +26,7 @@ const DesignerWishlists = (props) => {
 
     const [tempDesignerWishlist, setTempDesignerWishlist] = useState(cookies.tempDesignerWishlist ?? []);
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
     const token = cookies.token;
 
     const fetchData = async (e) => {
@@ -46,7 +47,7 @@ const DesignerWishlists = (props) => {
     };
 
     async function designerWishlistUpdate(e) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/wishlist/update', e).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 fetchData({ currentUser: currentUser, token: token });
@@ -59,7 +60,7 @@ const DesignerWishlists = (props) => {
     }
 
     async function toggleAddViewCount(id) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/' + id).then((response) => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/' + id + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 // toast.success('Design saved as draft successfully!');

@@ -10,6 +10,7 @@ import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoEyeOutline, IoHeartOutline } from "react-icons/io5";
 import PlaceholderImage from 'Assets/images/placeholders/image.png'
+import { useCookies } from 'react-cookie';
 import axios from 'axios';
 
 const Fabrics = (props) => {
@@ -17,9 +18,13 @@ const Fabrics = (props) => {
     const reloadCount = props.reloadCount;
     const currentUser = props.currentUser;
     const limit = props.limit;
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
     const [selectedItemIndex, setSelectedItemIndex] = useState('');
     const [fabrics, setFabrics] = useState([]);
     const [fabricsLoading, setFabricsLoading] = useState(true);
+
+    const current_user_id = cookies.currentUser;
+    const token = cookies.token;
 
     const fetchData = async (e) => {
         try {
@@ -44,7 +49,7 @@ const Fabrics = (props) => {
     }
 
     async function toggleSortFabrics(type, sort) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/design' +type+sort).then((response) => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/design' +type+sort + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const selectedFabrics = response.data.data;
             if(selectedFabrics) {
                 setFabrics(selectedFabrics);
@@ -60,7 +65,7 @@ const Fabrics = (props) => {
     }
 
     async function toggleAddViewCount(id) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/view/'+id).then((response) => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/view/'+id + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
                 // toast.success('Design saved as draft successfully!');

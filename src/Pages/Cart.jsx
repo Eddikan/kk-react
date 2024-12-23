@@ -36,8 +36,10 @@ const Cart = (props) => {
     // Access individual query parameters using get method
     const item = searchParams.get('item');
 
-    const [cookies, setCookie, removeCookie] = useCookies(['userCurrency', 'userCurrencyCode', 'currencyConversions', 'selectedCurrency', 'selectedCurrencyCode', 'currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'selectedCountry', 'tempCart', 'cartItemCount']);
+    const [cookies, setCookie, removeCookie] = useCookies(['userCurrency', 'userCurrencyCode', 'currencyConversions', 'selectedCurrency', 'selectedCurrencyCode', 'currentUser','token' , 'isLoggedIn', 'userDetails', 'userRole', 'selectedCountry', 'tempCart', 'cartItemCount']);
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
+    const token = cookies.token;
     const currency = cookies.selectedCurrency || cookies.userCurrency || 'USD';
     const currencyCode = cookies.selectedCurrencyCode || cookies.userCurrencyCode || '$';
     const [reloadCount, setReloadCount] = useState(0);
@@ -64,23 +66,23 @@ const Cart = (props) => {
     }
 
     const getUserCartItems = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/cart');
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/cart?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const getUser = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser);
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const postCheckOut = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'order', data);
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'order', data + '?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const updateQuantity = async (data) => {
-        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'cart/' + data.id, data);
+        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'cart/' + data.id + '?current_user_id=' + current_user_id + '&token=' + token, data);
     };
 
     const deleteCartItem = async () => {
-        return await axios.delete(process.env.REACT_APP_API_ENDPOINT + 'cart/' + cartItemId);
+        return await axios.delete(process.env.REACT_APP_API_ENDPOINT + 'cart/' + cartItemId + '?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const deleteTempCartItem = (id) => {

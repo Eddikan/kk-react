@@ -28,6 +28,8 @@ const AddressStep = ({ user, currentUser, reload, token }) => {
     const [provincesLoading, setProvincesLoading] = useState(false);
     const [citiesLoading, setCitiesLoading] = useState(false);
 
+    const current_user_id = cookies.currentUser;
+
     const getCountryCode = (countryName) => {
         // Find the country code based on the country name
         const entries = Object.entries(CountryCodes);
@@ -208,7 +210,7 @@ const AddressStep = ({ user, currentUser, reload, token }) => {
             e.preventDefault();
             
             setProfileFormLoading(true);
-            axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, { ...profileFormData, address_complete: 1, latitude: coordinates.latitude, longitude: coordinates.longitude }).then((response) => {
+            axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token, { ...profileFormData, address_complete: 1, latitude: coordinates.latitude, longitude: coordinates.longitude }).then((response) => {
                 const success = response.data.status;
                 if (success == 'Success') {
                     const data = response.data.data;
@@ -233,7 +235,7 @@ const AddressStep = ({ user, currentUser, reload, token }) => {
 
     async function submitBack(e) {
         e.preventDefault();
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 reload();

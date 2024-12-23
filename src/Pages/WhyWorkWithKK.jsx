@@ -39,6 +39,7 @@ const WhyWorkWithKK = (props) => {
 
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
     const userRole = cookies.userRole;
     const token = cookies.token;
     let PageSize = 10;
@@ -51,7 +52,7 @@ const WhyWorkWithKK = (props) => {
 
     async function onFilterChange(data) {
         setEcoFabricsLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?user_id=' + currentUser + '&token=' + token, data).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?current_user_id=' + current_user_id + '&token=' + token, data).then((response) => {
             const selectedDesigns = response.data.data;
             if (selectedDesigns) {
                 setEcofabrics(selectedDesigns);
@@ -67,7 +68,7 @@ const WhyWorkWithKK = (props) => {
     }
 
     async function onWishlistChange(data) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?user_id=' + currentUser + '&token=' + token, data).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?current_user_id=' + current_user_id + '&token=' + token, data).then((response) => {
             const selectedDesigns = response.data.data;
             if (selectedDesigns) {
                 setEcofabrics(selectedDesigns);
@@ -103,7 +104,7 @@ const WhyWorkWithKK = (props) => {
     };
 
     async function wishlistUpdate(e) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'wishlist/update', e).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 onWishlistChange({
@@ -144,7 +145,7 @@ const WhyWorkWithKK = (props) => {
     };
 
     async function toggleAddViewCount(id) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/view/' + id).then((response) => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/view/' + id + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 // toast.success('Fabric saved as draft successfully!');

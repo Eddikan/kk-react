@@ -627,6 +627,7 @@ const VideoConferencing = (props) => {
     const navigate = useNavigate();
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'currentUserSeller', 'currentUserDesigner']);
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
     const userDetails = cookies.userDetails;
     const currentUserDesigner = cookies.currentUserDesigner;
     const currentUserSeller = cookies.currentUserSeller;
@@ -671,15 +672,15 @@ const VideoConferencing = (props) => {
     let room = document.querySelector("whereby-embed");
 
     const getAppointment = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentId);
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentId + '?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const putSchedule = async (data) => {
-        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentId, data);
+        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentId + '?current_user_id=' + current_user_id  + '&token=' + token, data);
     };
 
     const putUser = async (data) => {
-        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, data);
+        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token, data);
     };
 
     const toggleSaveAppointmentModal = () => {
@@ -771,7 +772,7 @@ const VideoConferencing = (props) => {
         });
 
         e.preventDefault();
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token + '&gender=' + value).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token + '&gender=' + value).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 // toast.success('Profile updated successfully!');

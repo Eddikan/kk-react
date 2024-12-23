@@ -23,6 +23,7 @@ const ImageDragAndDrop = (props) => {
 
   const token = cookies.token;
   const currentUser = cookies.currentUser;
+  const current_user_id = cookies.currentUser;
 
   const filesUploaded = (e) => {
     props.onImagesChange(e);
@@ -55,7 +56,7 @@ const ImageDragAndDrop = (props) => {
 
       try {
         const response = await axios.post(
-          `${process.env.REACT_APP_API_ENDPOINT}${imageType}/image?user_id=${currentUser}&token=${token}`,
+          `${process.env.REACT_APP_API_ENDPOINT}${imageType}/image?current_user_id=${current_user_id}&token=${token}`,
           dataArray,
           {
             headers: {

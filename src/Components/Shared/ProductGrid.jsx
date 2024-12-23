@@ -21,6 +21,7 @@ const ProductGrid = (props) => {
 
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token', 'userRole']);
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
     const userRole = cookies.userRole;
     const token = cookies.token;
 
@@ -32,7 +33,7 @@ const ProductGrid = (props) => {
 
 
     async function wishlistUpdate(e, id) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'wishlist/update', e).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 setReloadCount(reloadCount + 1);

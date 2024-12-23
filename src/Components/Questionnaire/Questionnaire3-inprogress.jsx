@@ -51,6 +51,7 @@ const Questionnaire3 = (props) => {
 
     const token = cookies.token;
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
     const signupType = cookies.signup_type;
 
     const fetchData = async (e) => {
@@ -130,7 +131,7 @@ const Questionnaire3 = (props) => {
     async function questionnaire3Submit(e) {
         e.preventDefault();
         setQuestionnaire3Loading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'seller?user_id=' + currentUser + '&token=' + token, {...questionnaire3Data, areas_of_specialization: selectedSpecialization, user_id: currentUser, products: productItems, availability: availability, post_type: postType  }).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'seller?current_user_id=' + current_user_id + '&token=' + token, {...questionnaire3Data, areas_of_specialization: selectedSpecialization, user_id: currentUser, products: productItems, availability: availability, post_type: postType  }).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
                 hideAll(4);

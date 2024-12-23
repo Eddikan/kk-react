@@ -90,6 +90,7 @@ const Fabrics = (props) => {
     const weaves = ['Plain', 'Twill', 'Satin', 'Basket', 'Herringbone', 'Jacquard', 'Dobby', 'Leno']; // Replace with your array of weave options
 
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
     const userRole = cookies.userRole;
     const token = cookies.token;
     const user = cookies.userDetails;
@@ -218,7 +219,7 @@ const Fabrics = (props) => {
     async function onFilterChange(data) {
         setFabricsLoading(true);
         setFabricsFilter(data);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?page=' + currentPage + '&user_id=' + currentUser + '&token=' + token, data).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?page=' + currentPage + '&current_user_id=' + current_user_id + '&token=' + token, data).then((response) => {
             const selectedDesigns = response.data.data;
             if (selectedDesigns) {
                 setFabrics(selectedDesigns);
@@ -235,7 +236,7 @@ const Fabrics = (props) => {
     }
 
     async function onWishlistChange(data) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?user_id=' + currentUser + '&token=' + token, data).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?current_user_id=' + current_user_id + '&token=' + token, data).then((response) => {
             const selectedDesigns = response.data.data;
             if (selectedDesigns) {
                 setFabrics(selectedDesigns);
@@ -396,7 +397,7 @@ const Fabrics = (props) => {
     };
 
     async function wishlistUpdate(e) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'wishlist/update', e).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 onWishlistChange({
@@ -447,7 +448,7 @@ const Fabrics = (props) => {
     };
 
     async function toggleSortFabrics(type, sort) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/fabric' + type + sort).then((response) => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/fabric' + type + sort + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const selectedDesigns = response.data.data;
             if (selectedDesigns) {
                 setFabrics(selectedDesigns);
@@ -463,7 +464,7 @@ const Fabrics = (props) => {
     }
 
     async function toggleAddViewCount(id) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/view/' + id).then((response) => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/view/' + id + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 // toast.success('Fabric saved as draft successfully!');
@@ -478,7 +479,7 @@ const Fabrics = (props) => {
 
     // Pagination
     const handleChangePage = (pageNumber) => {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?page=' + pageNumber + '&user_id=' + currentUser, fabricsFilter)
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?page=' + pageNumber + '&current_user_id=' + current_user_id + '$token=' + token, fabricsFilter)
             .then((response) => {
                 const data = response.data;
                 setCurrentPage(pageNumber);
@@ -501,7 +502,7 @@ const Fabrics = (props) => {
 
     async function addToCart(e) {
         setAddToCartLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart', e).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success("Fabric added to cart successfully!");

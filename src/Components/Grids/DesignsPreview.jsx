@@ -9,17 +9,22 @@ import { BsThreeDots } from "react-icons/bs";
 import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoEyeOutline, IoHeartOutline } from "react-icons/io5";
+import { useCookies } from 'react-cookie';
 import PlaceholderImage from 'Assets/images/placeholders/image.png'
 import axios from 'axios';
 
 const Designs = (props) => {
     const navigate = useNavigate();
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
     const reloadCount = props.reloadCount;
     const currentUser = props.currentUser;
     const limit = props.limit;
     const [selectedItemIndex, setSelectedItemIndex] = useState('');
     const [designs, setDesigns] = useState([]);
     const [designsLoading, setDesignsLoading] = useState(true);
+
+    const current_user_id = cookies.currentUser;
+    const token = cookies.token;
 
     const fetchData = async (e) => {
         try {
@@ -44,7 +49,7 @@ const Designs = (props) => {
     }
 
     async function toggleSortDesigns(type, sort) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/design' +type+sort).then((response) => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/design' +type+sort + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const selectedDesigns = response.data.data;
             if(selectedDesigns) {
                 setDesigns(selectedDesigns);
@@ -60,7 +65,7 @@ const Designs = (props) => {
     }
 
     async function toggleAddViewCount(id) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/'+id).then((response) => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/'+id + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
                 // toast.success('Design saved as draft successfully!');

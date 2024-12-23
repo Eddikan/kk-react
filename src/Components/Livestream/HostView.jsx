@@ -8,14 +8,19 @@ import { ImEmbed2 } from "react-icons/im";
 import { IoShareSocial, IoInformationOutline, IoVideocam, IoCloseOutline, IoDocumentOutline, IoEyeOutline } from "react-icons/io5";
 // add styles for the video UI
 import '@stream-io/video-react-sdk/dist/css/styles.css';
+import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
 const MyLivestreamUI = ({ livestreamId }) => {
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
     const [liveStatus, setLiveStatus] = useState('standby');
     const [shareModalShow, setShareModalShow] = useState(false);
     const [copyEmbedLink, setCopyEmbedLink] = useState(false);
     const [copy, setCopy] = useState(false)
+
+    const current_user_id = cookies.currentUser;
+    const token = cookies.token;
 
     let iframeLink = `<iframe src="https://kouture-konect.web.app/designer/live/stream/${livestreamId}" height="316" width="404" allowfullscreen lazyload frameborder="0" allow="clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
 
@@ -40,7 +45,7 @@ const MyLivestreamUI = ({ livestreamId }) => {
     const isCallLive = useIsCallLive();
 
     const putStream = async (data) => {
-        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'livestream/'+livestreamId, data);
+        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'livestream/'+livestreamId + '?current_user_id=' + current_user_id + '&token=' + token, data);
     };
 
     const stopLive = (e) => {

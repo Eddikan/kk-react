@@ -73,6 +73,7 @@ const EditDesigner = () => {
     const [areasOfSpecialization, setAreaOfSpecialization] = useState(initialDesignerData.areas_of_specialization);
 
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
     const token = cookies.token;
 
     const days = Array.from({ length: 31 }, (_, i) => i + 1);
@@ -130,7 +131,7 @@ const EditDesigner = () => {
     async function submitProfile(e) {
         e.preventDefault();
         setUserFormLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + designerId + '?user_id=' + designerId + '&token=' + token, userFormData).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + designerId + '?user_id=' + designerId + '&current_user_id=' + current_user_id + '&token=' + token, userFormData).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 const data = response.data.data;
@@ -156,7 +157,7 @@ const EditDesigner = () => {
         if (areasOfSpecializationData.length > 0) {
             e.preventDefault();
             setUserFormLoading(true);
-            axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designer.id + '?user_id=' + designerId + '&token=' + token, { areas_of_specialization: areasOfSpecializationData }).then((response) => {
+            axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designer.id + '?user_id=' + designerId + '&current_user_id=' + current_user_id + '&token=' + token, { areas_of_specialization: areasOfSpecializationData }).then((response) => {
                 const success = response.data.status;
                 if (success == 'Success') {
                     const data = response.data.data;

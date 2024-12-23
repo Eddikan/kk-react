@@ -56,7 +56,7 @@ const NewProductNormal = (props) => {
     const [productLoading, setProductLoading] = useState(false);
     const [productDraftLoading, setProductDraftLoading] = useState(false);
     const [reloadCount, setReloadCount] = useState(0);
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
     const [colors, setColors] = useState([]);
     const [certifications, setCertifications] = useState([]);
     const [otherComposition, setOtherComposition] = useState('');
@@ -69,6 +69,7 @@ const NewProductNormal = (props) => {
     const [selectedSustainabilities, setSelectedSustainabilities] = useState([]);
 
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
     const token = cookies.token;
 
     const reloadPage = (e) => {
@@ -249,7 +250,7 @@ const NewProductNormal = (props) => {
             } else {
                 if (productData.image_urls) {
                     setProductLoading(true);
-                    axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser + '&token=' + token, { ...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, sustainability: selectedSustainabilities, certifications: certifications, status: 'Active' }).then((response) => {
+                    axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?current_user_id=' + current_user_id + '&token=' + token, { ...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, sustainability: selectedSustainabilities, certifications: certifications, status: 'Active' }).then((response) => {
                         const success = response.data.status;
                         if (success == 'Success') {
                             toast.success('Fabric added successfully!');
@@ -279,7 +280,7 @@ const NewProductNormal = (props) => {
         
         e.preventDefault();
         setProductDraftLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser + '&token=' + token, { ...productData, eco_friendly: eco_friendly, sustainability: selectedSustainabilities, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, certifications: certifications, status: 'Draft' }).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?current_user_id=' + current_user_id + '&token=' + token, { ...productData, eco_friendly: eco_friendly, sustainability: selectedSustainabilities, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, certifications: certifications, status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success('Fabric saved as draft successfully!');

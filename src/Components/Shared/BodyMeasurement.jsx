@@ -579,9 +579,10 @@ const BodyMeasurement = ({ userData }) => {
     const [bodyMeasurementFormData, setBodyMeasurementFormData] = useState(initialBodyMeasurementData);
     const [formLoading, setFormLoading] = useState(false);
     const [user, setUser] = useState(userData);
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
 
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
     const token = cookies.token;
 
     const toggleMeasurementGuideModal = (id) => {
@@ -624,7 +625,7 @@ const BodyMeasurement = ({ userData }) => {
 
         const updatedProfileFormData = {body_measurement: JSON.stringify(bodyMeasurementFormData)};
 
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, updatedProfileFormData).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token, updatedProfileFormData).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 const data = response.data.data;

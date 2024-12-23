@@ -91,6 +91,7 @@ const DesignerProfile = () => {
     const [userWishlist, setUserWishlist] = useState(false);
 
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
     const userDetails = cookies.userDetails;
     const userRole = cookies.userRole;
     const token = cookies.token;
@@ -114,7 +115,7 @@ const DesignerProfile = () => {
     const [uploadStatus, setUploadStatus] = useState("standby");
 
     const getBusinessHours = async (designerId) => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/availability/' + designerId);
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/availability/' + designerId + '?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     function toggleChatbox(id, first_name, last_name, image, message) {
@@ -212,7 +213,7 @@ const DesignerProfile = () => {
     };
 
     async function wishlistDesignerUpdate(e) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/wishlist/update', e).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 setReloadCount(reloadCount + 1 )

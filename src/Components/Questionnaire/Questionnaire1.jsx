@@ -34,6 +34,9 @@ const Questionnaire1 = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'token']);
     const selectedSignupType = cookies.signup_type;
 
+    const current_user_id = cookies.currentUser;
+    const token = cookies.token;
+
     const toggleSchedule = (e) => {
         e.preventDefault();
         setScheduleShow(!scheduleShow);
@@ -67,7 +70,7 @@ const Questionnaire1 = (props) => {
     async function questionnaire1Submit(e) {
         e.preventDefault();
         setQuestionnaire1Loading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/'+currentUser, { ...questionnaire1Data, interested_in: interestedIn } ).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/'+currentUser + '?current_user_id=' + current_user_id + '&token=' + token, { ...questionnaire1Data, interested_in: interestedIn } ).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 // reloadPage(true);

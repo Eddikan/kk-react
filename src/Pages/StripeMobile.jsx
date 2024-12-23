@@ -61,11 +61,11 @@ const StripeMobile = () => {
     const [reloadCount, setReloadCount] = useState(0);
 
     const putCheckOut = async (data, orderID) => {
-        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'order/' + orderID, data);
+        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'order/' + orderID + '?current_user_id=' + data.user_id + '&token=' + data.token, data);
     };
 
     const postCheckOut = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'order', data);
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'order?current_user_id=' + data.user_id + '&token=' + data.token, data);
     };
 
     const getUserOrder = async (orderID) => {
@@ -73,15 +73,15 @@ const StripeMobile = () => {
     };
 
     const createUpsInternationalShipment = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'ups/v2/create/shipment/international', data);
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'ups/v2/create/shipment/international?current_user_id=' + data.user_id + '&token=' + data.token, data);
     };
 
     const createGigmShipment = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'gigm/v2/create/shipment', data);
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'gigm/v2/create/shipment?current_user_id=' + data.user_id + '&token=' + data.token, data);
     };
 
-    const getUserCartItems = async (userID) => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + userID + '/cart');
+    const getUserCartItems = async (userID,token) => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + userID + '/cart?current_user_id' + userID + '&token=' + token);
     };
 
     const checkOutSubmitStripe = async (event) => {
@@ -113,7 +113,7 @@ const StripeMobile = () => {
         // Send payment method to your backend to create a payment intent
         if (checkOutFormData) {
             try {
-                const response = await axios.post(process.env.REACT_APP_API_ENDPOINT + 'create-intent', {
+                const response = await axios.post(process.env.REACT_APP_API_ENDPOINT + 'create-intent?current_user_id=' + checkOutFormData.user_id + '&token=' + checkOutFormData.token, {
                     payment_method_id: paymentMethod.id,
                     total_amount: checkOutFormData.total_amount_converted, // Example amount in cents (e.g., $50.00)
                     currency: checkOutFormData.currency_conversions ?? 'USD',
@@ -389,7 +389,7 @@ const StripeMobile = () => {
                         setCheckOutFormData(message.payload.checkout_data);
                         setTotalAmount(message.payload.checkout_data.total_amount_converted);
                         if (message.payload.checkout_data.user_id) {
-                            getUserCartItems(message.payload.checkout_data.user_id)
+                            getUserCartItems(message.payload.checkout_data.user_id,message.payload.checkout_data.token)
                                 .then((response) => {
                                     const cartItemsData = response.data.data;
                                     if (cartItemsData) {

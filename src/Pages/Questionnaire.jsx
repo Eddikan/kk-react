@@ -54,6 +54,7 @@ const Questionnaire = () => {
   const [questionnaire5Show, setQuestionnaire5Show] = useState(false);
 
   const currentUser = cookies.currentUser;
+  const current_user_id = cookies.currentUser;
   const isLoggedIn = cookies.isLoggedIn;
   const userDetails = cookies.userDetails;
   const userRole = cookies.userRole;
@@ -67,11 +68,11 @@ const Questionnaire = () => {
   };
 
   const getUser = async () => {
-    return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser);
+    return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token);
   };
 
   const putUser = async (data) => {
-    return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser, data);
+    return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token, data);
   };
 
   const reloadPage = (e) => {

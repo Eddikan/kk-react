@@ -23,7 +23,7 @@ import axios from "axios";
 import toast from 'react-hot-toast';
 
 const OrderTracking = (props) => {
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'token']);
     const { orderItemId } = useParams();
     const [reloadCount, setReloadCount] = useState(0);
     const [chatBox, setChatBox] = useState(false);
@@ -48,6 +48,9 @@ const OrderTracking = (props) => {
     const [user, setUser] = useState('');
     const [orderLoading, setOrderLoading] = useState(true);
 
+    const current_user_id = cookies.currentUser;
+    const token = cookies.token;
+
     const chatBoxModal = () => {
         setChatBox(true);
     }
@@ -58,7 +61,7 @@ const OrderTracking = (props) => {
     }
 
     const getAddCarts = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + '/#');
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + '/#?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     // const getUser = async () => {
@@ -66,7 +69,7 @@ const OrderTracking = (props) => {
     // };
 
     const getOrderItem = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'order/item/' + orderItemId);
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'order/item/' + orderItemId + '?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     function handleOnEnter(text) {

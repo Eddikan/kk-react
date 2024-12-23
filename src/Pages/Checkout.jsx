@@ -85,8 +85,10 @@ const Cart = ({ props }) => {
 
     // Access individual query parameters using get method
     const item = searchParams.get('item');
-    const [cookies, setCookie, removeCookie] = useCookies(['userCurrency', 'userCurrencyCode', 'currencyConversions', 'selectedCurrency', 'selectedCurrencyCode', 'currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'selectedCountry', 'tempCart', 'cartItemCount', 'selectedCartItems', 'cookieCheckoutDesigner']);
+    const [cookies, setCookie, removeCookie] = useCookies(['userCurrency', 'userCurrencyCode', 'currencyConversions', 'selectedCurrency', 'selectedCurrencyCode', 'currentUser', 'token', 'isLoggedIn', 'userDetails', 'userRole', 'selectedCountry', 'tempCart', 'cartItemCount', 'selectedCartItems', 'cookieCheckoutDesigner']);
     const currency = cookies.selectedCurrency || cookies.userCurrency || 'USD';
+    const current_user_id = cookies.currentUser;
+    const token = cookies.token;
     const currencyCode = cookies.selectedCurrencyCode || cookies.userCurrencyCode || '$';
     const [reloadCount, setReloadCount] = useState(0);
     const [formStatus, setFormStatus] = useState('standby');
@@ -337,42 +339,42 @@ const Cart = ({ props }) => {
     };
 
     const getUserCartItems = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/cart');
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/cart?current_user_id='+ current_user_id + '&token=' + token);
     };
 
     const getUser = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser);
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id='+ current_user_id + '&token=' + token);
     };
 
     const getInternationalRates = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'ups/v2/get/rating/international', data);
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'ups/v2/get/rating/international?current_user_id='+ current_user_id + '&token=' + token, data);
     };
 
     const getGigmRates = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'gigm/v2/get/shipment/price', data);
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'gigm/v2/get/shipment/price?current_user_id='+ current_user_id + '&token=' + token, data);
     };
 
     const createUpsInternationalShipment = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'ups/v2/create/shipment/international', data);
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'ups/v2/create/shipment/international?current_user_id='+ current_user_id + '&token=' + token, data);
     };
 
     const createGigmShipment = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'gigm/v2/create/shipment', data);
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'gigm/v2/create/shipment?current_user_id='+ current_user_id + '&token=' + token, data);
     };
 
     const postCheckOut = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'order', data);
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'order?current_user_id='+ current_user_id + '&token=' + token, data);
     };
 
     const updateQuantity = async (data) => {
-        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'cart/' + data.id, data);
+        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'cart/' + data.id + '?current_user_id='+ current_user_id + '&token=' + token, data);
     };
 
     const deleteCartItem = async () => {
-        return await axios.delete(process.env.REACT_APP_API_ENDPOINT + 'cart/' + cartItemId);
+        return await axios.delete(process.env.REACT_APP_API_ENDPOINT + 'cart/' + cartItemId + '?current_user_id='+ current_user_id + '&token=' + token);
     };
 
-    const postIntent = async (data) => await axios.post(process.env.REACT_APP_API_ENDPOINT + 'create-intent', data);
+    const postIntent = async (data) => await axios.post(process.env.REACT_APP_API_ENDPOINT + 'create-intent?current_user_id='+ current_user_id + '&token=' + token, data);
 
     const imperialCountries = ['US', 'UK', 'LR', 'MM']; // Add more countries as needed
 

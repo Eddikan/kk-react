@@ -29,6 +29,7 @@ const Orders = (props) => {
     const token = cookies.token;
     const orderStatus = props.orderStatus;
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
     const [reloadCount, setReloadCount] = useState(0);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
@@ -62,7 +63,9 @@ const Orders = (props) => {
         return await axios.get(
             process.env.REACT_APP_API_ENDPOINT +
             'user/' + currentUser + 
-            '/order?status=' + (orderStatus === 'all' ? '' : orderStatus)
+            '/order?status=' + (orderStatus === 'all' ? '' : orderStatus) +
+            '&current_user_id=' + current_user_id +
+            '&token=' + token
         );
     };    
 
@@ -78,7 +81,7 @@ const Orders = (props) => {
 
     async function reorderProducts(e) {
         // setReorderLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart/bulk', { order_items: e, user_id: currentUser }).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart/bulk?current_user_id=' + current_user_id + '&token=' + token, { order_items: e, user_id: currentUser }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 const data = response.data.data;

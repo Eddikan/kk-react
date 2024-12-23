@@ -28,13 +28,14 @@ const EmailConfirmation = () => {
   const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'token']);
 
   const currentUser = cookies.currentUser;
+  const current_user_id = cookies.currentUser;
   const token = cookies.token;
   const isLoggedIn = cookies.isLoggedIn;
   const userDetails = cookies.userDetails;
   const userRole = cookies.userRole;
 
   const getUser = async () => {
-    return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser);
+    return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token);
   };
   useEffect(() =>{
     if(!currentUser){
@@ -43,7 +44,7 @@ const EmailConfirmation = () => {
   })
   async function resendVerificationEmail(e) {
     setFormStatus('loading');
-    axios.post(process.env.REACT_APP_API_ENDPOINT + 'resend/verification/' + currentUser + '?user_id=' + currentUser + '&token=' + token, {
+    axios.post(process.env.REACT_APP_API_ENDPOINT + 'resend/verification/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token, {
       user_id: currentUser
     }).then((response) => {
       const success = response.data.status;

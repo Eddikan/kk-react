@@ -19,7 +19,7 @@ import toast from 'react-hot-toast';
 
 
 const RateReview = (props) => {
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'token']);
     const { productId } = useParams();
     const [reloadCount, setReloadCount] = useState(0);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
@@ -31,6 +31,9 @@ const RateReview = (props) => {
     const [text, setText] = useState('')
     const [activeImage, setActiveImage] = useState('');
 
+    const current_user_id = cookies.currentUser;
+    const token = cookies.token;
+
     const options = {
         year: 'numeric',
         month: 'long',
@@ -39,7 +42,7 @@ const RateReview = (props) => {
     const today = (new Date(product.created_at)).toLocaleDateString('en-ES', options);
 
     const getProduct = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/' + productId);
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/' + productId + '?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     function toggleUnderConstruction(message) {

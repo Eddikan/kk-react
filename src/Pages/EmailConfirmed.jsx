@@ -34,13 +34,14 @@ const EmailConfirmation = () => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'token']);
 
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
     const token = cookies.token;
     const isLoggedIn = cookies.isLoggedIn;
     const userDetails = cookies.userDetails;
     const userRole = cookies.userRole;
 
     const getUser = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/'+userCode+'/details');
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/'+userCode+'/details?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     async function goToQuestionnaire(e) {

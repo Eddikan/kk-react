@@ -50,6 +50,7 @@ const Designs = (props) => {
     const headerSearch = query.get('search');
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites', 'selectedCountry', 'favoriteItemCount']);
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
     const token = cookies.token;
     const userRole = cookies.userRole;
     const user = cookies.userDetails;
@@ -238,7 +239,7 @@ const Designs = (props) => {
 
     async function onFilterChange(data) {
         setDesignsLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/filter?search='+searchValue+'&country='+selectedCountry+'&user_id=' + currentUser + '&token=' + token, data).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/filter?search='+searchValue+'&country='+selectedCountry+'&current_user_id=' + current_user_id + '&token=' + token, data).then((response) => {
             const selectedDesigns = response.data.data;
             if (selectedDesigns) {
                 setDesigns(selectedDesigns);
@@ -332,7 +333,7 @@ const Designs = (props) => {
     };
 
     async function favoriteDesignUpdate(e) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/item/wishlist/update', e).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/item/wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 handleChangePage(currentPage);
@@ -425,7 +426,7 @@ const Designs = (props) => {
     }
 
     async function toggleSortDesigns(type, sort) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/design' + type + sort).then((response) => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/design' + type + sort + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const selectedDesigns = response.data.data;
             if (selectedDesigns) {
                 setDesigns(selectedDesigns);
@@ -442,7 +443,7 @@ const Designs = (props) => {
 
     async function toggleAddViewCount(id) {
         if (currentUser && currentUser != "") {
-            axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/' + id).then((response) => {
+            axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/' + id + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
                 const success = response.data.status;
                 if (success == 'Success') {
                     // toast.success('Design saved as draft successfully!');
@@ -457,7 +458,7 @@ const Designs = (props) => {
     };
 
     async function getPortfolioFilters() {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'design/filter/type').then((response) => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'design/filter/type?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const data = response.data;
             if (data) {
                 const filters = data.data;
@@ -551,7 +552,7 @@ const Designs = (props) => {
 
     // Pagination
     const handleChangePage = (pageNumber) => {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/filter?search='+searchValue+'&country='+selectedCountry+'&page=' + pageNumber + '&user_id=' + currentUser)
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/filter?search='+searchValue+'&country='+selectedCountry+'&page=' + pageNumber + '&current_user_id=' + current_user_id + '&token=' + token)
             .then((response) => {
                 const data = response.data;
                 setCurrentPage(pageNumber);

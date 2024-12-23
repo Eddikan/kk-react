@@ -37,7 +37,7 @@ const HeaderAdmin = () => {
     const [notifications, setNotifications] = useState([]);
     const [notificationsLoading, setNotificationsLoading] = useState(true);
 
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails', 'userRole']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails', 'userRole', 'token']);
     const [userType, setUserType] = useState('user');
     const userRole = cookies.userRole;
     const userRef = useRef(null);
@@ -49,16 +49,18 @@ const HeaderAdmin = () => {
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState();
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
+    const token = cookies.token;
     const userDetails = cookies.userDetails;
     const signupType = cookies.signup_type;
     const completedQuestionnaire = cookies.completed_questionnaire;
 
     const getUser = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser);
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const getNotifications = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'notification?user_id=' + currentUser);
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'notification?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     // removeCookies

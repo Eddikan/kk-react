@@ -45,8 +45,10 @@ const initialAppointments = {
 };
 
 const AdminAppointments = (props) => {
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser','token', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
+    const token = cookies.token;
     const userDetails = cookies.userDetails;
     const [appointmentId, setAppointmentId] = useState('');
     const [reloadCount, setReloadCount] = useState(0);
@@ -75,16 +77,16 @@ const AdminAppointments = (props) => {
     let PageSize = 10;
 
     const getAppointments = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'appointment');
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'appointment?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const putReschedule = async (data) => {
-        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentEditId, data);
+        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentEditId + '?current_user_id=' + current_user_id + '&token=' + token, data);
     };
 
     const toggleEditAppointmentModal = (id) => {
         setAppointmentEditId(id);
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'appointment/' + id).then(response => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'appointment/' + id + '?current_user_id=' + current_user_id + '&token=' + token).then(response => {
             const result = response.data.data;
             setConsultationFormData(result);
         })
@@ -185,7 +187,7 @@ const AdminAppointments = (props) => {
     }
 
     const handleChangePage = (pageNumber) => {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'appointment?page=' + pageNumber + '&user_id=' + currentUser)
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'appointment?page=' + pageNumber + '&current_user_id=' + current_user_id + '&token=' + token)
             .then((response) => {
                 const data = response.data;
                 const result = data.data;

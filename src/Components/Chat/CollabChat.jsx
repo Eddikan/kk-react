@@ -6,16 +6,21 @@ import { AiOutlineSend } from "react-icons/ai";
 import LoadingIcon from "../Icons/Loading";
 import ToastAlert from 'Utils/ToastAlert/ToastAlert';
 import axios from 'axios';
+import { useCookies } from 'react-cookie';
 
 const CollabChat = ({ meetingId, user, currentUser, video }) => {
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
     const [chatMessages, setChatMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
     const [formStatus, setFormStatus] = useState("standby");
     // const userImage = user.image_url;
     const chatContainerRef = useRef(null);
+    
+    const current_user_id = cookies.currentUser;
+    const token = cookies.token;
 
     const postNewMessageNotif = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'chat/notification/' + meetingId, data);
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'chat/notification/' + meetingId + '?current_user_id=' + current_user_id + '&token=' + token, data);
     };
 
     useEffect(() => {

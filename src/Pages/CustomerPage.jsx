@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import 'Assets/styles/Customer/style.css';
 import { BsThreeDotsVertical, BsTrash } from 'react-icons/bs';
 import { FaPencilAlt } from 'react-icons/fa';
+import { useCookies } from 'react-cookie';
 
 const initialNewCustomerData = Object.freeze({
     first_name: '',
@@ -51,28 +52,32 @@ const CustomerPage = () => {
     const [showEditModal, setShowEditModal] = useState(false);
     const [showAddModal, setShowAddModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
+
+    const current_user_id = cookies.currentUser;
+    const token = cookies.token;
 
     // API CALL FOR GET ALL (START)
     const getCustomers = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'customer');
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'customer?current_user_id=' + current_user_id + '&token=' + token);
     }
     // API CALL FOR GET ALL (END)
 
     // API CALL FOR POST (START)
     const submitCustomer = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'customer', data);
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'customer?current_user_id=' + current_user_id + '&token=' + token, data);
     }
     // API CALL FOR POST (END)
 
     // API CALL FOR UPDATE (START)
     const updateCustomer = async (data) => {
-        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'customer/' + data.id, data);
+        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'customer/' + data.id + '?current_user_id=' + current_user_id + '&token=' + token, data);
     }
     // API CALL FOR UPDATE (END)
 
     // API CALL FOR DELETE (START)
     const deleteCustomer = async () => {
-        return await axios.delete(process.env.REACT_APP_API_ENDPOINT + 'customer/' + selectedCustomer);
+        return await axios.delete(process.env.REACT_APP_API_ENDPOINT + 'customer/' + selectedCustomer + '?current_user_id=' + current_user_id + '&token=' + token);
     }
     // API CALL FOR DELETE (END)
 

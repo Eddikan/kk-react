@@ -68,8 +68,10 @@ const ConsultationCalendar = ({ toggleEvent }) => {
         });
     };
 
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'token']);
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
+    const token = cookies.token;
     const currentUserDetails = cookies.userDetails;
     const userRole = cookies.userRole;
     const userDetails = cookies.userDetails;
@@ -104,23 +106,23 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     const [isScheduled, setIsScheduled] = useState(false);
 
     const postSetAppointment = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/set/appointment?user_id=' + currentUser, data);
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/set/appointment?current_user_id=' + current_user_id + '&token=' + token, data);
     };
 
     const putSetAppointment = async (data) => {
-        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentscheduleId + '?user_id=' + currentUser, data);
+        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentscheduleId + '?current_user_id=' + current_user_id + '&token=' + token, data);
     };
 
     const getSetAppointment = async (e) => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/availability?date=' + e);
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/availability?date=' + e + '&current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const getAppointment = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentscheduleId);
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentscheduleId + '?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const getDesigner = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId);
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '?current_user_id=' + current_user_id + '&token=' + token);
     };
 
 

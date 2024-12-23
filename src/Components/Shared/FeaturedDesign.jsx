@@ -27,7 +27,7 @@ import { useCookies } from 'react-cookie';
 
 const PortfolioGrid = (props) => {
     const navigate = useNavigate();
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites','favoriteItemCount']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites','favoriteItemCount']);
     const [portfolio, setPortfolio] = useState([]);
     const [portfolioLoading, setPortfolioLoading] = useState(true);
     const [reloadCount, setReloadCount] = useState(0);
@@ -50,6 +50,7 @@ const PortfolioGrid = (props) => {
     const [copy, setCopy] = useState(false);
 
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
     const userRole = cookies.userRole;
     const token = cookies.token;
     const [tempFavorites, setTempFavorites] = useState(cookies.tempFavorites ?? []);
@@ -154,7 +155,7 @@ const PortfolioGrid = (props) => {
     };
 
     async function toggleAddViewCount(id) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/' + id).then((response) => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/' + id + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 // toast.success('Design saved as draft successfully!');
@@ -196,7 +197,7 @@ const PortfolioGrid = (props) => {
     }, [reloadCount]);
 
     async function favoriteDesignUpdate(e) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/item/wishlist/update', e).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/item/wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 fetchData(user_id);

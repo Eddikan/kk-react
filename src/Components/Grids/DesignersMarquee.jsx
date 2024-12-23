@@ -10,9 +10,11 @@ import 'react-multi-carousel/lib/styles.css';
 import { GoHeart } from 'react-icons/go';
 import Loading from 'Components/Shared/Loading';
 import Marquee from 'react-fast-marquee';
+import { useCookies } from 'react-cookie';
 import axios from "axios";
 
 const DesignersMarquee = (props) => {
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
     const navigate = useNavigate();
     const reloadCount = props.reloadCount;
     const currentUser = props.currentUser;
@@ -20,8 +22,11 @@ const DesignersMarquee = (props) => {
     const [designers, setDesigners] = useState([]);
     const [designersLoading, setDesignersLoading] = useState(true);
 
+    const current_user_id = cookies.currentUser;
+    const token = cookies.token;
+
     const getDesigners = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer');
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const toggleGetUser = (e) => {
@@ -29,7 +34,7 @@ const DesignersMarquee = (props) => {
     }
 
     async function wishlistDesignerUpdate(e) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/wishlist/update', e).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
             } else {

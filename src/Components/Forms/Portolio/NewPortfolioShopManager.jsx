@@ -27,13 +27,14 @@ const NewPortfolioShopManager = (props) => {
     const [portfolioLoading, setPortfolioLoading] = useState(false);
     const [portfolioDraftLoading, setPortfolioDraftLoading] = useState(false);
     const [reloadCount, setReloadCount] = useState(0);
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
     const [colors, setColors] = useState([]);
     const [tags, setTags] = useState([]);
     const [materials, setMaterials] = useState([]);
     const [categories, setCategories] = useState([])
 
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
     const token = cookies.token;
 
     const reloadPage = (e) => {
@@ -92,7 +93,7 @@ const NewPortfolioShopManager = (props) => {
 
         if (portfolioData.image_urls) {
             setPortfolioLoading(true);
-            axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item?user_id=' + currentUser + '&token=' + token, {...portfolioData, colors: colors, tags: tags, materials: materials, status: 'Active' }).then((response) => {
+            axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item?current_user_id=' + current_user_id + '&token=' + token, {...portfolioData, colors: colors, tags: tags, materials: materials, status: 'Active' }).then((response) => {
                 const success = response.data.status;
                 if(success == 'Success') {
                     toast.success('Design added successfully!');

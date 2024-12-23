@@ -7,10 +7,12 @@ import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 
 const ContactStep = ({ user, currentUser, reload, token }) => {
-    const [cookies, setCookie] = useCookies(['currentUser', 'aboutDone', 'addressDone', 'contactDone', 'socialDone']);
+    const [cookies, setCookie] = useCookies(['currentUser', 'aboutDone', 'addressDone', 'contactDone', 'socialDone', 'token']);
 
     const [profileFormData, setProfileFormData] = useState('');
     const [formStatus, setFormStatus] = useState(false);
+
+    const current_user_id = cookies.currentUser;
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -62,7 +64,7 @@ const ContactStep = ({ user, currentUser, reload, token }) => {
         } else {
             e.preventDefault();
             setFormStatus(true);
-            axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, { ...profileFormData, contact_complete: 1 }).then((response) => {
+            axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token, { ...profileFormData, contact_complete: 1 }).then((response) => {
                 const success = response.data.status;
                 if (success == 'Success') {
                     const data = response.data.data;
@@ -83,7 +85,7 @@ const ContactStep = ({ user, currentUser, reload, token }) => {
 
     async function submitBack(e) {
         e.preventDefault();
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 reload();

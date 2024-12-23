@@ -14,8 +14,10 @@ import Loading from "Components/Shared/Loading";
 import UserPlaceholder from 'Assets/images/user.png';
 import toast from 'react-hot-toast';
 import axios from "axios";
+import { useCookies } from 'react-cookie';
 
 const LiveStreamChat = ({ livestreamId, user, currentUser, loading, status }) => {
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
     const [chatMessages, setChatMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
     const [formStatus, setFormStatus] = useState("standby");
@@ -31,6 +33,9 @@ const LiveStreamChat = ({ livestreamId, user, currentUser, loading, status }) =>
     const hiddenFileInput = useRef(null);
     const hiddenImgInput = useRef(null);
     const textInputRef = useRef(null);
+
+    const current_user_id = cookies.currentUser;
+    const token = cookies.token;
 
     useEffect(() => {
         // Fetch chat messages of the given meeting from Firestore
@@ -196,7 +201,7 @@ const LiveStreamChat = ({ livestreamId, user, currentUser, loading, status }) =>
                 dataArray.append("file", fileToUpload);
     
                 const response = await axios.post(
-                    `${process.env.REACT_APP_API_ENDPOINT}user/file?user_id=${currentUser.id}&token=${currentUser.token}`,
+                    `${process.env.REACT_APP_API_ENDPOINT}user/file?current_user_id=${current_user_id}&token=${token}`,
                     dataArray,
                     { headers: { "Content-Type": "multipart/form-data" } }
                 );

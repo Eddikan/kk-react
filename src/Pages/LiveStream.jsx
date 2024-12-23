@@ -17,8 +17,10 @@ import GuestLivestream from 'Components/Livestream/GuestView'
 
 const LiveStreams = (props) => {
     const navigate = useNavigate();
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole','token']);
     const currentUser = cookies.currentUser;
+    const token = cookies.token;
+    const current_user_id = cookies.currentUser;
     const userDetails = cookies.userDetails;
     const { livestreamId } = useParams();
     const [livestream, setLivestream] = useState([]);
@@ -33,7 +35,7 @@ const LiveStreams = (props) => {
     };
 
     const getLiveStream = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'livestream/' + livestreamId);
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'livestream/' + livestreamId + '?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     function returnFormattedDate(date) {

@@ -25,10 +25,12 @@ import { FaArrowRight } from "react-icons/fa6";
 
 
 const Designs = (props) => {
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites', 'favoriteItemCount']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser','token', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites', 'favoriteItemCount']);
     const navigate = useNavigate();
     const reloadCount = props.reloadCount;
     const currentUser = props.currentUser;
+    const current_user_id = cookies.currentUser;
+    const token = cookies.token;
     const userRole = cookies.userRole;
     const limit = props.limit ?? 16;
     const [designs, setDesigns] = useState([]);
@@ -145,7 +147,7 @@ const Designs = (props) => {
     };
 
     async function toggleSortDesigns(type, sort) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/design' + type + sort).then((response) => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/design' + type + sort + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const selectedDesigns = response.data.data;
             if (selectedDesigns) {
                 setDesigns(selectedDesigns);
@@ -161,7 +163,7 @@ const Designs = (props) => {
     }
 
     async function toggleAddViewCount(id) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/' + id).then((response) => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/' + id + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 // toast.success('Design saved as draft successfully!');
@@ -174,7 +176,7 @@ const Designs = (props) => {
     }
 
     async function favoriteDesignUpdate(e) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/item/wishlist/update', e).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/item/wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 fetchData(currentUser);

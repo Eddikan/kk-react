@@ -50,6 +50,7 @@ const EditPortfolio = (props) => {
     const [fileInputKey, setFileInputKey] = useState(Date.now());
 
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
     const token = cookies.token;
 
     const reloadPage = (e) => {
@@ -104,7 +105,7 @@ const EditPortfolio = (props) => {
 
             try {
                 const response = await axios.post(
-                    `${process.env.REACT_APP_API_ENDPOINT}portfolio/image?user_id=${currentUser}&token=${token}`,
+                    `${process.env.REACT_APP_API_ENDPOINT}portfolio/image?current_user_id=${current_user_id}&token=${token}`,
                     dataArray,
                     {
                         headers: {
@@ -156,7 +157,7 @@ const EditPortfolio = (props) => {
         e.preventDefault();
         if (images) {
             setPortfolioLoading(true);
-            axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/' + portfolioId + '?user_id=' + currentUser + '&token=' + token, { ...portfolioData, image_urls: images, portfolio_item_category_ids: categoryIds, seasons: seasons, colors: colors, tags: tags, materials: materials, genders: genders, status: 'Active' }).then((response) => {
+            axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/' + portfolioId + '?current_user_id=' + current_user_id + '&token=' + token, { ...portfolioData, image_urls: images, portfolio_item_category_ids: categoryIds, seasons: seasons, colors: colors, tags: tags, materials: materials, genders: genders, status: 'Active' }).then((response) => {
                 const success = response.data.status;
                 if (success == 'Success') {
                     toast.success('Design updated successfully!');
@@ -182,7 +183,7 @@ const EditPortfolio = (props) => {
     async function PortfolioDraftSubmit(e) {
         e.preventDefault();
         setPortfolioDraftLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/' + portfolioId + '?user_id=' + currentUser + '&token=' + token, { ...portfolioData, image_urls: images, portfolio_item_category_ids: categoryIds, seasons: seasons, colors: colors, tags: tags, materials: materials, genders: genders, status: 'Draft' }).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/' + portfolioId + '?current_user_id=' + current_user_id + '&token=' + token, { ...portfolioData, image_urls: images, portfolio_item_category_ids: categoryIds, seasons: seasons, colors: colors, tags: tags, materials: materials, genders: genders, status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success('Design saved as draft successfully!');
@@ -269,7 +270,7 @@ const EditPortfolio = (props) => {
     };
 
     async function getCategories(id) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'design/filter/type').then((response) => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'design/filter/type?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const data = response.data;
             if (data) {
                 const filters = data.data;
@@ -287,7 +288,7 @@ const EditPortfolio = (props) => {
 
     async function addCategory(e) {
         e.preventDefault();
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio-item-categories?user_id=' + currentUser + '&token=' + token, { name: categorySearchTerm, user_id: currentUser }).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio-item-categories?current_user_id=' + current_user_id + '&token=' + token, { name: categorySearchTerm, user_id: currentUser }).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
                 const category = response.data.data;

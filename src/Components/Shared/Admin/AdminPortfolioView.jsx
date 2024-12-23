@@ -49,6 +49,7 @@ const PortfolioGrid = (props) => {
     const [copy, setCopy] = useState(false);
 
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
     const { userId } = useParams();
     const token = cookies.token;
 
@@ -166,7 +167,7 @@ const PortfolioGrid = (props) => {
 
     async function PortfolioDeleteSubmit(e) {
         setPortfolioDeleteLoading(true);
-        axios.delete(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/' + portfolioId + '?user_id=' + userId + '&token=' + token).then((response) => {
+        axios.delete(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/' + portfolioId + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success('Design deleted successfully!');
@@ -185,7 +186,7 @@ const PortfolioGrid = (props) => {
 
     async function PortfolioDraftSubmit(e) {
         setPortfolioDraftLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/' + e + '?user_id=' + userId + '&token=' + token, { status: 'Draft' }).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/' + e + '?current_user_id=' + current_user_id + '&token=' + token, { status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success('Design saved as draft successfully!');
@@ -203,7 +204,7 @@ const PortfolioGrid = (props) => {
 
     async function PortfolioPublishSubmit(e) {
         setPortfolioPublishLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/' + e + '?user_id=' + userId + '&token=' + token, { status: 'Active' }).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/' + e + '?current_user_id=' + current_user_id + '&token=' + token, { status: 'Active' }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success('Design published successfully!');

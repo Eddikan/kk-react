@@ -106,6 +106,7 @@ const Header = () => {
   const [search, setSearch] = useState(headerSearch ?? '');
   const [activeTab, setActiveTab] = useState(headerType ?? 'Designers');
   const currentUser = cookies.currentUser;
+  const current_user_id = cookies.currentUser;
   const token = cookies.token;
   const userDetails = cookies.userDetails;
   const userRole = cookies.userRole;
@@ -119,22 +120,22 @@ const Header = () => {
   const selectedCurrency = cookies.selectedCurrency ?? "";
 
   const getUser = async () => {
-    return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser);
+    return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token);
   };
 
   const getFabrics = async () => {
-    return await axios.get(process.env.REACT_APP_API_ENDPOINT + '/product/fabric' + currentUser);
+    return await axios.get(process.env.REACT_APP_API_ENDPOINT + '/product/fabric' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token);
   };
   const getUserOrders = async () => {
-    return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/order');
+    return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/order?current_user_id=' + current_user_id + '&token=' + token);
   }
 
   const getNotifications = async () => {
-    return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'notification?user_id=' + currentUser);
+    return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'notification?user_id=' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token);
   };
 
   const getUserCartItems = async () => {
-    return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/cart');
+    return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/cart?current_user_id=' + current_user_id + '&token=' + token);
   };
 
   const getCurrencyConversions = async (e) => {

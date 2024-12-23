@@ -27,10 +27,12 @@ const initialStreamFormData = Object.freeze({
 const LiveStreams = (props) => {
     const apiKey = process.env.REACT_APP_STREAM_API_KEY;
 
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'token']);
     const [livestreamId, setLiveStreamId] = useState('');
     const [livestreamStatus, setLivestreamStatus] = useState('');
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
+    const token = cookies.token
     const userDetails = cookies.userDetails;
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
@@ -71,11 +73,11 @@ const LiveStreams = (props) => {
     }
 
     const getLiveStream = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/'+currentUser+'/livestream');
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/'+currentUser+'/livestream?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const postStream = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'livestream', data);
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'livestream?current_user_id' + current_user_id + '&token=' + token, data);
     };
 
     const handleChangeStream = (e) => {
@@ -88,7 +90,7 @@ const LiveStreams = (props) => {
     }
 
     const handleChangePage = (pageNumber) => {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/'+currentUser+'/livestream?page=' + pageNumber + '&user_id=' + currentUser)
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/'+currentUser+'/livestream?page=' + pageNumber + '&current_user_id=' + current_user_id + '&token=' + token)
             .then((response) => {
                 const data = response.data;
                 setCurrentPage(pageNumber);

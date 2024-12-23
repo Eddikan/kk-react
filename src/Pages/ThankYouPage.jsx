@@ -20,7 +20,7 @@ const ThankYouPage = (props) => {
     };
     let query = useQuery();
     const orderId = query.get('order_id');
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'cookieCheckoutDesigner']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token', 'isLoggedIn', 'cookieCheckoutDesigner']);
     const [selectedDesigner, setSelectedDesigner] = useState(null);
     const [designerID, setDesignerId] = useState('');
     const [needsDesigner, setNeedsDesigner] = useState('');
@@ -28,6 +28,8 @@ const ThankYouPage = (props) => {
     const [connectDesignerLoading, setConnectDesignerLoading] = useState(false);
 
     const cookieCheckoutDesigner = cookies.cookieCheckoutDesigner;
+    const current_user_id = cookies.currentUser;
+    const token = cookies.token
 
     const toggleSelectDesignerShow = (e) => {
         setSelectDesignerShow(!selectDesignerShow);
@@ -53,7 +55,7 @@ const ThankYouPage = (props) => {
 
     async function addDesignerToOrder(e) {
         setConnectDesignerLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'order/'+orderId, {needs_designer: needsDesigner, designer_id: designerID}).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'order/'+orderId + '?current_user_id=' + current_user_id + '&token=' + token, {needs_designer: needsDesigner, designer_id: designerID}).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 // navigate('/orders');

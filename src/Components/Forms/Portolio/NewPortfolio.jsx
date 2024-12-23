@@ -31,7 +31,7 @@ const NewPortfolio = (props) => {
     const [portfolioLoading, setPortfolioLoading] = useState(false);
     const [portfolioDraftLoading, setPortfolioDraftLoading] = useState(false);
     const [reloadCount, setReloadCount] = useState(0);
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
     const [colors, setColors] = useState([]);
     const [tags, setTags] = useState([]);
     const [seasons, setSeasons] = useState([]);
@@ -40,6 +40,7 @@ const NewPortfolio = (props) => {
     const [categories, setCategories] = useState([])
 
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser
     const token = cookies.token;
 
     const reloadPage = (e) => {
@@ -81,7 +82,7 @@ const NewPortfolio = (props) => {
     }, [reloadCount]);
 
     async function getCategories(id) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'design/filter/type').then((response) => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'design/filter/type?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const data = response.data;
             if (data) {
                 const filters = data.data;
@@ -99,7 +100,7 @@ const NewPortfolio = (props) => {
 
     async function addCategory(e) {
         e.preventDefault();
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio-item-categories?user_id=' + currentUser + '&token=' + token, { name: categorySearchTerm, user_id: currentUser }).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio-item-categories?current_user_id=' + current_user_id + '&token=' + token, { name: categorySearchTerm, user_id: currentUser }).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
                 const category = response.data.data;
@@ -129,7 +130,7 @@ const NewPortfolio = (props) => {
         } else {
             if (portfolioData.image_urls) {
                 setPortfolioLoading(true);
-                axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item?user_id=' + currentUser + '&token=' + token, {...portfolioData, portfolio_item_category_ids: categoryIds, seasons: seasons, colors: colors, tags: tags, materials: materials, genders: genders, status: 'Active' }).then((response) => {
+                axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item?current_user_id=' + current_user_id + '&token=' + token, {...portfolioData, portfolio_item_category_ids: categoryIds, seasons: seasons, colors: colors, tags: tags, materials: materials, genders: genders, status: 'Active' }).then((response) => {
                     const success = response.data.status;
                     if(success == 'Success') {
                         toast.success('Design added successfully!');
@@ -155,7 +156,7 @@ const NewPortfolio = (props) => {
     async function PortfolioDraftSubmit(e) {
         e.preventDefault();
         setPortfolioDraftLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item?user_id=' + currentUser + '&token=' + token, {...portfolioData, portfolio_item_category_ids: categoryIds, seasons: seasons, colors: colors, tags: tags, materials: materials, genders: genders, status: 'Draft' }).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item?current_user_id=' + current_user_id + '&token=' + token, {...portfolioData, portfolio_item_category_ids: categoryIds, seasons: seasons, colors: colors, tags: tags, materials: materials, genders: genders, status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
                 toast.success('Design saved as draft successfully!');

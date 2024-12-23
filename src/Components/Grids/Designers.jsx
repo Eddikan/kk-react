@@ -9,10 +9,12 @@ import Pagination from 'Components/Pagination/Pagination';
 import { BsBroadcast } from "react-icons/bs";
 import 'react-multi-carousel/lib/styles.css';
 import { GoHeart } from 'react-icons/go';
+import { useCookies } from 'react-cookie';
 import axios from "axios";
 
 const Designers = (props) => {
     const navigate = useNavigate();
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
     const reloadCount = props.reloadCount;
     const currentUser = props.currentUser;
     const userRole = props.userRole;
@@ -24,8 +26,11 @@ const Designers = (props) => {
     const [pageSize, setPageSize] = useState(1);
     let PageSize = 10;
 
+    const current_user_id = cookies.currentUser;
+    const token = cookies.token;
+    
     const getDesigners = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer');
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const toggleGetUser = (e) => {
@@ -33,7 +38,7 @@ const Designers = (props) => {
     }
 
     const handleChangePage = (pageNumber) => {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer?page=' + pageNumber + '&user_id=' + currentUser)
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer?page=' + pageNumber + '&current_user_id=' + current_user_id + '&token=' + token)
             .then((response) => {
                 const data = response.data;
                 setCurrentPage(pageNumber);
@@ -55,7 +60,7 @@ const Designers = (props) => {
     };
 
     async function wishlistDesignerUpdate(e) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/wishlist/update', e).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
             } else {

@@ -33,8 +33,10 @@ const ToastCss = {
 };
 
 const Messages = (props) => {
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'token']);
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
+    const token = cookies.token;
     const userDetails = cookies.userDetails;
     const { designerId } = useParams();
     const [reloadCount, setReloadCount] = useState(0);
@@ -50,11 +52,11 @@ const Messages = (props) => {
     }
 
     const getAddCarts = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + '/#');
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + '/#?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const postCheckOut = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + '/#', data);
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + '/#?current_user_id=' + current_user_id + '&token' + token, data);
     };
 
     const handleChangePaymentInfo = (e) => {

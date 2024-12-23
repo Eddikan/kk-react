@@ -25,6 +25,7 @@ const VideoDragAndDrop = (props) => {
 
     const token = cookies.token;
     const currentUser = cookies.currentUser;
+    const current_user_id = cookies.currentUser;
 
     const clearFileInput = () => {
         if (fileInputRef.current) {
@@ -65,9 +66,9 @@ const VideoDragAndDrop = (props) => {
         const updatedVideoUrls = [...videoUrl];
         let apiLink = "";
         if (videoType == "portfolio") {
-            apiLink = process.env.REACT_APP_API_ENDPOINT+'portfolio/items/video/upload?user_id='+currentUser+'&token='+token;
+            apiLink = process.env.REACT_APP_API_ENDPOINT+'portfolio/items/video/upload?current_user_id='+current_user_id+'&token='+token;
         } else {
-            apiLink = process.env.REACT_APP_API_ENDPOINT+'product/video/upload?user_id='+currentUser+'&token='+token;
+            apiLink = process.env.REACT_APP_API_ENDPOINT+'product/video/upload?current_user_id='+current_user_id+'&token='+token;
         }
 
         for (const videoInfo of video) {
