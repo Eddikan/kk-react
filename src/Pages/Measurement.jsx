@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import * as bodyPix from '@tensorflow-models/body-pix';
 import * as tf from '@tensorflow/tfjs';
-import axios from 'axios';
 import 'Assets/styles/measurement.css';
 
 function PixelComponent() {

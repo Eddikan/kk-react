@@ -1,48 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams, useLocation } from 'react-router-dom';
+import  { useEffect, useState } from 'react';
+import {  useNavigate, useParams } from 'react-router-dom';
 import { Form, Container, Row, Col, Button, Card, Modal, ModalFooter, Alert } from 'react-bootstrap';
 import Layout from 'Components/Layout/Layout';
 import '../Assets/styles/EcoFriendly/style.css';
 import '../Assets/styles/ConsultationMeeting/style.css';
 import { useCookies } from 'react-cookie';
-import { IoIosInformationCircleOutline } from "react-icons/io";
-import { HiMiniUsers } from "react-icons/hi2";
 import GoBack from 'Components/Shared/GoBack';
 import { FaVideo } from "react-icons/fa";
-import { FiUser, FiMonitor } from "react-icons/fi";
+import {  FiMonitor } from "react-icons/fi";
 import { GoAlertFill } from 'react-icons/go';
 import { IoCloseOutline } from "react-icons/io5";
 import { ImPhoneHangUp } from "react-icons/im";
-import { MdOutlineVideocam, MdOutlineVideocamOff, MdOutlineCalendarMonth } from 'react-icons/md';
-import { BiDetail, BiSolidMessageDetail, BiMicrophone, BiMicrophoneOff } from "react-icons/bi";
-import { VscSend } from "react-icons/vsc";
-import { LuAlarmClock } from "react-icons/lu";
+import { MdOutlineVideocam, MdOutlineVideocamOff } from 'react-icons/md';
+import {  BiMicrophone, BiMicrophoneOff } from "react-icons/bi";
 import { Helmet } from "react-helmet";
-import ImageDragAndDrop from 'Components/Shared/ImageDragAndDrop';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import getUserData from 'Utils/GetUserData';
 
-import { BsPeopleFill, BsFillChatLeftTextFill } from 'react-icons/bs';
-import { RiInformationLine } from 'react-icons/ri';
-
-import { FaCrown } from 'react-icons/fa';
 import MeetingChat from '../Components/Chat/MeetingChat';
-import UserPlaceholder from 'Components/Elements/UserPlaceholder';
-// import UserImage from 'components/Image/UserImage';
 import { IoIosHelpCircleOutline } from "react-icons/io";
-import UpperNeck from 'Assets/images/upper-neck-circumference.png';
 
+import { measurementGuideData, initialChecklistData } from "Utils/assets";
 
-const ToastCss = {
-    position: "top-right",
-    autoClose: 1500,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-};
 
 const intitialConsultationData = {
     consultation_date_time: '',
@@ -56,576 +36,12 @@ const intitialConsultationData = {
     consultation_details: '',
 }
 
-const initialChecklistData = {
-    measurement_checklist: 1,
-    upper_neck_circumference: '',
-    lower_neck_circumference: '',
-    chest_circumference: '',
-    bust_circumference: '',
-    under_bust_circumference: '',
-    waist_circumference: '',
-    mid_hip_circumference: '',
-    hip_circumference: '',
-    bust_distance: '',
-    front_chest_width: '',
-    back_chest_width: '',
-    front_waist_length: '',
-    back_waist_length: '',
-    center_front_length: '',
-    center_back_length: '',
-    front_neck_depth: '',
-    back_neck_depth: '',
-    bust_depth: '',
-    armhole_depth: '',
-    bust_height: '',
-    front_shoulder_width: '',
-    back_shoulder_width: '',
-    shoulder_length: '',
-    shoulder_depth: '',
-    elbow_circumference: '',
-    underarm_length: '',
-    sleeve_length: '',
-    arm_circumference: '',
-    wrist_circumference: '',
-    elbow_length: '',
-    armhole_circumference: '',
-    sleeve_cap_height: '',
-    hip_depth: '',
-    crotch_depth: '',
-    crotch_length: '',
-    pants_length: '',
-    knee_length: '',
-    in_seam_length: '',
-    thigh_circumference: '',
-    mid_thigh_circumference: '',
-    knee_circumference: '',
-    calf_circumference: '',
-    ankle_circumference: '',
-    ankle_heel_circumference: '',
-    body_height: '',
-    body_length: '',
-    side_seam: '',
-    pants_trouser_length: '',
 
 
-    // measurement_name: '',
-    // measurement_description: '',
-    // measurement_image_urls: [],
-}
 
-const measurementGuideData = [
-    // Female
-    {
-        id: 1,
-        title: 'Upper Neck Circumference',
-        image: require('Assets/images/upper-neck-circumference.png'), // Adjust path
-        description: 'Measure upper portion of the neck.',
-    },
-    {
-        id: 2,
-        title: 'Lower Neck Circumference',
-        image: require('Assets/images/lower-neck-circumference.png'), // Adjust path
-        description: 'Measure the base of the lower portion of the neck.',
-    },
-    {
-        id: 3,
-        title: 'Chest Circumference',
-        image: require('Assets/images/chest-circumference.png'), // Adjust path
-        description: 'Measure around the chest from back to front keeping the tape runs parallel to the floor.',
-    },
-    {
-        id: 4,
-        title: 'Bust Circumference',
-        image: require('Assets/images/bust-circumference.png'), // Adjust path
-        description: 'Measure around the fullest part of the breast from back to front keeping the tape parallel to the floor.',
-    },
-    {
-        id: 5,
-        title: 'Under Bust Circumference',
-        image: require('Assets/images/under-bust-circumference.png'), // Adjust path
-        description: 'Measure under the bust from back to front keeping the tape parallel to the ground.',
-    },
-    {
-        id: 6,
-        title: 'Waist Circumference',
-        image: require('Assets/images/waist-circumference.png'), // Adjust path
-        description: 'Measure around the narrowest part of the waist from back to front ensuring the tape is parallel to the floor.',
-    },
-    {
-        id: 7,
-        title: 'Mid Hip Circumference',
-        image: require('Assets/images/mid-hip-circumference.png'), // Adjust path
-        description: 'Measure around the area between the widest part of  the hip and the waist line.',
-    },
-    {
-        id: 8,
-        title: 'Hip Circumference',
-        image: require('Assets/images/hip-circumference.png'), // Adjust path
-        description: 'Measure around the widest part of the hip.',
-    },
-    {
-        id: 9,
-        title: 'Bust Distance',
-        image: require('Assets/images/bust-distance.png'), // Adjust path
-        description: 'Measure from the nipple point of one breast to the nipple of the other.',
-    },
-    {
-        id: 10,
-        title: 'Front Chest Width',
-        image: require('Assets/images/front-chest-width.png'), // Adjust path
-        description: 'Measure the distance from one armpit to the other.',
-    },
-    {
-        id: 11,
-        title: 'Back Chest Width',
-        image: require('Assets/images/back-chest-width.png'), // Adjust path
-        description: 'Measure the distance from one armpit to the other.',
-    },
-    {
-        id: 12,
-        title: 'Front Waist Length',
-        image: require('Assets/images/front-waist-length.png'), // Adjust path
-        description: 'Measure from the base of the neck to the front waistline mark, passing the tape over the bust.',
-    },
-    {
-        id: 13,
-        title: 'Back Waist Length',
-        image: require('Assets/images/back-waist-length.png'), // Adjust path
-        description: 'Measure from the base of the neck to the back waistline mark.',
-    },
-    {
-        id: 14,
-        title: 'Center Front Length',
-        image: require('Assets/images/center-front-length.png'), // Adjust path
-        description: 'Measure from the center of the front neck down to the center of the front waistline mark.',
-    },
-    {
-        id: 15,
-        title: 'Center Back Length',
-        image: require('Assets/images/center-back-length.png'), // Adjust path
-        description: 'Measure from the center of  the back neck down to the center of the back waistline mark.',
-    },
-    {
-        id: 16,
-        title: 'Front Neck Depth',
-        image: require('Assets/images/front-neck-depth.png'), // Adjust path
-        description: 'Measure from the front shoulder starting at the base of the neck to your desired front neck depth.',
-    },
-    {
-        id: 17,
-        title: 'Back Neck Depth',
-        image: require('Assets/images/back-neck-depth.png'), // Adjust path
-        description: 'Measure from the base of the neck to the desired back neck depth.',
-    },
-    {
-        id: 18,
-        title: 'Bust Depth',
-        image: require('Assets/images/bust-depth-radius.png'), // Adjust path
-        description: 'Measure from the nipple point on the bust down to under the bust.',
-    },
-    {
-        id: 19,
-        title: 'Armhole Depth',
-        image: require('Assets/images/armhole-depth.png'), // Adjust path
-        description: 'With a ruler placed under the armpit, measure from the tip of the shoulder bone to the armpit, touching the ruler.',
-    },
-    {
-        id: 20,
-        title: 'Bust Height',
-        image: require('Assets/images/bust-height.png'), // Adjust path
-        description: 'Measure from the front shoulder at the base of the neck to the highest point of the bust.',
-    },
-    {
-        id: 21,
-        title: 'Front Shoulder Width',
-        image: require('Assets/images/front-shoulder-width.png'), // Adjust path
-        description: 'Request your assistant to place one end of a tape measure flat against one shoulder point. Then, have them extend the tape measure across your front, tracing the natural curve of your shoulders, until it reaches the opposite shoulder point.',
-    },
-    {
-        id: 22,
-        title: 'Back Shoulder Width',
-        image: require('Assets/images/back-shoulder-width.png'), // Adjust path
-        description: 'Request your assistant to place one end of a tape measure flat against one shoulder point. Then, have them extend the tape measure across your back, tracing the natural curve of your shoulders, until it reaches the opposite shoulder point.',
-    },
-    {
-        id: 23,
-        title: 'Shoulder Length',
-        image: require('Assets/images/shoulder-length.png'), // Adjust path
-        description: 'Measure along the front from base of neck to the shoulder point.',
-    },
-    {
-        id: 24,
-        title: 'Shoulder Depth',
-        image: require('Assets/images/shoulder-depth.png'), // Adjust path
-        description: 'Measure from the nape down to the line that meets the shoulder point.',
-    },
-    {
-        id: 25,
-        title: 'Elbow Circumference',
-        image: require('Assets/images/elbow-circumference.png'), // Adjust path
-        description: 'With your arm slightly bent and hand resting on your hip, measure around the elbow.',
-    },
-    {
-        id: 26,
-        title: 'Underarm Length',
-        image: require('Assets/images/elbow-circumference.png'), // Adjust path
-        description: 'With your arm slightly bent and hand resting on your hip, measure from the armpit to the wrist.',
-    },
-    {
-        id: 27,
-        title: 'Sleeve Length',
-        image: require('Assets/images/sleeve-length.png'), // Adjust path
-        description: 'While the arm is bent, measure from the tip of the shoulder point to the wrist mark, ensuring the measurement passes through the elbow.',
-    },
-    {
-        id: 28,
-        title: 'Arm Circumference)',
-        image: require('Assets/images/arm-circumference.png'), // Adjust path
-        description: 'Measure the widest part of the upper arm.',
-    },
-    {
-        id: 29,
-        title: 'Wrist Circumference',
-        image: require('Assets/images/wrist-circumference.png'), // Adjust path
-        description: 'Measure the narrowest area of the wrist.',
-    },
-    {
-        id: 30,
-        title: 'Elbow Length',
-        image: require('Assets/images/elbow-circumference.png'), // Adjust path
-        description: 'While the arm is bent, measure from the tip of the shoulder point to the tip of the elbow bone.',
-    },
-    {
-        id: 31,
-        title: 'Armhole Circumference',
-        image: require('Assets/images/armhole-circumference.png'), // Adjust path
-        description: 'Measure around the armhole passing over the shoulder point and under the armpit.',
-    },
-    {
-        id: 32,
-        title: 'Sleeve Cap Height',
-        image: require('Assets/images/sleeve-cap-height.png'), // Adjust path
-        description: 'Measure from the tip of the shoulder bone to the widest part of the arm, just below the armpit.',
-    },
-    {
-        id: 33,
-        title: 'Hip Depth',
-        image: require('Assets/images/hip-depth.png'), // Adjust path
-        description: 'Measure from the waistline to a point on the widest part of the hip.',
-    },
-    {
-        id: 34,
-        title: 'Crotch Depth',
-        image: require('Assets/images/crotch-depth.png'), // Adjust path
-        description: 'Take this measurement while sitting straight. Measure from the side waist point, to the surface of the seat.',
-    },
-    {
-        id: 35,
-        title: 'Crotch Length',
-        image: require('Assets/images/crotch-length.png'), // Adjust path
-        description: 'Measure from the center front waistline to the center back waist line passing the measuring tape in between the thighs.',
-    },
-    {
-        id: 36,
-        title: 'Pants/Trouser Length',
-        image: require('Assets/images/pants-trouser-length.png'), // Adjust path
-        description: 'Measure from the waistline to the desired pant/trouser length.',
-    },
-    {
-        id: 37,
-        title: 'Knee Length',
-        image: require('Assets/images/knee-length.png'), // Adjust path
-        description: 'Measure from the waist to the narrowest part of the knee.',
-    },
-    {
-        id: 38,
-        title: 'In Seam Length',
-        image: require('Assets/images/in-seam-length.png'), // Adjust path
-        description: 'Measure from the crotch to the feet.',
-    },
-    {
-        id: 39,
-        title: 'Thigh Circumference',
-        image: require('Assets/images/thigh-circumference.png'), // Adjust path
-        description: 'Measure the widest portion of the thigh.',
-    },
-    {
-        id: 40,
-        title: 'Mid-thigh Circumference',
-        image: require('Assets/images/mid-thigh-circumference.png'), // Adjust path
-        description: 'Measure around the mid-point of the thigh, between the upper thigh and the knee.',
-    },
-    {
-        id: 41,
-        title: 'Knee Circumference',
-        image: require('Assets/images/knee-circumference.png'), // Adjust path
-        description: 'Measure around the narrowest part of the knee.',
-    },
-    {
-        id: 42,
-        title: 'Calf Circumference',
-        image: require('Assets/images/calf-circumference.png'), // Adjust path
-        description: 'Measure the widest part of each calf, as there may be asymmetry between them. Record the measurement for the widest calf.',
-    },
-    {
-        id: 43,
-        title: 'Ankle Circumference',
-        image: require('Assets/images/ankle-circumference.png'), // Adjust path
-        description: 'Measure around the narrowest part of the ankle.',
-    },
-    {
-        id: 44,
-        title: 'Ankle-Heel Circumference',
-        image: require('Assets/images/ankle-heel-circumference.png'), // Adjust path
-        description: 'Measure around the heel and ankle.',
-    },
-    {
-        id: 45,
-        title: 'Body Height',
-        image: require('Assets/images/body-height.png'), // Adjust path
-        description: 'Ask your partner to gently mark the wall with colored tape where the ruler, book, or another flat object meets your head while you stand against the wall. Use a tape measure, preferably a metal one for accuracy, to measure the distance from the floor to the mark on the wall.',
-    },
-    {
-        id: 46,
-        title: 'Body Length',
-        image: require('Assets/images/body-length.png'), // Adjust path
-        description: 'Ask your partner to gently mark the wall with colored tape where the ruler, book, or another flat object meets your nape while you stand against the wall. Use a tape measure, preferably a metal one for accuracy, to measure the distance from the floor to the mark on the wall.',
-    },
-
-    // Male
-    {
-        id: 47,
-        title: 'Upper Neck Circumference',
-        image: require('Assets/images/Male-Measurement-Descriptions/upper-neck.png'), // Adjust path
-        description: 'Measure upper portion of the neck.',
-    },
-    {
-        id: 48,
-        title: 'Lower Neck Circumference',
-        image: require('Assets/images/Male-Measurement-Descriptions/lower-neck.png'), // Adjust path
-        description: 'Measure the base of the lower portion of the neck.',
-    },
-    {
-        id: 49,
-        title: 'Chest Circumference',
-        image: require('Assets/images/Male-Measurement-Descriptions/chest-circumference.png'), // Adjust path
-        description: 'Measure around the chest from back to front keeping the tape runs parallel to the floor.',
-    },
-    {
-        id: 50,
-        title: 'Waist Circumference',
-        image: require('Assets/images/Male-Measurement-Descriptions/waist-circumference.png'), // Adjust path
-        description: 'Measure around the narrowest part of the waist from back to front ensuring the tape is parallel to the floor.',
-    },
-    {
-        id: 51,
-        title: 'Mid Hip Circumference',
-        image: require('Assets/images/Male-Measurement-Descriptions/mid-hip-circumference.png'), // Adjust path
-        description: 'Measure around the area between the widest part of  the hip and the waist line.',
-    },
-    {
-        id: 52,
-        title: 'Hip Circumference',
-        image: require('Assets/images/Male-Measurement-Descriptions/hip-circumference.png'), // Adjust path
-        description: 'Measure around the widest part of the hip.',
-    },
-    {
-        id: 53,
-        title: 'Front Waist Length',
-        image: require('Assets/images/Male-Measurement-Descriptions/front-waist-length.png'), // Adjust path
-        description: 'Measure the shoulder at the base of the neck to the front waistline.',
-    },
-    {
-        id: 54,
-        title: 'Back Waist Length',
-        image: require('Assets/images/Male-Measurement-Descriptions/back-waist-length.png'), // Adjust path
-        description: 'Measure the shoulder at the base of the neck to the back waistline.',
-    },
-    {
-        id: 55,
-        title: 'Center Front Length',
-        image: require('Assets/images/Male-Measurement-Descriptions/center-front-length.png'), // Adjust path
-        description: 'Measure from the center of  the front neck down to the center of the front waistline mark.',
-    },
-    {
-        id: 56,
-        title: 'Center Back Length',
-        image: require('Assets/images/Male-Measurement-Descriptions/center-back-length.png'), // Adjust path
-        description: 'Measure from the center of  the back neck down to the center of the back waistline mark.',
-    },
-    {
-        id: 57,
-        title: 'Front Neck Depth',
-        image: require('Assets/images/Male-Measurement-Descriptions/front-neck-depth.png'), // Adjust path
-        description: 'Measure from the front shoulder starting at the base of the neck to your desired front neck depth.',
-    },
-    {
-        id: 58,
-        title: 'Back Neck Depth',
-        image: require('Assets/images/Male-Measurement-Descriptions/back-neck-depth.png'), // Adjust path
-        description: 'Measure from the base of the neck to the desired back neck depth.',
-    },
-    {
-        id: 59,
-        title: 'Armhole Depth',
-        image: require('Assets/images/Male-Measurement-Descriptions/armhole-depth.png'), // Adjust path
-        description: 'With a ruler placed under the armpit, measure from the tip of the shoulder bone to the armpit, touching the ruler.',
-    },
-    {
-        id: 60,
-        title: 'Front Shoulder Width',
-        image: require('Assets/images/Male-Measurement-Descriptions/front-shoulder-width.png'), // Adjust path
-        description: 'Request your assistant to place one end of a tape measure flat against one shoulder point. Then, have them extend the tape measure across your front, tracing the natural curve of your shoulders, until it reaches the opposite shoulder point.',
-    },
-    {
-        id: 61,
-        title: 'Back Shoulder Width',
-        image: require('Assets/images/Male-Measurement-Descriptions/back-shoulder-width.png'), // Adjust path
-        description: 'Request your assistant to place one end of a tape measure flat against one shoulder point. Then, have them extend the tape measure across your back, tracing the natural curve of your shoulders, until it reaches the opposite shoulder point.',
-    },
-    {
-        id: 62,
-        title: 'Shoulder Depth',
-        image: require('Assets/images/Male-Measurement-Descriptions/shoulder-depth.png'), // Adjust path
-        description: 'Measure from the nape down to the line that meets the shoulder point.',
-    },
-    {
-        id: 63,
-        title: 'Elbow Circumference',
-        image: require('Assets/images/Male-Measurement-Descriptions/elbow-circumference.png'), // Adjust path
-        description: 'With your arm slightly bent and hand resting on your hip, measure around the elbow.',
-    },
-    {
-        id: 64,
-        title: 'Underarm Length',
-        image: require('Assets/images/Male-Measurement-Descriptions/underarm-length.png'), // Adjust path
-        description: 'With your arm slightly bent and hand resting on your hip, measure from the armpit to the wrist.',
-    },
-    {
-        id: 65,
-        title: 'Side Seam',
-        image: require('Assets/images/Male-Measurement-Descriptions/side-seam.png'), // Adjust path
-        description: 'With the arm bent, measure from the arm pint to the waistline.',
-    },
-    {
-        id: 66,
-        title: 'Sleeve Length',
-        image: require('Assets/images/Male-Measurement-Descriptions/sleeve-length.png'), // Adjust path
-        description: 'While the arm is bent, measure from the tip of the shoulder point to the wrist mark, ensuring the measurement passes through the elbow.',
-    },
-    {
-        id: 67,
-        title: 'Arm Circumference',
-        image: require('Assets/images/Male-Measurement-Descriptions/arm-circumference.png'), // Adjust path
-        description: 'Measure the widest part of the upper arm.',
-    },
-    {
-        id: 68,
-        title: 'Wrist Circumference',
-        image: require('Assets/images/Male-Measurement-Descriptions/wrist-circumference.png'), // Adjust path
-        description: 'Measure the narrowest area of the wrist.',
-    },
-    {
-        id: 69,
-        title: 'Elbow Length',
-        image: require('Assets/images/Male-Measurement-Descriptions/elbow-length.png'), // Adjust path
-        description: 'While the arm is bent, measure from the tip of the shoulder point to the tip of the elbow bone.',
-    },
-    {
-        id: 70,
-        title: 'Armhole Circumference',
-        image: require('Assets/images/Male-Measurement-Descriptions/armhole-circumference.png'), // Adjust path
-        description: 'Measure around the armhole passing over the shoulder point and under the armpit.',
-    },
-    {
-        id: 71,
-        title: 'Sleeve Cap Height',
-        image: require('Assets/images/Male-Measurement-Descriptions/sleeve-cap-height.png'), // Adjust path
-        description: 'Measure from the tip of the shoulder bone to the widest part of the arm, just below the armpit.',
-    },
-    {
-        id: 72,
-        title: 'Hip Depth',
-        image: require('Assets/images/Male-Measurement-Descriptions/hip-depth.png'), // Adjust path
-        description: 'Measure from the waistline to a point on the widest part of the hip.',
-    },
-    {
-        id: 73,
-        title: 'Crotch Depth',
-        image: require('Assets/images/Male-Measurement-Descriptions/crotch-depth.png'), // Adjust path
-        description: 'Take this measurement while sitting straight. Measure from the side waist point, to the surface of the seat.',
-    },
-    {
-        id: 74,
-        title: 'Pants/Trouser Length',
-        image: require('Assets/images/Male-Measurement-Descriptions/pants-trouser-length.png'), // Adjust path
-        description: 'Measure from the waistline to the desired pant/trouser length.',
-    },
-    {
-        id: 75,
-        title: 'Knee Length',
-        image: require('Assets/images/Male-Measurement-Descriptions/knee-length.png'), // Adjust path
-        description: 'Measure from the waist to the narrowest part of the knee.',
-    },
-    {
-        id: 76,
-        title: 'In Seam Length',
-        image: require('Assets/images/Male-Measurement-Descriptions/in-seam-length.png'), // Adjust path
-        description: 'Measure from the crotch to the feet.',
-    },
-    {
-        id: 77,
-        title: 'Thigh Circumference',
-        image: require('Assets/images/Male-Measurement-Descriptions/thigh-circumference.png'), // Adjust path
-        description: 'Measure the widest portion of the thigh.',
-    },
-    {
-        id: 78,
-        title: 'Mid-thigh Circumference',
-        image: require('Assets/images/Male-Measurement-Descriptions/mid-thigh-circumference.png'), // Adjust path
-        description: 'Measure around the mid-point of the thigh, between the upper thigh and the knee.',
-    },
-    {
-        id: 79,
-        title: 'Knee Circumference',
-        image: require('Assets/images/Male-Measurement-Descriptions/knee-circumference.png'), // Adjust path
-        description: 'Measure around the narrowest part of the knee.',
-    },
-    {
-        id: 80,
-        title: 'Calf Circumference',
-        image: require('Assets/images/Male-Measurement-Descriptions/calf-circumference.png'), // Adjust path
-        description: 'Measure the widest part of each calf, as there may be asymmetry between them. Record the measurement for the widest calf.',
-    },
-    {
-        id: 81,
-        title: 'Ankle Circumference',
-        image: require('Assets/images/Male-Measurement-Descriptions/ankle-heel-circumference.png'), // Adjust path
-        description: 'Measure around the narrowest part of the ankle.',
-    },
-    {
-        id: 82,
-        title: 'Ankle-Heel Circumference',
-        image: require('Assets/images/Male-Measurement-Descriptions/ankle-heel-circumference.png'), // Adjust path
-        description: 'Measure around the heel and ankle.',
-    },
-    {
-        id: 83,
-        title: 'Body Height',
-        image: require('Assets/images/Male-Measurement-Descriptions/body-height.png'), // Adjust path
-        description: 'Ask your partner to gently mark the wall with colored tape where the ruler, book, or another flat object meets your head while you stand against the wall. Use a tape measure, preferably a metal one for accuracy, to measure the distance from the floor to the mark on the wall.',
-    },
-    {
-        id: 84,
-        title: 'Body Length',
-        image: require('Assets/images/Male-Measurement-Descriptions/body-length.png'), // Adjust path
-        description: 'Ask your partner to gently mark the wall with colored tape where the ruler, book, or another flat object meets your nape while you stand against the wall. Use a tape measure, preferably a metal one for accuracy, to measure the distance from the floor to the mark on the wall.',
-    },
-];
-
-const VideoConferencing = (props) => {
+const VideoConferencing = () => {
     const navigate = useNavigate();
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'currentUserSeller', 'currentUserDesigner']);
+    const [cookies] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'currentUserSeller', 'currentUserDesigner']);
     const currentUser = cookies.currentUser;
     const current_user_id = cookies.currentUser;
     const userDetails = cookies.userDetails;
@@ -635,7 +51,6 @@ const VideoConferencing = (props) => {
 
     const { appointmentId } = useParams();
     const [appointment, setAppointment] = useState([]);
-    const [appointmentLoading, setAppointmentLoading] = useState(true);
     const [reloadCount, setReloadCount] = useState(0);
     const [reloadCountUser, setReloadCountUser] = useState(1);
     const [user, setUser] = useState([]);
@@ -645,30 +60,19 @@ const VideoConferencing = (props) => {
     const [updateChecklistLoading, setUpdateChecklistLoading] = useState(false);
     const [measurementModalShow, setMeasurementModalShow] = useState(false);
     const [uploadMeasurementModalShow, setUploadMeasurementModalShow] = useState(false);
-    const [chatShow, setChatShow] = useState(true);
-    const [participantsShow, setParticipantsShow] = useState(false);
-    const [agendaShow, setAgendaShow] = useState(false);
     const [isMicVisible, setMicVisible] = useState(false);
     const [isCameraVisible, setIsCameraVisible] = useState(false);
     const [isShareScreenVisible, setShareScreenVisible] = useState(false);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [endMeetingModal, setEndMeetingModal] = useState(false);
     const [endMeetingLoading, setEndMeetingLoading] = useState(false);
-    const [modalHeading, setModalHeading] = useState('');
+    // eslint-disable-next-line no-unused-vars
     const [modalHeadingMeasurementGuide, setModalHeadingMeasurementGuide] = useState('');
     const [measurementGuideDescription, setModalMeasurementGuideDescription] = useState('');
     const [measurementGuideImage, setModalMeasurementGuideImage] = useState('');
     const [measurementGuideModalShow, setMeasurementGuideModalShow] = useState(false);
     const [measurementGuidedataLookup, setMeasurementGuideDataLookup] = useState({});
     const [isUserAppointment, setIsUserAppointment] = useState(false);
-
-    const useQuery = () => {
-        return new URLSearchParams(useLocation().search);
-    };
-    let query = useQuery();
-    const meeting_id = query.get("meeting_id");
-    const video_call = query.get("video_call");
-
     let room = document.querySelector("whereby-embed");
 
     const getAppointment = async () => {
@@ -724,10 +128,6 @@ const VideoConferencing = (props) => {
         setIsCameraVisible(!isCameraVisible);
     };
 
-    function toggleUnderConstruction(message) {
-        setUnderConstructionShow(true);
-        setModalHeading(message);
-    };
 
     const shareScreen = () => {
         if (!isShareScreenVisible) {
@@ -739,23 +139,7 @@ const VideoConferencing = (props) => {
         }
     };
 
-    const showTab = (tab) => {
-        if (tab == "chat") {
-            setChatShow(true);
-            setParticipantsShow(false);
-            setAgendaShow(false);
-
-        } else if (tab === "participants") {
-            setChatShow(false);
-            setParticipantsShow(true);
-            setAgendaShow(false);
-
-        } else if (tab === "agenda") {
-            setChatShow(false);
-            setParticipantsShow(false);
-            setAgendaShow(true);
-        }
-    };
+ 
 
     const handleChange = (e) => {
         setChecklistData({
@@ -778,39 +162,15 @@ const VideoConferencing = (props) => {
                 // toast.success('Profile updated successfully!');
             } else {
                 const errors = response.data.errors;
+                console.log("errors", errors);
             }
         }).catch((error) => {
+            console.log("error", error);
             toast.error('Something went wrong, please contact the administrator!');
         });
     };
 
-    const handleImagesChange = (images) => {
-        // Use the images as needed in the parent component (e.g., for uploading)
-        setChecklistData({
-            ...checklistData,
-            measurement_image_urls: images,
-        });
-    };
-
-    function returnFormattedDate(date) {
-        const targetDate = new Date(date);
-        const month = targetDate.toLocaleString('en-US', { month: 'long' });
-        const day = targetDate.getDate();
-        const year = targetDate.getFullYear();
-        const formattedDate = `${month} ${day}, ${year}`;
-        return formattedDate;
-    }
-
-    function returnFormattedTime(timeString) {
-        const [hours, minutes] = timeString.split(':').map(Number);
-        const ampm = hours >= 12 ? ' PM' : ' AM';
-
-        let formattedHours = hours % 12;
-        formattedHours = formattedHours === 0 ? 12 : formattedHours;
-
-        const formattedTime = `${formattedHours}:${minutes < 10 ? '0' : ''}${minutes}${ampm}`;
-        return formattedTime;
-    }
+  
 
     const endMeetingSubmit = (e) => {
         setEndMeetingLoading(true);
@@ -859,7 +219,6 @@ const VideoConferencing = (props) => {
             console.log("userDetails", userDetails);
             getAppointment()
                 .then((response) => {
-                    setAppointmentLoading(false);
                     const selectedAppointment = response.data.data;
                     if (selectedAppointment) {
                         setAppointment(selectedAppointment);
@@ -874,12 +233,11 @@ const VideoConferencing = (props) => {
                         }
                     } else {
                         toast.error('There has been an error getting the appointment, please try again!');
-                        setAppointmentLoading(false);
                     }
                 })
                 .catch((error) => {
+                    console.log("error", error);
                     toast.error('There has been an error getting the appointment, please try again!');
-                    setAppointmentLoading(false);
                 });
         }
     },
@@ -896,6 +254,7 @@ const VideoConferencing = (props) => {
                 toast.error('An error occured. Please try again or contact the administrator.');
             }
         } catch (error) {
+            console.log("error", error);
             toast.error('An error occured. Please try again or contact the administrator.');
         }
     };
@@ -933,50 +292,7 @@ const VideoConferencing = (props) => {
                                 </Col>
                             </Row>
                             <Col lg="8">
-                                {/* <Card className="bordered-top-primary">
-                                    <Card.Body>
-                                        <Row>
-                                            <Col lg="12">
-                                                <div className='fw-600 fs-18'>Consultation Details</div>
-                                                <hr />
-                                            </Col>
-
-                                            <Col lg="6">
-                                                <div className='mt-1 mb-2'><MdOutlineCalendarMonth size="20" className='text-gold me-2 mb-1' />
-                                                    <span className='fw-600 me-2'>Date:</span>
-                                                    <span className='mt-1'>{returnFormattedDate(appointment?.consultation_date ?? '-')}</span>
-                                                </div>
-                                            </Col>
-
-                                            <Col lg="6">
-                                                <div className='mt-1 mb-2'><LuAlarmClock size="20" className='text-gold me-2 mb-1' />
-                                                    <span className='fw-600 me-2'>Time:</span>
-                                                    <span className='mt-1'>
-                                                        {returnFormattedTime(appointment?.consultation_hour_start ?? '-') + ' - ' + returnFormattedTime(appointment?.consultation_hour_end ?? '-')}
-                                                    </span>
-                                                </div>
-                                            </Col>
-
-                                            <Col lg="12">
-                                                <div className='mt-1'><FiUser size="20" className='text-gold me-2 mb-1' />
-                                                    <span className='fw-600 me-2'>Customer:</span>
-                                                    <span className='mt-1'>{appointment?.designer?.first_name}&nbsp;{appointment?.designer?.last_name}</span>
-                                                </div>
-                                            </Col>
-
-                                            <Col lg="12">
-                                                <Card className='mt-3'>
-                                                    <Card.Body>
-                                                        <div className='mt-1'><BiDetail size="20" className='text-gold me-2 mb-1' />
-                                                            <span className='fw-600 me-2'>Details</span>
-                                                            <div className='mt-3'>{appointment?.consultation_details}</div>
-                                                        </div>
-                                                    </Card.Body>
-                                                </Card>
-                                            </Col>
-                                        </Row>
-                                    </Card.Body>
-                                </Card> */}
+                               
 
                                 <Card>
                                     <Card.Body className='card-video'>
@@ -1112,7 +428,6 @@ const VideoConferencing = (props) => {
                                 }
                                 <Card>
                                     <Card.Body>
-                                        {chatShow ?
                                             <>
                                                 <Row>
                                                     <Col lg="12">
@@ -1129,9 +444,7 @@ const VideoConferencing = (props) => {
                                                     </Col>
                                                 </Row>
                                             </>
-                                            :
-                                            null
-                                        }
+                                       
 
 
                                         {/* {participantsShow ?
@@ -1181,29 +494,7 @@ const VideoConferencing = (props) => {
 
                                 <Row>
                                     <Col className='d-flex justify-content-end mt-3'>
-                                        {/* <div
-                                            className={`cursor - pointer video - button meeting - tooltip tab - family mb - 3 fs - 16 ${agendaShow ? 'bg-gold-icon text-gold' : 'bg-gray-icon text-black'}`}
-                                            onClick={function () { showTab("agenda"); }}
-                                        >
-                                            <span className="icon-tooltiptext fs-14">Agenda</span>
-                                            <IoIosInformationCircleOutline className="text-white off-cam-icon" size={20} />
-                                        </div>
-
-                                        <div
-                                            className={`cursor - pointer video - button meeting - tooltip tab - family mx - 3 mb - 3 fs - 16 ${participantsShow ? 'bg-gold-icon text-gold' : 'bg-gray-icon text-black'}`}
-                                            onClick={function () { showTab("participants"); }}
-                                        >
-                                            <span className="icon-tooltiptext fs-14">Participants</span>
-                                            <HiMiniUsers className="text-white off-cam-icon" size={20} />
-                                        </div> */}
-
-                                        {/* <div
-                                            className={`cursor-pointer video-button meeting-tooltip ${chatShow ? 'bg-gold-icon text-gold' : 'bg-gray-icon text-black'}`}
-                                            onClick={function () { showTab("chat"); }}
-                                        >
-                                            <span className="icon-tooltiptext fs-14">Message</span>
-                                            <BiSolidMessageDetail className="text-white off-cam-icon" size={20} />
-                                        </div> */}
+                                       
                                     </Col>
                                 </Row>
                             </Col>
@@ -1232,7 +523,7 @@ const VideoConferencing = (props) => {
                     </button>
                 </Modal.Header>
                 <Modal.Body>
-                    <h4 className='fs-22 rufina-family mb-3'>{modalHeading}</h4>
+                    <h4 className='fs-22 rufina-family mb-3'>Under Construction</h4>
                     <Card>
                         <Card.Body className="text-center py-5">
                             <GoAlertFill size="60px" className="mb-2 text-gold" />
@@ -2890,7 +2181,7 @@ const VideoConferencing = (props) => {
                 size="lg"
             >
                 <Modal.Header className="py-0">
-                    <h5 className='modal-title text-left rufina-family fs-22 mt-3'>{modalHeadingMeasurementGuide}</h5>
+                    <h5 className='modal-title text-left rufina-family fs-22 mt-3'>Measurement Description</h5>
                     <button
                         type='button'
                         className='close react-modal-close'
