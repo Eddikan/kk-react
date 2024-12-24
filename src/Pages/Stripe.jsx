@@ -66,11 +66,11 @@ const SplitForm = () => {
   const token = cookies.token;
 
   const putCheckOut = async (data, orderID) => {
-    return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'order/' + orderID + '?current_user_id=' + current_user_id + '&token=' + token, data);
+    return await axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'order/' + orderID + '?current_user_id=' + current_user_id + '&token=' + token, data);
   };
 
   const getUserOrder = async (orderID) => {
-    return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'order/' + orderID + '?current_user_id=' + current_user_id + '&token=' + token);
+    return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'order/' + orderID + '?current_user_id=' + current_user_id + '&token=' + token);
   };
   const checkOutSubmitStripe = async (event) => {
     event.preventDefault();
@@ -95,7 +95,7 @@ const SplitForm = () => {
 
     // Send payment method to your backend to create a payment intent
     try {
-      const response = await axios.post(process.env.REACT_APP_API_ENDPOINT + 'create-intent?current_user_id=' + current_user_id + '&token=' + token, {
+      const response = await axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'create-intent?current_user_id=' + current_user_id + '&token=' + token, {
         payment_method_id: paymentMethod.id,
         total_amount: totalAmount, // Example amount in cents (e.g., $50.00)
         currency: 'USD',

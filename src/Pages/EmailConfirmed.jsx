@@ -41,7 +41,7 @@ const EmailConfirmation = () => {
     const userRole = cookies.userRole;
 
     const getUser = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/'+userCode+'/details?current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/'+userCode+'/details?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     async function goToQuestionnaire(e) {

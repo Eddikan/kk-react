@@ -48,7 +48,7 @@ const AdminViewGeneralSurvey = (props) => {
     const navigate = useNavigate();
 
     const getGeneralFeedBack = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'general-feedback-survey/' + surveyId);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'general-feedback-survey/' + surveyId);
     };
 
     const handleChangeGeneralFeeback = (e) => {

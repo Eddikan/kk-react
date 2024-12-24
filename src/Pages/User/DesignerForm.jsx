@@ -40,7 +40,7 @@ const BecomeDesigner = () => {
   const signupType = cookies.signup_type;
 
   const getUser = async () => {
-    return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser);
+    return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + currentUser);
   };
 
   const reloadPage = (e) => {

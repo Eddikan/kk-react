@@ -47,7 +47,7 @@ const Orders = (props) => {
     const [dateFrom, setDateFrom] = useState('');
 
     const getOrders = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'order?page='+currentPage+'&status=' + currentTab);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'order?page='+currentPage+'&status=' + currentTab);
     };
 
     function toggleUnderConstruction(message) {
@@ -71,7 +71,7 @@ const Orders = (props) => {
 
     const fetchProducts = async () => {
         try {
-            const response = await axios.get(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser, {
+            const response = await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser, {
                 params: {
                     search: query
                 }
@@ -86,7 +86,7 @@ const Orders = (props) => {
     const handleChangePage = (pageNumber) => {
         setOrdersLoading(true);
         setCurrentPage(pageNumber);
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'order?status=' + currentTab+'&user_id=' + currentUser +'&page='+pageNumber)
+        axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'order?status=' + currentTab+'&user_id=' + currentUser +'&page='+pageNumber)
             .then((response) => {
                 const data = response.data;
                 const selectedOrders = response.data.data;
@@ -276,7 +276,7 @@ const Orders = (props) => {
                                                                     var order_product = order_items[0].product;
                                                                     if (order_product.image_urls) {
                                                                         var image_urls = JSON.parse(order_product.image_urls);
-                                                                        var cartItemImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
+                                                                        var cartItemImage = import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
                                                                     } else {
                                                                         var cartItemImage = PlaceholderImage;
                                                                     }

@@ -38,7 +38,7 @@ const LogIn = () => {
   const deviceId = cookies.device_id;
 
   const postEmailCode = async (data) => {
-    return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'email-2fa', data);
+    return await axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'email-2fa', data);
   };
 
   const handleChange = (e) => {
@@ -58,7 +58,7 @@ const LogIn = () => {
   async function loginSubmit(e) {
     e.preventDefault();
     setLoginFormLoading(true);
-    axios.post(process.env.REACT_APP_API_ENDPOINT + 'login?device_id='+ deviceId, loginFormData).then((response) => {
+    axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'login?device_id='+ deviceId, loginFormData).then((response) => {
       const success = response.data.status;
       if (success == 'Success') {
         const data = response.data.data;
@@ -120,7 +120,7 @@ const LogIn = () => {
   }
 
   async function createGoogleUser(e) {
-    axios.post(process.env.REACT_APP_API_ENDPOINT + 'user/google/register', e).then((response) => {
+    axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/google/register', e).then((response) => {
       const success = response.data.status;
       if (success == 'Success') {
         const data = response.data.data;
@@ -273,7 +273,7 @@ const LogIn = () => {
       const data = {
         email: googleEmail
       };
-      axios.post(process.env.REACT_APP_API_ENDPOINT + 'user/email', data).then((response) => {
+      axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/email', data).then((response) => {
         const success = response.data.status;
         if (success == 'Success') {
           const data = response.data.data;

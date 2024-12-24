@@ -115,7 +115,7 @@ const PortfolioGrid = (props) => {
 
         setDesignImages(image_urls);
         if (image_urls?.[0]?.image_url) {
-            setActiveImage(process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image_urls[0].image_url);
+            setActiveImage(import.meta.env.VITE_REACT_APP_STORAGE_URL + 'portfolio/' + image_urls[0].image_url);
         } else {
             setActiveImage(PlaceholderImage);
         }
@@ -155,7 +155,7 @@ const PortfolioGrid = (props) => {
     };
 
     async function toggleAddViewCount(id) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/' + id + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
+        axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio/view/' + id + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 // toast.success('Design saved as draft successfully!');
@@ -197,7 +197,7 @@ const PortfolioGrid = (props) => {
     }, [reloadCount]);
 
     async function favoriteDesignUpdate(e) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/item/wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio/item/wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 fetchData(user_id);
@@ -230,7 +230,7 @@ const PortfolioGrid = (props) => {
 
                                     {portfolio.slice(0, 3).map((design, index) => {
                                         if (design.image_urls?.[0]?.image_url) {
-                                            var portfolioImage = process.env.REACT_APP_STORAGE_URL + 'portfolio/' + design.image_urls[0].image_url;
+                                            var portfolioImage = import.meta.env.VITE_REACT_APP_STORAGE_URL + 'portfolio/' + design.image_urls[0].image_url;
                                         } else {
                                             var portfolioImage = PlaceholderImage;
                                         }
@@ -366,7 +366,7 @@ const PortfolioGrid = (props) => {
                             {singleDesign.image !== '' && singleDesign.image !== '-' ? (
                                 <div
                                     className='user-photo'
-                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
+                                    style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
                                 >
                                 </div>
                             ) : (
@@ -404,7 +404,7 @@ const PortfolioGrid = (props) => {
                                                         <div key={index} className="single-image-slider-fabrics"
                                                             style={{
                                                                 backgroundImage:
-                                                                    `url(${process.env.REACT_APP_STORAGE_URL}portfolio/${image.image_url})`
+                                                                    `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}portfolio/${image.image_url})`
                                                             }}
 
                                                         >
@@ -429,7 +429,7 @@ const PortfolioGrid = (props) => {
                                                     {singleDesign.image !== '' && singleDesign.image !== '-' ? (
                                                         <div
                                                             className='user-photo'
-                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
+                                                            style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
                                                         >
                                                         </div>
                                                     ) : (
@@ -485,7 +485,7 @@ const PortfolioGrid = (props) => {
                                                             {singleDesign.image !== '' && singleDesign.image !== '-' ? (
                                                                 <div
                                                                     className='user-photo-modal mb-2 '
-                                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
+                                                                    style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
                                                                 >
                                                                 </div>
                                                             ) : (
@@ -564,7 +564,7 @@ const PortfolioGrid = (props) => {
                                         {singleDesign.image !== '' && singleDesign.image !== '-' ? (
                                             <div
                                                 className='user-photo-side mb-4 '
-                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
+                                                style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
                                             >
                                             </div>
                                         ) : (
@@ -705,7 +705,7 @@ const PortfolioGrid = (props) => {
                                 {singleDesign.image && (
                                     <div
                                         className='user-photo-message mb-2 '
-                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
+                                        style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
                                     >
                                     </div>
                                 )}
@@ -877,7 +877,7 @@ const PortfolioGrid = (props) => {
                                                         <div key={index} className="single-image-slider-share mb-4"
                                                             style={{
                                                                 backgroundImage:
-                                                                    `url(${process.env.REACT_APP_STORAGE_URL}portfolio/${image.image_url})`
+                                                                    `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}portfolio/${image.image_url})`
                                                             }}
                                                         >
                                                         </div>
@@ -887,7 +887,7 @@ const PortfolioGrid = (props) => {
                                                             {singleDesign.image !== '' && singleDesign.image !== '-' ? (
                                                                 <div
                                                                     className='user-photo-share mt-1'
-                                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
+                                                                    style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
                                                                 >
                                                                 </div>
                                                             ) : (

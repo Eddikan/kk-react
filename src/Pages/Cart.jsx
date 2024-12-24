@@ -66,23 +66,23 @@ const Cart = (props) => {
     }
 
     const getUserCartItems = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/cart?current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/cart?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const getUser = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const postCheckOut = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'order', data + '?current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'order', data + '?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const updateQuantity = async (data) => {
-        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'cart/' + data.id + '?current_user_id=' + current_user_id + '&token=' + token, data);
+        return await axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'cart/' + data.id + '?current_user_id=' + current_user_id + '&token=' + token, data);
     };
 
     const deleteCartItem = async () => {
-        return await axios.delete(process.env.REACT_APP_API_ENDPOINT + 'cart/' + cartItemId + '?current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.delete(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'cart/' + cartItemId + '?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const deleteTempCartItem = (id) => {
@@ -462,7 +462,7 @@ const Cart = (props) => {
                                                                             var cart_product = cartItem.product;
                                                                             if (cart_product.image_urls) {
                                                                                 var image_urls = JSON.parse(cart_product.image_urls);
-                                                                                var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
+                                                                                var fabricImage = import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
                                                                             } else {
                                                                                 var fabricImage = PlaceholderImage;
                                                                             }
@@ -628,7 +628,7 @@ const Cart = (props) => {
                                                                                                     {cartItem.seller.image ?
                                                                                                         <div
                                                                                                             className='user-photo-chat'
-                                                                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${cartItem.seller.image})` }}
+                                                                                                            style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${cartItem.seller.image})` }}
                                                                                                         >
                                                                                                         </div>
                                                                                                         :
@@ -725,7 +725,7 @@ const Cart = (props) => {
                                                                             var cart_product = cartItem;
                                                                             if (cart_product.images) {
                                                                                 var image = cart_product.images;
-                                                                                var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url;
+                                                                                var fabricImage = import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + image.image_url;
                                                                             } else {
                                                                                 var fabricImage = PlaceholderImage;
                                                                             }
@@ -878,7 +878,7 @@ const Cart = (props) => {
                                                                                                     {cartItem.user_image ?
                                                                                                         <div
                                                                                                             className='user-photo-chat'
-                                                                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${cartItem.user_image})` }}
+                                                                                                            style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${cartItem.user_image})` }}
                                                                                                         >
                                                                                                         </div>
                                                                                                         :

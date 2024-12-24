@@ -120,22 +120,22 @@ const Header = () => {
   const selectedCurrency = cookies.selectedCurrency ?? "";
 
   const getUser = async () => {
-    return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token);
+    return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token);
   };
 
   const getFabrics = async () => {
-    return await axios.get(process.env.REACT_APP_API_ENDPOINT + '/product/fabric' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token);
+    return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + '/product/fabric' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token);
   };
   const getUserOrders = async () => {
-    return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/order?current_user_id=' + current_user_id + '&token=' + token);
+    return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/order?current_user_id=' + current_user_id + '&token=' + token);
   }
 
   const getNotifications = async () => {
-    return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'notification?current_user_id=' + current_user_id + '&token=' + token);
+    return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'notification?current_user_id=' + current_user_id + '&token=' + token);
   };
 
   const getUserCartItems = async () => {
-    return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/cart?current_user_id=' + current_user_id + '&token=' + token);
+    return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/cart?current_user_id=' + current_user_id + '&token=' + token);
   };
 
   const getCurrencyConversions = async (e) => {
@@ -636,7 +636,7 @@ const Header = () => {
                         {/* <IoPersonOutline size={26} /> */}
                         <img src={UserIcon} className="navigation-icon" alt="Profile" />
                         {/* {userImage ?
-                          <div className="header-user-photo cursor-pointer" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}>
+                          <div className="header-user-photo cursor-pointer" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}>
 
                           </div>
                           :
@@ -831,7 +831,7 @@ const Header = () => {
                     }
                     <div className="user-dropdown nav-link position-relative d-none" ref={userRef}>
                       {userImage ?
-                        <div className="header-user-photo cursor-pointer" onClick={toggleUserMenu} style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}>
+                        <div className="header-user-photo cursor-pointer" onClick={toggleUserMenu} style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}>
 
                         </div>
                         :
@@ -856,7 +856,7 @@ const Header = () => {
                                 <Col lg="3">
                                   <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none">
                                     {userImage ?
-                                      <div className="header-user-photo cursor-pointer" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
+                                      <div className="header-user-photo cursor-pointer" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
                                       :
                                       <div className="header-user-photo cursor-pointer" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
                                     }

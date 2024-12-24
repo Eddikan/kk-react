@@ -61,7 +61,7 @@ const Orders = (props) => {
 
     const getOrders = async () => {
         return await axios.get(
-            process.env.REACT_APP_API_ENDPOINT +
+            import.meta.env.VITE_REACT_APP_API_ENDPOINT +
             'user/' + currentUser + 
             '/order?status=' + (orderStatus === 'all' ? '' : orderStatus) +
             '&current_user_id=' + current_user_id +
@@ -81,7 +81,7 @@ const Orders = (props) => {
 
     async function reorderProducts(e) {
         // setReorderLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart/bulk?current_user_id=' + current_user_id + '&token=' + token, { order_items: e, user_id: currentUser }).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'cart/bulk?current_user_id=' + current_user_id + '&token=' + token, { order_items: e, user_id: currentUser }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 const data = response.data.data;
@@ -181,7 +181,7 @@ const Orders = (props) => {
                                                         var order_product = order_items[0]?.product;
                                                         if (order_product.image_urls) {
                                                             var image_urls = JSON.parse(order_product.image_urls);
-                                                            var cartItemImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
+                                                            var cartItemImage = import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
                                                         } else {
                                                             var cartItemImage = PlaceholderImage;
                                                         }
@@ -320,7 +320,7 @@ const Orders = (props) => {
                                     {designerName.image && (
                                         <div
                                             className='user-photo'
-                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${designerName.image})` }}
+                                            style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${designerName.image})` }}
                                         >
                                         </div>
                                     )}

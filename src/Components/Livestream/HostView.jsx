@@ -45,7 +45,7 @@ const MyLivestreamUI = ({ livestreamId }) => {
     const isCallLive = useIsCallLive();
 
     const putStream = async (data) => {
-        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'livestream/'+livestreamId + '?current_user_id=' + current_user_id + '&token=' + token, data);
+        return await axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'livestream/'+livestreamId + '?current_user_id=' + current_user_id + '&token=' + token, data);
     };
 
     const stopLive = (e) => {
@@ -216,7 +216,7 @@ const MyLivestreamUI = ({ livestreamId }) => {
 
 const HostView = ({livestream, userDetails}) => {
 
-    const apiKey = process.env.REACT_APP_STREAM_API_KEY;
+    const apiKey = import.meta.env.VITE_REACT_APP_STREAM_API_KEY;
     const token = livestream.token;
     const callId = livestream.id; // the call id can be found in the "Credentials" section
 
@@ -224,7 +224,7 @@ const HostView = ({livestream, userDetails}) => {
     const user = {
         id: userDetails.first_name+'_'+livestream.id,
         name: userDetails.first_name,
-        image: process.env.REACT_APP_STORAGE_URL+'user/'+userDetails.image,
+        image: import.meta.env.VITE_REACT_APP_STORAGE_URL+'user/'+userDetails.image,
     };
 
     const client = new StreamVideoClient({ apiKey, user, token });

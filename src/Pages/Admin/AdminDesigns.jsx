@@ -75,7 +75,7 @@ const AdminDesigns = (props) => {
     };
 
     const getPortfolio = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/design?current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio/design?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     function toggleShareModal() {
@@ -117,7 +117,7 @@ const AdminDesigns = (props) => {
 
         setDesignImages(image_urls);
         if (image_urls?.[0]?.image_url) {
-            setActiveImage(process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image_urls[0].image_url);
+            setActiveImage(import.meta.env.VITE_REACT_APP_STORAGE_URL + 'portfolio/' + image_urls[0].image_url);
         } else {
             setActiveImage(PlaceholderImage);
         }
@@ -130,7 +130,7 @@ const AdminDesigns = (props) => {
     }
 
     const handleChangePage = (pageNumber) => {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/design?page=' + pageNumber + '&current_user_id=' + current_user_id)
+        axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio/design?page=' + pageNumber + '&current_user_id=' + current_user_id)
             .then((response) => {
                 const data = response.data;
                 setCurrentPage(pageNumber);
@@ -153,7 +153,7 @@ const AdminDesigns = (props) => {
 
     async function PortfolioDeleteSubmit(e) {
         setPortfolioDeleteLoading(true);
-        axios.delete(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/' + portfolioId + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
+        axios.delete(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio_item/' + portfolioId + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success('Design deleted successfully!');
@@ -194,7 +194,7 @@ const AdminDesigns = (props) => {
         [reloadCount]);
 
     async function toggleAddViewCount(id) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/' + id + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
+        axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio/view/' + id + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 // toast.success('Design saved as draft successfully!');
@@ -268,7 +268,7 @@ const AdminDesigns = (props) => {
                                                         <>
                                                             {designs.map((design) => {
                                                                 if (design.image_urls?.[0]?.image_url) {
-                                                                    var designImage = process.env.REACT_APP_STORAGE_URL + 'portfolio/' + design.image_urls[0].image_url;
+                                                                    var designImage = import.meta.env.VITE_REACT_APP_STORAGE_URL + 'portfolio/' + design.image_urls[0].image_url;
                                                                 } else {
                                                                     var designImage = PlaceholderImage;
                                                                 }
@@ -303,7 +303,7 @@ const AdminDesigns = (props) => {
                                                                                                     {design.user.image ?
                                                                                                         <div
                                                                                                             className='user-photo-chat'
-                                                                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${design.user.image})` }}
+                                                                                                            style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${design.user.image})` }}
                                                                                                         >
                                                                                                         </div>
                                                                                                         :
@@ -518,7 +518,7 @@ const AdminDesigns = (props) => {
                             {singleDesign.image !== '' && singleDesign.image !== '-' ? (
                                 <div
                                     className='user-photo'
-                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
+                                    style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
                                 >
                                 </div>
                             ) : (
@@ -555,7 +555,7 @@ const AdminDesigns = (props) => {
                                                         <div key={index} className="single-image-slider-fabrics"
                                                             style={{
                                                                 backgroundImage:
-                                                                    `url(${process.env.REACT_APP_STORAGE_URL}portfolio/${image.image_url})`
+                                                                    `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}portfolio/${image.image_url})`
                                                             }}
                                                         >
                                                         </div>
@@ -579,7 +579,7 @@ const AdminDesigns = (props) => {
                                                     {singleDesign.image !== '' && singleDesign.image !== '-' ? (
                                                         <div
                                                             className='user-photo'
-                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
+                                                            style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
                                                         >
                                                         </div>
                                                     ) : (
@@ -632,7 +632,7 @@ const AdminDesigns = (props) => {
                                                             {singleDesign.image !== '' && singleDesign.image !== '-' ? (
                                                                 <div
                                                                     className='user-photo-modal mb-2 '
-                                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
+                                                                    style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
                                                                 >
                                                                 </div>
                                                             ) : (
@@ -699,7 +699,7 @@ const AdminDesigns = (props) => {
                                         {singleDesign.image !== '' && singleDesign.image !== '-' ? (
                                             <div
                                                 className='user-photo-side mb-4 '
-                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
+                                                style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
                                             >
                                             </div>
                                         ) : (
@@ -807,7 +807,7 @@ const AdminDesigns = (props) => {
                                                         <div key={index} className="single-image-slider-share mb-4"
                                                             style={{
                                                                 backgroundImage:
-                                                                    `url(${process.env.REACT_APP_STORAGE_URL}portfolio/${image.image_url})`
+                                                                    `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}portfolio/${image.image_url})`
                                                             }}
                                                         >
                                                         </div>
@@ -817,7 +817,7 @@ const AdminDesigns = (props) => {
                                                             {singleDesign.image !== '' && singleDesign.image !== '-' ? (
                                                                 <div
                                                                     className='user-photo-share mt-1'
-                                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
+                                                                    style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
                                                                 >
                                                                 </div>
                                                             ) : (

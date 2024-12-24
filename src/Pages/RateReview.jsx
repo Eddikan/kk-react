@@ -42,7 +42,7 @@ const RateReview = (props) => {
     const today = (new Date(product.created_at)).toLocaleDateString('en-ES', options);
 
     const getProduct = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/' + productId + '?current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'product/' + productId + '?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     function toggleUnderConstruction(message) {
@@ -68,7 +68,7 @@ const RateReview = (props) => {
                     setImages(productData.image_urls);
 
                     if (productData.image_urls?.[0]?.image_url) {
-                        setActiveImage(process.env.REACT_APP_STORAGE_URL + 'product/' + productData.image_urls[0].image_url);
+                        setActiveImage(import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + productData.image_urls[0].image_url);
                     } else {
                         setActiveImage(PlaceholderImage);
                     }
@@ -108,7 +108,7 @@ const RateReview = (props) => {
                                                         {productUser.image && (
                                                             <div
                                                                 className='user-photo-rate me-2'
-                                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${productUser.image})` }}
+                                                                style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${productUser.image})` }}
                                                             >
                                                             </div>
                                                         )}

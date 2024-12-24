@@ -111,7 +111,7 @@ const NewPortfolio = (props) => {
     }, [reloadCount]);
 
     async function getCategories(id) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'design/filter/type?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
+        axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'design/filter/type?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const data = response.data;
             if (data) {
                 const filters = data.data;
@@ -129,7 +129,7 @@ const NewPortfolio = (props) => {
 
     async function addCategory(e) {
         e.preventDefault();
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio-item-categories?current_user_id=' + current_user_id + '&token=' + token, { name: categorySearchTerm, user_id: currentUser }).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio-item-categories?current_user_id=' + current_user_id + '&token=' + token, { name: categorySearchTerm, user_id: currentUser }).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
                 const category = response.data.data;
@@ -168,7 +168,7 @@ const NewPortfolio = (props) => {
         } else {
             if (portfolioData.image_urls) {
                 setPortfolioLoading(true);
-                axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item?current_user_id=' + current_user_id + '&token=' + token, {...portfolioData, portfolio_item_category_ids: categoryIds, seasons: seasons, colors: colors, tags: tags, materials: materials, genders: genders, status: 'Active' }).then((response) => {
+                axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio_item?current_user_id=' + current_user_id + '&token=' + token, {...portfolioData, portfolio_item_category_ids: categoryIds, seasons: seasons, colors: colors, tags: tags, materials: materials, genders: genders, status: 'Active' }).then((response) => {
                     const success = response.data.status;
                     if(success == 'Success') {
                         toast.success('Design added successfully!');
@@ -195,7 +195,7 @@ const NewPortfolio = (props) => {
     async function PortfolioDraftSubmit(e) {
         e.preventDefault();
         setPortfolioDraftLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item?current_user_id=' + current_user_id + '&token=' + token, {...portfolioData, portfolio_item_category_ids: categoryIds, seasons: seasons, colors: colors, tags: tags, materials: materials, genders: genders, status: 'Draft' }).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio_item?current_user_id=' + current_user_id + '&token=' + token, {...portfolioData, portfolio_item_category_ids: categoryIds, seasons: seasons, colors: colors, tags: tags, materials: materials, genders: genders, status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
                 toast.success('Design saved as draft successfully!');
@@ -586,7 +586,7 @@ const NewPortfolio = (props) => {
                                                                     {element.value && element.value.length > 0 && element.value != "" ?
                                                                         <>
                                                                             {element.value.map((image, imageIndex) => (
-                                                                                <img key={imageIndex} src={process.env.REACT_APP_STORAGE_URL+'product/'+image?.image_url} className="w-100 h-auto mb-3" alt="" />
+                                                                                <img key={imageIndex} src={import.meta.env.VITE_REACT_APP_STORAGE_URL+'product/'+image?.image_url} className="w-100 h-auto mb-3" alt="" />
                                                                             ))}
                                                                         </>
                                                                         :
@@ -604,7 +604,7 @@ const NewPortfolio = (props) => {
                                                                     : element.type == "Video" && element.value != "" ?
                                                                     <>
                                                                         <div className="mb-3">
-                                                                            <ResponsiveVideo src={process.env.REACT_APP_STORAGE_URL+'products/videos/'+element.value} />
+                                                                            <ResponsiveVideo src={import.meta.env.VITE_REACT_APP_STORAGE_URL+'products/videos/'+element.value} />
                                                                         </div>
                                                                     </>
                                                                     : element.type == "Line Break" ?

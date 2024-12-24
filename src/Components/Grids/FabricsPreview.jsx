@@ -49,7 +49,7 @@ const Fabrics = (props) => {
     }
 
     async function toggleSortFabrics(type, sort) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/design' +type+sort + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
+        axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio/design' +type+sort + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const selectedFabrics = response.data.data;
             if(selectedFabrics) {
                 setFabrics(selectedFabrics);
@@ -65,7 +65,7 @@ const Fabrics = (props) => {
     }
 
     async function toggleAddViewCount(id) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/view/'+id + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
+        axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'product/view/'+id + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
                 // toast.success('Design saved as draft successfully!');
@@ -108,7 +108,7 @@ const Fabrics = (props) => {
                                         <Row className="designs-row">
                                             {fabrics.map((fabric, index) => {
                                                 if (fabric.image_urls?.[0]?.image_url) {
-                                                    var fabricImage = process.env.REACT_APP_STORAGE_URL+'product/'+fabric.image_urls[0].image_url;
+                                                    var fabricImage = import.meta.env.VITE_REACT_APP_STORAGE_URL+'product/'+fabric.image_urls[0].image_url;
                                                 } else {
                                                     var fabricImage = PlaceholderImage;
                                                 }
@@ -138,7 +138,7 @@ const Fabrics = (props) => {
                                     <Row className="designs-row">
                                         {fabrics.map((fabric, index) => {
                                             if (fabric.image_urls?.[0]?.image_url) {
-                                                var fabricImage = process.env.REACT_APP_STORAGE_URL+'portfolio/'+fabric.image_urls[0].image_url;
+                                                var fabricImage = import.meta.env.VITE_REACT_APP_STORAGE_URL+'portfolio/'+fabric.image_urls[0].image_url;
                                             } else {
                                                 var fabricImage = PlaceholderImage;
                                             }

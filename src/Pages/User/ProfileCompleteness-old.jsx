@@ -183,7 +183,7 @@ const ProfileCompleteness = () => {
                                     <div className="d-flex column-gap-20">
                                         <div>
                                             {userImage ?
-                                                <div className="profile-image" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
+                                                <div className="profile-image" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
                                                 :
                                                 <div className="profile-image" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
                                             }

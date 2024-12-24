@@ -34,7 +34,7 @@ const AdminSeller = (props) => {
     let PageSize = 10;
 
     const getSellers = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'seller');
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'seller');
     };
 
     const deleteConfirm = (e) => {
@@ -43,7 +43,7 @@ const AdminSeller = (props) => {
     };
 
     const handleChangePage = (pageNumber) => {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'seller?page=' + pageNumber + '&user_id=' + currentUser)
+        axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'seller?page=' + pageNumber + '&user_id=' + currentUser)
             .then((response) => {
                 const data = response.data;
                 setCurrentPage(pageNumber);
@@ -66,7 +66,7 @@ const AdminSeller = (props) => {
 
     async function sellerDeleteSubmit() {
         setSellerDeleteLoading(true);
-        axios.delete(process.env.REACT_APP_API_ENDPOINT + 'seller/' + sellerId).then((response) => {
+        axios.delete(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'seller/' + sellerId).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success('Seller deleted successfully!');
@@ -182,7 +182,7 @@ const AdminSeller = (props) => {
                                                                                                 {seller?.user?.image ?
                                                                                                     <div
                                                                                                         className='seller-photo-admin cursor-pointer'
-                                                                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${seller?.user?.image})` }}
+                                                                                                        style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${seller?.user?.image})` }}
                                                                                                     >
                                                                                                     </div>
                                                                                                     :

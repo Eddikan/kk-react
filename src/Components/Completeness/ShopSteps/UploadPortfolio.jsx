@@ -175,7 +175,7 @@ const UploadPortfolio = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
                                                                         <>
                                                                             {portfolioItem.image_urls.map((image, imageIndex) => (
                                                                                 <Col lg={4} key={image.id} className="image-preview mt-3">
-                                                                                    <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image.image_url + ")", minHeight: '190px' }}>
+                                                                                    <div className="image-dnd" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'portfolio/' + image.image_url + ")", minHeight: '190px' }}>
                                                                                         <div className="dnd-actions-overlay"></div>
                                                                                     </div>
                                                                                 </Col>
@@ -247,7 +247,7 @@ const UploadPortfolio = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
                                                         <Row className="portfolio-row">
                                                             {portfolio.map((object, index) => {
                                                                 if (object.image_urls?.[0]?.image_url) {
-                                                                    var portfolioImage = process.env.REACT_APP_STORAGE_URL + 'portfolio/' + object.image_urls[0].image_url;
+                                                                    var portfolioImage = import.meta.env.VITE_REACT_APP_STORAGE_URL + 'portfolio/' + object.image_urls[0].image_url;
                                                                 } else {
                                                                     var portfolioImage = PlaceholderImage;
                                                                 }

@@ -30,7 +30,7 @@ const Designers = (props) => {
     const token = cookies.token;
     
     const getDesigners = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer?current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const toggleGetUser = (e) => {
@@ -38,7 +38,7 @@ const Designers = (props) => {
     }
 
     const handleChangePage = (pageNumber) => {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer?page=' + pageNumber + '&current_user_id=' + current_user_id + '&token=' + token)
+        axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer?page=' + pageNumber + '&current_user_id=' + current_user_id + '&token=' + token)
             .then((response) => {
                 const data = response.data;
                 setCurrentPage(pageNumber);
@@ -60,7 +60,7 @@ const Designers = (props) => {
     };
 
     async function wishlistDesignerUpdate(e) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
             } else {
@@ -120,7 +120,7 @@ const Designers = (props) => {
                                                         null
                                                     }
                                                     {designer.user.image ? (
-                                                        <div onClick={() => toggleGetUser(designer.user.id)} className="designers-grid-div w-100" style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${designer.user.image})` }}>
+                                                        <div onClick={() => toggleGetUser(designer.user.id)} className="designers-grid-div w-100" style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${designer.user.image})` }}>
                                                             <div className='bg-black-faded cursor-pointer designer-overlay'>
                                                                 <div className="designer-details">
                                                                     <h3 className="designer-name text-white fs-25 mb-1 fw-600">{designer.user.first_name && designer.user.first_name !== "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name !== "" ? designer.user.last_name : "-"}</h3>

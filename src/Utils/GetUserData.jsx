@@ -7,7 +7,7 @@ const GetUserData = async (data) => {
     const token = data.token;
 
     try {
-        const response = await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser+'?user_id='+currentUser+'&token='+token);
+        const response = await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + currentUser+'?user_id='+currentUser+'&token='+token);
         return response.data.data;
     } catch (error) {
         // Handle the error or show a toast message

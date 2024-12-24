@@ -97,11 +97,11 @@ const ImageSlider = (props) => {
                     return (
                         <div className="slider pt-0" key={index}>
                             {type == 'product' ?
-                                <div className="slider-image cursor-pointer" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")" }}>
+                                <div className="slider-image cursor-pointer" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")" }}>
 
                                 </div>
                                 :
-                                <div className="slider-image cursor-pointer" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image.image_url + ")" }}>
+                                <div className="slider-image cursor-pointer" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'portfolio/' + image.image_url + ")" }}>
 
                                 </div>
                             }

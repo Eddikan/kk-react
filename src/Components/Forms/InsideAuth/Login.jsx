@@ -59,19 +59,19 @@ const LogIn = ({ props, showSignup, onCloseModal }) => {
     const deviceId = cookies.device_id;
 
     const postEmailCode = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'email-2fa', data);
+        return await axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'email-2fa', data);
     };
 
     const postSMSCode = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'sms-2fa', data);
+        return await axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'sms-2fa', data);
     };
 
     const postLogin = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'login-2fa?device_id=' + deviceId, data);
+        return await axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'login-2fa?device_id=' + deviceId, data);
     };
 
     const postSMSLogin = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'login-sms-2fa?device_id=' + deviceId, data);
+        return await axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'login-sms-2fa?device_id=' + deviceId, data);
     };
 
     const handleChange = (e) => {
@@ -95,12 +95,12 @@ const LogIn = ({ props, showSignup, onCloseModal }) => {
     }
 
     const getUserCartItems = async (e) => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + e + '/cart');
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + e + '/cart');
     };
 
     async function addTempCartToCart(data) {
         // setReorderLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart/bulk', { order_items: data.order_items, user_id: data.user_id }).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'cart/bulk', { order_items: data.order_items, user_id: data.user_id }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 getUserCartItems(data.user_id).then((response) => {
@@ -133,7 +133,7 @@ const LogIn = ({ props, showSignup, onCloseModal }) => {
 
     async function addTempFavoritesToFavorites(data) {
         // setReorderLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/item/wishlist/bulk', { favorites: data.favorites, user_id: data.user_id }).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio/item/wishlist/bulk', { favorites: data.favorites, user_id: data.user_id }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 const data = response.data.data;
@@ -447,7 +447,7 @@ const LogIn = ({ props, showSignup, onCloseModal }) => {
     async function loginSubmit(e) {
         e.preventDefault();
         setLoginFormLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'login?device_id=' + deviceId, loginFormData).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'login?device_id=' + deviceId, loginFormData).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 const data = response.data.data;
@@ -535,7 +535,7 @@ const LogIn = ({ props, showSignup, onCloseModal }) => {
     }
 
     async function createGoogleUser(e) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'user/google/register', e).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/google/register', e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 const data = response.data.data;
@@ -649,7 +649,7 @@ const LogIn = ({ props, showSignup, onCloseModal }) => {
             const data = {
                 email: googleEmail
             };
-            axios.post(process.env.REACT_APP_API_ENDPOINT + 'user/email?device_id=' + deviceId, data).then((response) => {
+            axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/email?device_id=' + deviceId, data).then((response) => {
                 const success = response.data.status;
                 if (success == 'Success') {
                     const data = response.data.data;

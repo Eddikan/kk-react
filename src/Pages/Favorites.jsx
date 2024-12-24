@@ -45,7 +45,7 @@ const Favorites = (props) => {
     };
 
     async function favoriteUpdate(e) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/item/wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio/item/wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 fetchData({ currentUser: currentUser, token: token });
@@ -58,7 +58,7 @@ const Favorites = (props) => {
     }
 
     async function toggleAddViewCount(id) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/' + id + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
+        axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio/view/' + id + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 // toast.success('Design saved as draft successfully!');
@@ -147,7 +147,7 @@ const Favorites = (props) => {
                                                                 if (favorite.portfolio_item?.image_urls) {
                                                                     var favorite_images = JSON.parse(favorite.portfolio_item?.image_urls);
                                                                     if (favorite_images?.[0]) {
-                                                                        var favoriteImage = process.env.REACT_APP_STORAGE_URL + 'portfolio/' + favorite_images[0].image_url;
+                                                                        var favoriteImage = import.meta.env.VITE_REACT_APP_STORAGE_URL + 'portfolio/' + favorite_images[0].image_url;
                                                                     } else {
                                                                         var favoriteImage = PlaceholderImage;
                                                                     }
@@ -184,7 +184,7 @@ const Favorites = (props) => {
                                                                                                 </div>
                                                                                                 <div className='d-flex align-items-center mt-1' >
                                                                                                     {/* {favorite.user.image ?
-                                                                                                        <div className='designer-photo-small' style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+favorite.user.image+")"}} ></div>
+                                                                                                        <div className='designer-photo-small' style={{ backgroundImage: "url("+import.meta.env.VITE_REACT_APP_STORAGE_URL+'user/'+favorite.user.image+")"}} ></div>
                                                                                                         :
                                                                                                         <div className='designer-photo-small' style={{ backgroundImage: "url("+UserPlaceholder+")"}} ></div>
                                                                                                     }
@@ -236,7 +236,7 @@ const Favorites = (props) => {
                                                                 if (favorite?.image_urls) {
                                                                     var favorite_images = favorite.image_urls;
                                                                     if (favorite_images) {
-                                                                        var favoriteImage = process.env.REACT_APP_STORAGE_URL + 'portfolio/' + favorite_images.image_url;
+                                                                        var favoriteImage = import.meta.env.VITE_REACT_APP_STORAGE_URL + 'portfolio/' + favorite_images.image_url;
                                                                     } else {
                                                                         var favoriteImage = PlaceholderImage;
                                                                     }
@@ -273,7 +273,7 @@ const Favorites = (props) => {
                                                                                                 </div>
                                                                                                 <div className='d-flex align-items-center mt-1' >
                                                                                                     {/* {favorite.user.image ?
-                                                                                                        <div className='designer-photo-small' style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+favorite.user.image+")"}} ></div>
+                                                                                                        <div className='designer-photo-small' style={{ backgroundImage: "url("+import.meta.env.VITE_REACT_APP_STORAGE_URL+'user/'+favorite.user.image+")"}} ></div>
                                                                                                         :
                                                                                                         <div className='designer-photo-small' style={{ backgroundImage: "url("+UserPlaceholder+")"}} ></div>
                                                                                                     }

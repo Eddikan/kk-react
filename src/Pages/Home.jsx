@@ -89,7 +89,7 @@ const Home = (props) => {
     }
 
   }, [reloadCount]);
-
+console.log('check',import.meta.env.VITE_REACT_APP_API_ENDPOINT)
   return (
     <Layout>
       {/* <HeroSection /> */}

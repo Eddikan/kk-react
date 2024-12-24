@@ -25,7 +25,7 @@ const initialStreamFormData = Object.freeze({
 });
 
 const LiveStreams = (props) => {
-    const apiKey = process.env.REACT_APP_STREAM_API_KEY;
+    const apiKey = import.meta.env.VITE_REACT_APP_STREAM_API_KEY;
 
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'token']);
     const [livestreamId, setLiveStreamId] = useState('');
@@ -73,11 +73,11 @@ const LiveStreams = (props) => {
     }
 
     const getLiveStream = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/'+currentUser+'/livestream?current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/'+currentUser+'/livestream?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const postStream = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'livestream?current_user_id' + current_user_id + '&token=' + token, data);
+        return await axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'livestream?current_user_id' + current_user_id + '&token=' + token, data);
     };
 
     const handleChangeStream = (e) => {
@@ -90,7 +90,7 @@ const LiveStreams = (props) => {
     }
 
     const handleChangePage = (pageNumber) => {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/'+currentUser+'/livestream?page=' + pageNumber + '&current_user_id=' + current_user_id + '&token=' + token)
+        axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/'+currentUser+'/livestream?page=' + pageNumber + '&current_user_id=' + current_user_id + '&token=' + token)
             .then((response) => {
                 const data = response.data;
                 setCurrentPage(pageNumber);

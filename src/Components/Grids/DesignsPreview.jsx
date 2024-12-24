@@ -49,7 +49,7 @@ const Designs = (props) => {
     }
 
     async function toggleSortDesigns(type, sort) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/design' +type+sort + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
+        axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio/design' +type+sort + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const selectedDesigns = response.data.data;
             if(selectedDesigns) {
                 setDesigns(selectedDesigns);
@@ -65,7 +65,7 @@ const Designs = (props) => {
     }
 
     async function toggleAddViewCount(id) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/'+id + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
+        axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio/view/'+id + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
                 // toast.success('Design saved as draft successfully!');
@@ -108,7 +108,7 @@ const Designs = (props) => {
                                         <Row className="designs-row">
                                             {designs.map((design, index) => {
                                                 if (design.image_urls?.[0]?.image_url) {
-                                                    var designImage = process.env.REACT_APP_STORAGE_URL+'portfolio/'+design.image_urls[0].image_url;
+                                                    var designImage = import.meta.env.VITE_REACT_APP_STORAGE_URL+'portfolio/'+design.image_urls[0].image_url;
                                                 } else {
                                                     var designImage = PlaceholderImage;
                                                 }
@@ -138,7 +138,7 @@ const Designs = (props) => {
                                     <Row className="designs-row">
                                         {designs.map((design, index) => {
                                             if (design.image_urls?.[0]?.image_url) {
-                                                var designImage = process.env.REACT_APP_STORAGE_URL+'portfolio/'+design.image_urls[0].image_url;
+                                                var designImage = import.meta.env.VITE_REACT_APP_STORAGE_URL+'portfolio/'+design.image_urls[0].image_url;
                                             } else {
                                                 var designImage = PlaceholderImage;
                                             }

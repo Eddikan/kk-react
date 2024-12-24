@@ -46,7 +46,7 @@ function PixelComponent() {
         const pixHeight = distancePixel(top.x, top.y, heel.x, heel.y);
         drawLine(ctx,top,heel,'black');
     
-        pixToCmFactor = height / pixHeight;
+        setPixToCmFactor( height / pixHeight)
     }
     
     function distancePixel(x1,y1,x2,y2){
@@ -393,11 +393,11 @@ function PixelComponent() {
                             // console.log("Shirt Bottom: "+ measurements.bottom + " cm");
                             // console.log("Waist: " + measurements.waist + " cm");
                             // console.log("TURN Right!");
-                            state++;
+                            setState((prev)=>prev++)
                         }
                     }
                     else
-                        prevFactor = pixToCmFactor;
+                    setPrevFactor(  pixToCmFactor)
                 }
             }
         }

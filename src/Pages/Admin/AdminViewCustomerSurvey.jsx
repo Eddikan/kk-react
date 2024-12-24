@@ -47,7 +47,7 @@ const AdminViewCustomerSurvey = (props) => {
     const [surveyUser, setSurveyUser] = useState('');
 
     const getCustomerSurvey = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'customer-satisfaction-survey/' + surveyId);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'customer-satisfaction-survey/' + surveyId);
     };
 
     const handleChangeCustomer = (e) => {

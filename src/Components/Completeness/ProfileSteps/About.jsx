@@ -36,7 +36,7 @@ const AboutStep = ({ user, currentUser, reload, token }) => {
         } else {
             e.preventDefault();
             setFormStatus(true);
-            axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token, { ...profileFormData, about_complete: 1}).then((response) => {
+            axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token, { ...profileFormData, about_complete: 1}).then((response) => {
                 const success = response.data.status;
                 if (success == 'Success') {
                     const data = response.data.data;

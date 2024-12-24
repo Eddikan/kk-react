@@ -55,7 +55,7 @@ const ThankYouPage = (props) => {
 
     async function addDesignerToOrder(e) {
         setConnectDesignerLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'order/'+orderId + '?current_user_id=' + current_user_id + '&token=' + token, {needs_designer: needsDesigner, designer_id: designerID}).then((response) => {
+        axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'order/'+orderId + '?current_user_id=' + current_user_id + '&token=' + token, {needs_designer: needsDesigner, designer_id: designerID}).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 // navigate('/orders');
@@ -136,7 +136,7 @@ const ThankYouPage = (props) => {
                                     <div className='d-flex'>
                                         {selectedDesigner.user.image && selectedDesigner.user.image != "" ?
                                             <div className="designs-grid-div fabric-image"
-                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${selectedDesigner.user.image})`, width: '65px', height: '65px', minHeight: 'auto' }}>
+                                                style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${selectedDesigner.user.image})`, width: '65px', height: '65px', minHeight: 'auto' }}>
                                             </div>
                                             :
                                             <div className="designs-grid-div fabric-image"

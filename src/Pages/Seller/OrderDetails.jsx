@@ -160,37 +160,37 @@ const OrderDetails = (props) => {
     };
 
     const getOrder = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'order/' + orderId);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'order/' + orderId);
     };
 
     const getOrderStatus = async (order_item_id) => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'item/' + order_item_id);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'item/' + order_item_id);
     };
 
     const getOrderItemLog = async (order_item_log) => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'order/item/' + order_item_log + '/log');
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'order/item/' + order_item_log + '/log');
     };
 
     // const getOrderItemLogs = async (id) => {
-    //     return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'order/item/' + id + '/log');
+    //     return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'order/item/' + id + '/log');
     // };
 
     const postOrderItemLog = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'order/item/log', data);
+        return await axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'order/item/log', data);
     };
 
     const putOrder = async (data) => {
-        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'order/' + orderId, data);
+        return await axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'order/' + orderId, data);
     };
 
     const putOrderStatus = async (data) => {
-        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'item/' + orderItemId + '/status/update', data);
+        return await axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'item/' + orderItemId + '/status/update', data);
     };
 
 
     async function reorderProducts(e) {
         // setReorderLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart/bulk', { order_items: e, user_id: currentUser }).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'cart/bulk', { order_items: e, user_id: currentUser }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 const data = response.data.data;
@@ -405,7 +405,7 @@ const OrderDetails = (props) => {
                                                         var order_product = order_items[0].product;
                                                         if (order_product.image_urls) {
                                                             var image_urls = JSON.parse(order_product.image_urls);
-                                                            var cartItemImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
+                                                            var cartItemImage = import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
                                                         } else {
                                                             var cartItemImage = PlaceholderImage;
                                                         }
@@ -427,7 +427,7 @@ const OrderDetails = (props) => {
                                                                                     {order.user.image && (
                                                                                         <div
                                                                                             className='user-photo-order me-2'
-                                                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${order.user.image})` }}
+                                                                                            style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${order.user.image})` }}
                                                                                         >
                                                                                         </div>
                                                                                     )}
@@ -449,7 +449,7 @@ const OrderDetails = (props) => {
                                                                                         var order_item_product = order_item.product;
                                                                                         if (order_item_product.image_urls) {
                                                                                             var image_urls = JSON.parse(order_item_product.image_urls);
-                                                                                            var orderItemImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
+                                                                                            var orderItemImage = import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
                                                                                         } else {
                                                                                             var orderItemImage = PlaceholderImage;
                                                                                         }

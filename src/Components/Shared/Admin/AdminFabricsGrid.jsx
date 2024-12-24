@@ -68,7 +68,7 @@ const AdminProductGrid = (props) => {
 
     async function ProductDeleteSubmit(e) {
         setProductDeleteLoading(true);
-        axios.delete(process.env.REACT_APP_API_ENDPOINT + 'product/' + productId + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
+        axios.delete(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'product/' + productId + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success('Fabric deleted successfully!');
@@ -87,7 +87,7 @@ const AdminProductGrid = (props) => {
 
     async function ProductDraftSubmit(e) {
         setProductDraftLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/' + e + '?current_user_id=' + current_user_id + '&token=' + token, { status: 'Draft' }).then((response) => {
+        axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'product/' + e + '?current_user_id=' + current_user_id + '&token=' + token, { status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success('Fabric saved as draft successfully!');
@@ -105,7 +105,7 @@ const AdminProductGrid = (props) => {
 
     async function ProductPublishSubmit(e) {
         setProductPublishLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/' + e + '?current_user_id=' + current_user_id + '&token=' + token, { status: 'Active' }).then((response) => {
+        axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'product/' + e + '?current_user_id=' + current_user_id + '&token=' + token, { status: 'Active' }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success('Fabric published successfully!');
@@ -122,7 +122,7 @@ const AdminProductGrid = (props) => {
     };
 
     async function wishlistUpdate(e) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 fetchData(currentUser);
@@ -154,7 +154,7 @@ const AdminProductGrid = (props) => {
                                 <Row className="portfolio-row">
                                     {products.map((product, index) => {
                                         if (product.image_urls?.[0]?.image_url) {
-                                            var productImage = process.env.REACT_APP_STORAGE_URL + 'product/' + product.image_urls[0].image_url;
+                                            var productImage = import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + product.image_urls[0].image_url;
                                         } else {
                                             var productImage = PlaceholderImage;
                                         }

@@ -36,7 +36,7 @@ const AdminDesigners = (props) => {
     let PageSize = 10;
 
     const getDesigners = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer?current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const toggleGetUser = (e) => {
@@ -49,7 +49,7 @@ const AdminDesigners = (props) => {
     };
 
     const handleChangePage = (pageNumber) => {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer?page=' + pageNumber + '&current_user_id=' + current_user_id + '&token=' + token)
+        axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer?page=' + pageNumber + '&current_user_id=' + current_user_id + '&token=' + token)
             .then((response) => {
                 const data = response.data;
                 setCurrentPage(pageNumber);
@@ -72,7 +72,7 @@ const AdminDesigners = (props) => {
 
     async function designerDeleteSubmit(id) {
         setDesignerDeleteLoading(true);
-        axios.delete(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
+        axios.delete(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/' + designerId + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success('Designer deleted successfully!');
@@ -187,7 +187,7 @@ const AdminDesigners = (props) => {
                                                                                                 {designer?.user?.image ?
                                                                                                     <div
                                                                                                         className='designer-photo-admin cursor-pointer'
-                                                                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${designer?.user?.image})` }}
+                                                                                                        style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${designer?.user?.image})` }}
                                                                                                     >
                                                                                                     </div>
                                                                                                     :

@@ -38,11 +38,11 @@ const AdminVendorSurvey = (props) => {
     let PageSize = 10;
 
     const getVendorSurvey = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'vendor-feedback-survey');
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'vendor-feedback-survey');
     };
 
     const handleChangePage = (pageNumber) => {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'vendor-feedback-survey?page=' + pageNumber + '&user_id=' + currentUser)
+        axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'vendor-feedback-survey?page=' + pageNumber + '&user_id=' + currentUser)
             .then((response) => {
                 const data = response.data;
                 setCurrentPage(pageNumber);
@@ -159,7 +159,7 @@ const AdminVendorSurvey = (props) => {
                                                                                                 {vendorFeedBack.user?.image != '' && vendorFeedBack.user?.image != null ? (
                                                                                                     <div
                                                                                                         className='user-photo-survey'
-                                                                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${vendorFeedBack.user?.image})` }}
+                                                                                                        style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${vendorFeedBack.user?.image})` }}
                                                                                                     >
                                                                                                     </div>
                                                                                                 ) : (

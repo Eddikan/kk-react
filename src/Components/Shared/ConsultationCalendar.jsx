@@ -106,23 +106,23 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     const [isScheduled, setIsScheduled] = useState(false);
 
     const postSetAppointment = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/set/appointment?current_user_id=' + current_user_id + '&token=' + token, data);
+        return await axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/set/appointment?current_user_id=' + current_user_id + '&token=' + token, data);
     };
 
     const putSetAppointment = async (data) => {
-        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentscheduleId + '?current_user_id=' + current_user_id + '&token=' + token, data);
+        return await axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentscheduleId + '?current_user_id=' + current_user_id + '&token=' + token, data);
     };
 
     const getSetAppointment = async (e) => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/availability?date=' + e + '&current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/availability?date=' + e + '&current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const getAppointment = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentscheduleId + '?current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentscheduleId + '?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const getDesigner = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '?current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/' + designerId + '?current_user_id=' + current_user_id + '&token=' + token);
     };
 
 
@@ -469,7 +469,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                         {designerUser.image ?
                             <div
                                 className='user-photo-calendar me-2'
-                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${designerUser.image})` }}
+                                style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${designerUser.image})` }}
                             >
                             </div>
                             :

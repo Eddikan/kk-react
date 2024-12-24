@@ -20,7 +20,7 @@ const CollabChat = ({ meetingId, user, currentUser, video }) => {
     const token = cookies.token;
 
     const postNewMessageNotif = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'chat/notification/' + meetingId + '?current_user_id=' + current_user_id + '&token=' + token, data);
+        return await axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'chat/notification/' + meetingId + '?current_user_id=' + current_user_id + '&token=' + token, data);
     };
 
     useEffect(() => {

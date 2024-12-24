@@ -55,7 +55,7 @@ const GuestView = ({livestream, userDetails}) => {
     // set up the user object
     const user = {
         id: 'guest',
-        image: process.env.REACT_APP_STORAGE_URL+'user/'+userDetails.image,
+        image: import.meta.env.VITE_REACT_APP_STORAGE_URL+'user/'+userDetails.image,
     };
 
     const client = new StreamVideoClient({ apiKey, user, token });

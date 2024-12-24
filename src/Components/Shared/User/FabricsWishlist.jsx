@@ -52,7 +52,7 @@ const Wishlists = (props) => {
     async function addToCart(e) {
         setAddToCartLoading(true);
         setClickedCartButtonIndex(e.index);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'cart?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 navigate("/cart");
@@ -71,7 +71,7 @@ const Wishlists = (props) => {
     }
 
     async function wishlistUpdate(e) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 fetchData({ currentUser: currentUser, token: token });
@@ -84,7 +84,7 @@ const Wishlists = (props) => {
     }
 
     async function toggleAddViewCount(id) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/view/' + id + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
+        axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'product/view/' + id + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 // toast.success('Fabric saved as draft successfully!');
@@ -143,7 +143,7 @@ const Wishlists = (props) => {
                                                 if (wishlist.product?.image_urls) {
                                                     var wishlist_images = JSON.parse(wishlist.product?.image_urls);
                                                     if (wishlist_images?.[0]) {
-                                                        var wishlistImage = process.env.REACT_APP_STORAGE_URL + 'product/' + wishlist_images[0].image_url;
+                                                        var wishlistImage = import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + wishlist_images[0].image_url;
                                                     } else {
                                                         var wishlistImage = PlaceholderImage;
                                                     }

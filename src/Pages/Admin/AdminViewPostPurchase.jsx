@@ -32,7 +32,7 @@ const AdminViewPostPurchase = (props) => {
     const navigate = useNavigate();
 
     const getPostPurchase = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'post-purchase-survey/' + surveyId);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'post-purchase-survey/' + surveyId);
     };
 
 

@@ -38,7 +38,7 @@ const Users = (props) => {
     let PageSize = 10;
 
     const getUsers = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user');
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user');
     };
 
     function toggleUnderConstruction(message) {
@@ -52,7 +52,7 @@ const Users = (props) => {
     };
 
     const handleChangePage = (pageNumber) => {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'user?page=' + pageNumber + '&user_id=' + currentUser)
+        axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user?page=' + pageNumber + '&user_id=' + currentUser)
             .then((response) => {
                 const data = response.data;
                 setCurrentPage(pageNumber);
@@ -75,7 +75,7 @@ const Users = (props) => {
 
     async function userDeleteSubmit(id) {
         setUserDeleteLoading(true);
-        axios.delete(process.env.REACT_APP_API_ENDPOINT + 'user/' + userId).then((response) => {
+        axios.delete(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + userId).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success('User deleted successfully!');
@@ -195,7 +195,7 @@ const Users = (props) => {
                                                                                                 {user.image ?
                                                                                                     <div
                                                                                                         className='user-photo-admin'
-                                                                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${user.image})` }}
+                                                                                                        style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${user.image})` }}
                                                                                                     >
                                                                                                     </div>
                                                                                                     :

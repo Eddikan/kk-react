@@ -115,7 +115,7 @@ const DesignerProfile = () => {
     const [uploadStatus, setUploadStatus] = useState("standby");
 
     const getBusinessHours = async (designerId) => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/availability/' + designerId + '?current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/availability/' + designerId + '?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     function toggleChatbox(id, first_name, last_name, image, message) {
@@ -213,7 +213,7 @@ const DesignerProfile = () => {
     };
 
     async function wishlistDesignerUpdate(e) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 setReloadCount(reloadCount + 1 )
@@ -316,7 +316,7 @@ const DesignerProfile = () => {
                                             :
                                             <>
                                                 {userImage ?
-                                                    <div className="profile-image" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
+                                                    <div className="profile-image" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
                                                     :
                                                     <div className="profile-image" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
                                                 }
@@ -722,7 +722,7 @@ const DesignerProfile = () => {
                                                                         {element.value && element.value.length > 0 && element.value != "" ?
                                                                             <>
                                                                                 {element.value.map((image, imageIndex) => (
-                                                                                    <img key={imageIndex} src={process.env.REACT_APP_STORAGE_URL + 'product/' + image?.image_url} className="w-100 h-image mb-3" alt="" />
+                                                                                    <img key={imageIndex} src={import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + image?.image_url} className="w-100 h-image mb-3" alt="" />
                                                                                 ))}
                                                                             </>
                                                                             :
@@ -740,7 +740,7 @@ const DesignerProfile = () => {
                                                                             : element.type == "Video" && element.value != "" ?
                                                                                 <>
                                                                                     <div className="mb-3">
-                                                                                        <ResponsiveVideo src={process.env.REACT_APP_STORAGE_URL + 'products/videos/' + element.value} />
+                                                                                        <ResponsiveVideo src={import.meta.env.VITE_REACT_APP_STORAGE_URL + 'products/videos/' + element.value} />
                                                                                     </div>
                                                                                 </>
                                                                                 : element.type == "Line Break" ?

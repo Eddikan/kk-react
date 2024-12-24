@@ -45,7 +45,7 @@ const AddressStep = ({ user, currentUser, reload, token }) => {
         try {
             setProvincesLoading(true);
             const response = await axios.post(
-                process.env.REACT_APP_LOCATION_API_ENDPOINT + 'countries/states',
+                import.meta.env.VITE_REACT_APP_LOCATION_API_ENDPOINT + 'countries/states',
                 requestData, // JSON body with country
                 {
                     headers: {
@@ -79,7 +79,7 @@ const AddressStep = ({ user, currentUser, reload, token }) => {
         try {
             setCitiesLoading(true);
             const response = await axios.post(
-                process.env.REACT_APP_LOCATION_API_ENDPOINT + 'countries/state/cities',
+                import.meta.env.VITE_REACT_APP_LOCATION_API_ENDPOINT + 'countries/state/cities',
                 requestData, // JSON body with country and state
                 {
                     headers: {
@@ -210,7 +210,7 @@ const AddressStep = ({ user, currentUser, reload, token }) => {
             e.preventDefault();
             
             setProfileFormLoading(true);
-            axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token, { ...profileFormData, address_complete: 1, latitude: coordinates.latitude, longitude: coordinates.longitude }).then((response) => {
+            axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token, { ...profileFormData, address_complete: 1, latitude: coordinates.latitude, longitude: coordinates.longitude }).then((response) => {
                 const success = response.data.status;
                 if (success == 'Success') {
                     const data = response.data.data;
@@ -235,7 +235,7 @@ const AddressStep = ({ user, currentUser, reload, token }) => {
 
     async function submitBack(e) {
         e.preventDefault();
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
+        axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 reload();

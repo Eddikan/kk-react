@@ -100,7 +100,7 @@ const EditPortfolio = (props) => {
       
           try {
             const response = await axios.post(
-              `${process.env.REACT_APP_API_ENDPOINT}portfolio/image?current_user_id=${current_user_id}&token=${token}`,
+              `${import.meta.env.VITE_REACT_APP_API_ENDPOINT}portfolio/image?current_user_id=${current_user_id}&token=${token}`,
               dataArray,
               {
                 headers: {
@@ -187,7 +187,7 @@ const EditPortfolio = (props) => {
         e.preventDefault();
         if (images) {
             setPortfolioLoading(true);
-            axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/'+portfolioId+'?current_user_id=' + current_user_id + '&token=' + token, {...portfolioData, image_urls: images, colors: colors, tags: tags, materials: materials, categories: categories, status: 'Active' }).then((response) => {
+            axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio_item/'+portfolioId+'?current_user_id=' + current_user_id + '&token=' + token, {...portfolioData, image_urls: images, colors: colors, tags: tags, materials: materials, categories: categories, status: 'Active' }).then((response) => {
                 const success = response.data.status;
                 if(success == 'Success') {
                     toast.success('Design updated successfully!');
@@ -213,7 +213,7 @@ const EditPortfolio = (props) => {
     async function PortfolioDraftSubmit(e) {
         e.preventDefault();
         setPortfolioDraftLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/'+portfolioId+'?current_user_id=' + current_user_id + '&token=' + token, {...portfolioData, image_urls: images, colors: colors, tags: tags, materials: materials, categories: categories, status: 'Draft' }).then((response) => {
+        axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio_item/'+portfolioId+'?current_user_id=' + current_user_id + '&token=' + token, {...portfolioData, image_urls: images, colors: colors, tags: tags, materials: materials, categories: categories, status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
                 toast.success('Design saved as draft successfully!');
@@ -246,7 +246,7 @@ const EditPortfolio = (props) => {
                                         
                                         {images.length > 3 && index > 3 ?
                                             <Col lg={2} key={image.id} className="image-preview mt-3">
-                                                <div className="image-dnd" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'portfolio/'+image.image_url+")", minHeight: '170px'}}>
+                                                <div className="image-dnd" style={{ backgroundImage: "url("+import.meta.env.VITE_REACT_APP_STORAGE_URL+'portfolio/'+image.image_url+")", minHeight: '170px'}}>
                                                 <div className="dnd-actions-overlay">
                                                     <FaTimesCircle size="25px" onClick={() => handleRemove(index)} className="remove-icon cursor-pointer text-danger" />
                                                 </div>
@@ -254,7 +254,7 @@ const EditPortfolio = (props) => {
                                             </Col>
                                             :
                                             <Col lg={2} key={image.id} className="image-preview">
-                                                <div className="image-dnd" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'portfolio/'+image.image_url+")", minHeight: '170px'}}>
+                                                <div className="image-dnd" style={{ backgroundImage: "url("+import.meta.env.VITE_REACT_APP_STORAGE_URL+'portfolio/'+image.image_url+")", minHeight: '170px'}}>
                                                 <div className="dnd-actions-overlay">
                                                     <FaTimesCircle size="25px" onClick={() => handleRemove(index)} className="remove-icon cursor-pointer text-danger" />
                                                 </div>

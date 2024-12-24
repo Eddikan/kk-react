@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const GetDesignersData = async (currentUser) => {
     try {
-        const response = await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer');
+        const response = await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer');
         return response.data.data;
     } catch (error) {
         // Handle the error or show a toast message

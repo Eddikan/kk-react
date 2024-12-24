@@ -59,25 +59,25 @@ const CustomerPage = () => {
 
     // API CALL FOR GET ALL (START)
     const getCustomers = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'customer?current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'customer?current_user_id=' + current_user_id + '&token=' + token);
     }
     // API CALL FOR GET ALL (END)
 
     // API CALL FOR POST (START)
     const submitCustomer = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'customer?current_user_id=' + current_user_id + '&token=' + token, data);
+        return await axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'customer?current_user_id=' + current_user_id + '&token=' + token, data);
     }
     // API CALL FOR POST (END)
 
     // API CALL FOR UPDATE (START)
     const updateCustomer = async (data) => {
-        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'customer/' + data.id + '?current_user_id=' + current_user_id + '&token=' + token, data);
+        return await axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'customer/' + data.id + '?current_user_id=' + current_user_id + '&token=' + token, data);
     }
     // API CALL FOR UPDATE (END)
 
     // API CALL FOR DELETE (START)
     const deleteCustomer = async () => {
-        return await axios.delete(process.env.REACT_APP_API_ENDPOINT + 'customer/' + selectedCustomer + '?current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.delete(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'customer/' + selectedCustomer + '?current_user_id=' + current_user_id + '&token=' + token);
     }
     // API CALL FOR DELETE (END)
 

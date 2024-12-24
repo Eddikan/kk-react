@@ -51,7 +51,7 @@ const AdminViewVendorSurvey = (props) => {
     const [surveyUser, setSurveyUser] = useState('');
 
     const getVendorFeedBack = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'vendor-feedback-survey/' + surveyId);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'vendor-feedback-survey/' + surveyId);
     };
 
     const navigate = useNavigate();

@@ -39,7 +39,7 @@ const AdminFabrics = (props) => {
     let PageSize = 10;
 
     const getProducts = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'product');
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'product');
     };
 
     const deleteConfirm = (e) => {
@@ -48,7 +48,7 @@ const AdminFabrics = (props) => {
     };
 
     const handleChangePage = (pageNumber) => {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'product?page=' + pageNumber + '&user_id=' + currentUser)
+        axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'product?page=' + pageNumber + '&user_id=' + currentUser)
             .then((response) => {
                 const data = response.data;
                 setCurrentPage(pageNumber);
@@ -71,7 +71,7 @@ const AdminFabrics = (props) => {
 
     async function ProductDeleteSubmit(e) {
         setProductDeleteLoading(true);
-        axios.delete(process.env.REACT_APP_API_ENDPOINT + 'product/' + productId + '?user_id=' + currentUser + '&token=' + token).then((response) => {
+        axios.delete(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'product/' + productId + '?user_id=' + currentUser + '&token=' + token).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success('Fabric deleted successfully!');
@@ -177,7 +177,7 @@ const AdminFabrics = (props) => {
                                                         <>
                                                             {fabrics.map((fabric) => {
                                                                 if (fabric.image_urls?.[0]?.image_url) {
-                                                                    var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
+                                                                    var fabricImage = import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
                                                                 } else {
                                                                     var fabricImage = PlaceholderImage;
                                                                 }
@@ -221,7 +221,7 @@ const AdminFabrics = (props) => {
                                                                                                     {fabric.user.image ?
                                                                                                         <div
                                                                                                             className='user-photo-chat'
-                                                                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${fabric.user.image})` }}
+                                                                                                            style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${fabric.user.image})` }}
                                                                                                         >
                                                                                                         </div>
                                                                                                         :

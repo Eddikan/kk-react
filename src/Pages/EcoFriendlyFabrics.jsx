@@ -219,7 +219,7 @@ const Fabrics = (props) => {
     async function onFilterChange(data) {
         setFabricsLoading(true);
         setFabricsFilter(data);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?page=' + currentPage + '&current_user_id=' + current_user_id + '&token=' + token, data).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'product/filter?page=' + currentPage + '&current_user_id=' + current_user_id + '&token=' + token, data).then((response) => {
             const selectedDesigns = response.data.data;
             if (selectedDesigns) {
                 setFabrics(selectedDesigns);
@@ -236,7 +236,7 @@ const Fabrics = (props) => {
     }
 
     async function onWishlistChange(data) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?current_user_id=' + current_user_id + '&token=' + token, data).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'product/filter?current_user_id=' + current_user_id + '&token=' + token, data).then((response) => {
             const selectedDesigns = response.data.data;
             if (selectedDesigns) {
                 setFabrics(selectedDesigns);
@@ -397,7 +397,7 @@ const Fabrics = (props) => {
     };
 
     async function wishlistUpdate(e) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 onWishlistChange({
@@ -448,7 +448,7 @@ const Fabrics = (props) => {
     };
 
     async function toggleSortFabrics(type, sort) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/fabric' + type + sort + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
+        axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'product/fabric' + type + sort + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const selectedDesigns = response.data.data;
             if (selectedDesigns) {
                 setFabrics(selectedDesigns);
@@ -464,7 +464,7 @@ const Fabrics = (props) => {
     }
 
     async function toggleAddViewCount(id) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/view/' + id + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
+        axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'product/view/' + id + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 // toast.success('Fabric saved as draft successfully!');
@@ -479,7 +479,7 @@ const Fabrics = (props) => {
 
     // Pagination
     const handleChangePage = (pageNumber) => {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?page=' + pageNumber + '&current_user_id=' + current_user_id + '$token=' + token, fabricsFilter)
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'product/filter?page=' + pageNumber + '&current_user_id=' + current_user_id + '$token=' + token, fabricsFilter)
             .then((response) => {
                 const data = response.data;
                 setCurrentPage(pageNumber);
@@ -502,7 +502,7 @@ const Fabrics = (props) => {
 
     async function addToCart(e) {
         setAddToCartLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'cart?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success("Fabric added to cart successfully!");
@@ -1059,7 +1059,7 @@ const Fabrics = (props) => {
                                                     <Row className="designs-row">
                                                         {fabrics.map((fabric, index) => {
                                                             if (fabric.image_urls?.[0]?.image_url) {
-                                                                var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
+                                                                var fabricImage = import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
                                                             } else {
                                                                 var fabricImage = PlaceholderImage;
                                                             }
@@ -1233,7 +1233,7 @@ const Fabrics = (props) => {
                                                                             {/* {currentUser ?
                                                                         <div className='d-flex align-items-center mt-1'>
                                                                             {fabric.user.image ?
-                                                                                <div className='designer-photo-small' style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+fabric.user.image+")"}} ></div>
+                                                                                <div className='designer-photo-small' style={{ backgroundImage: "url("+import.meta.env.VITE_REACT_APP_STORAGE_URL+'user/'+fabric.user.image+")"}} ></div>
                                                                                 :
                                                                                 <div className='designer-photo-small' style={{ backgroundImage: "url("+UserPlaceholder+")"}} ></div>
                                                                             }

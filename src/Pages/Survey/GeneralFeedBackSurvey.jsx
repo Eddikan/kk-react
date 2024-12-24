@@ -51,7 +51,7 @@ const WebsiteFeedBackSurvey = (props) => {
 
 
     const postWebsiteSurvey = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'general-feedback-survey', data);
+        return await axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'general-feedback-survey', data);
     };
 
     function toggleUnderConstruction(message) {

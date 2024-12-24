@@ -29,19 +29,19 @@ const PaypalMobile = () => {
     const [isPageLoading, setIsPageLoading] = useState(true);
 
     const postCheckOut = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'order?current_user_id=' + data.user_id + '&token=' + data.token, data);
+        return await axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'order?current_user_id=' + data.user_id + '&token=' + data.token, data);
     };
 
     const createUpsInternationalShipment = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'ups/v2/create/shipment/international?current_user_id=' + data.user_id + '&token=' + data.token, data);
+        return await axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'ups/v2/create/shipment/international?current_user_id=' + data.user_id + '&token=' + data.token, data);
     };
 
     const createGigmShipment = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'gigm/v2/create/shipment?current_user_id=' + data.user_id + '&token=' + data.token, data);
+        return await axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'gigm/v2/create/shipment?current_user_id=' + data.user_id + '&token=' + data.token, data);
     };
 
     const getUserCartItems = async (userID,token) => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + userID + '/cart?current_user_id=' + userID + '&token=' + token);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + userID + '/cart?current_user_id=' + userID + '&token=' + token);
     };
 
     const checkOutSubmitPaypal = (details, data) => {

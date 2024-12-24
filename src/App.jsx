@@ -9,7 +9,13 @@ import {loadStripe} from '@stripe/stripe-js';
 import Home from "./Pages/Home"
 import About from "./Pages/About"
 
+ import AdminCustomerSatisfaction from "./Pages/Admin/AdminCustomerSatisfaction"
+
+// dont delete these comments 
+// import PortfolioGrid from "Components/Shared/PortfolioGrid";
+// import EcoFriendly from "Components/Shared/EcoFriendly";
 const stripePromise = loadStripe("pk_test_51KH5FQEHRDNky8yNuVaslaQXG2zhzUjBuooEw7vp8LKMwMd5eEd5xt5RAL0UdiuVJf7dMAwllXdSiDkvvSp9qzT700fhQD4wrQ");
+
 const LogIn = lazy(() => import("./Pages/LogIn"));
 const TwoFactorAuthentication = lazy(() => import("./Pages/TwoFactorAuthentication"));
 const ForgotPassword = lazy(() => import("./Pages/ForgotPassword"));
@@ -68,7 +74,7 @@ const VendorFeedBackSurvey = lazy(() =>
 );
 
 // Admin
-const AdminOrders = lazy(() => import("./Pages//Admin/Orders"));
+const AdminOrders = lazy(() => import("./Pages/Admin/Orders"));
 const AdminOrderDetails = lazy(() => import("./Pages/Admin/OrderDetails"));
 const AdminViewSurvey = lazy(() => import("./Pages/Admin/AdminViewSurvey"));
 const AdminFabrics = lazy(() => import("./Pages/Admin/AdminFabrics"));
@@ -113,9 +119,6 @@ const AdminViewVendorSurvey = lazy(() =>
   import("./Pages/Admin/AdminViewVendorSurvey")
 );
 
-const AdminCustomerSatisfaction = lazy(() =>
-  import("./Pages/Admin/AdminCustomerSatisfaction")
-);
 
 const AdminViewCustomerSurvey = lazy(() =>
   import("./Pages/Admin/AdminViewCustomerSurvey")
@@ -178,6 +181,7 @@ const BodyGram = lazy(() => import("./Pages/BodyGram"));
 
 //Measurement
 const Measurement = lazy(() => import("./Pages/Measurement"));
+
 const DelayedFallback = ({ delay, children }) => {
   const [show, setShow] = React.useState(false);
   React.useEffect(() => {
@@ -187,6 +191,7 @@ const DelayedFallback = ({ delay, children }) => {
   
   return show ? children : null;
 };
+
 const LoadingPage = () => {
   return (
     <>
@@ -208,7 +213,7 @@ const App = () => {
           <Route path="/stripe/mobile" element={<StripeMobile />} />
         </Routes>
       </Elements>
-      <Suspense fallback={<DelayedFallback delay={300}><LoadingPage /></DelayedFallback>}>
+      <Suspense fallback={<DelayedFallback delay={300}><LoadingPage /></DelayedFallback>} >
         <Routes>
           <Route path="/" exact element={<Home />} />
           <Route path="/login" exact element={<LogIn />} />

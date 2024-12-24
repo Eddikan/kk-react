@@ -82,7 +82,7 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
         setUploadStatus("loading");
         const dataArray = new FormData();
         dataArray.append("image", event);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'user/image?current_user_id=' + current_user_id + '&token=' + token, dataArray, {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/image?current_user_id=' + current_user_id + '&token=' + token, dataArray, {
             headers: {
                 "Content-Type": "multipart/form-data"
             }
@@ -233,7 +233,7 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
                 dataArray.append("file", fileToUpload);
     
                 const response = await axios.post(
-                    `${process.env.REACT_APP_API_ENDPOINT}user/file?current_user_id=${current_user_id}&token=${token}`,
+                    `${import.meta.env.VITE_REACT_APP_API_ENDPOINT}user/file?current_user_id=${current_user_id}&token=${token}`,
                     dataArray,
                     { headers: { "Content-Type": "multipart/form-data" } }
                 );
@@ -300,7 +300,7 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
                                                 <>
                                                     <div className="msg right-msg">
                                                         {chat.image && chat.image != "" ?
-                                                            <div className="msg-img" style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${chat.image})` }}> </div>
+                                                            <div className="msg-img" style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${chat.image})` }}> </div>
                                                             :
                                                             <div className="msg-img" style={{ backgroundImage: `url(${UserPlaceholder})` }}> </div>
                                                         }
@@ -314,13 +314,13 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
                                                                 {chat.attached_file && (
                                                                     chat.file_type?.startsWith("image/") ? (
                                                                         <img
-                                                                            src={`${process.env.REACT_APP_STORAGE_URL}file/${chat.attached_file}`}
+                                                                            src={`${import.meta.env.VITE_REACT_APP_STORAGE_URL}file/${chat.attached_file}`}
                                                                             alt="Attached"
                                                                             className="w-100"
                                                                         />
                                                                     ) : (
                                                                         <a
-                                                                            href={`${process.env.REACT_APP_STORAGE_URL}file/${chat.attached_file}`}
+                                                                            href={`${import.meta.env.VITE_REACT_APP_STORAGE_URL}file/${chat.attached_file}`}
                                                                             target="_blank"
                                                                             rel="noopener noreferrer"
                                                                             download
@@ -340,7 +340,7 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
                                                 <>
                                                     <div className="msg left-msg">
                                                         {chat.image && chat.image != "" ?
-                                                            <div className="msg-img" style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${chat.image})` }}> </div>
+                                                            <div className="msg-img" style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${chat.image})` }}> </div>
                                                             :
                                                             <div className="msg-img" style={{ backgroundImage: `url(${UserPlaceholder})` }}> </div>
                                                         }
@@ -354,13 +354,13 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
                                                                 {chat.attached_file && (
                                                                     chat.file_type?.startsWith("image/") ? (
                                                                         <img
-                                                                            src={`${process.env.REACT_APP_STORAGE_URL}file/${chat.attached_file}`}
+                                                                            src={`${import.meta.env.VITE_REACT_APP_STORAGE_URL}file/${chat.attached_file}`}
                                                                             alt="Attached"
                                                                             className="w-100"
                                                                         />
                                                                     ) : (
                                                                         <a
-                                                                            href={`${process.env.REACT_APP_STORAGE_URL}file/${chat.attached_file}`}
+                                                                            href={`${import.meta.env.VITE_REACT_APP_STORAGE_URL}file/${chat.attached_file}`}
                                                                             target="_blank"
                                                                             rel="noopener noreferrer"
                                                                             download

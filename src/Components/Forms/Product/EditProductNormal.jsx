@@ -203,7 +203,7 @@ const EditProductNormal = (props) => {
 
             try {
                 const response = await axios.post(
-                    `${process.env.REACT_APP_API_ENDPOINT}product/image?current_user_id=${current_user_id}&token=${token}`,
+                    `${import.meta.env.VITE_REACT_APP_API_ENDPOINT}product/image?current_user_id=${current_user_id}&token=${token}`,
                     dataArray,
                     {
                         headers: {
@@ -266,7 +266,7 @@ const EditProductNormal = (props) => {
 
             try {
                 const response = await axios.post(
-                    `${process.env.REACT_APP_API_ENDPOINT}product/image?current_user_id=${current_user_id}&token=${token}`,
+                    `${import.meta.env.VITE_REACT_APP_API_ENDPOINT}product/image?current_user_id=${current_user_id}&token=${token}`,
                     dataArray,
                     {
                         headers: {
@@ -431,7 +431,7 @@ const EditProductNormal = (props) => {
         e.preventDefault();
         if (images) {
             setProductLoading(true);
-            axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/' + productId + '?current_user_id=' + current_user_id + '&token=' + token, { ...productData, eco_friendly: eco_friendly, sustainability: selectedSustainabilities, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherComposition != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, image_urls: images, final_product_image_urls: finalProductImages,  colors: colors, certifications: certifications, status: 'Active' }).then((response) => {
+            axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'product/' + productId + '?current_user_id=' + current_user_id + '&token=' + token, { ...productData, eco_friendly: eco_friendly, sustainability: selectedSustainabilities, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherComposition != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, image_urls: images, final_product_image_urls: finalProductImages,  colors: colors, certifications: certifications, status: 'Active' }).then((response) => {
                 const success = response.data.status;
                 if (success == 'Success') {
                     toast.success('Fabric updated successfully!');
@@ -459,7 +459,7 @@ const EditProductNormal = (props) => {
 
         e.preventDefault();
         setProductDraftLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/' + productId + '?current_user_id=' + current_user_id + '&token=' + token, { ...productData, eco_friendly: eco_friendly, sustainability: selectedSustainabilities, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherComposition != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, image_urls: images, final_product_image_urls: finalProductImages, colors: colors, certifications: certifications, status: 'Draft' }).then((response) => {
+        axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'product/' + productId + '?current_user_id=' + current_user_id + '&token=' + token, { ...productData, eco_friendly: eco_friendly, sustainability: selectedSustainabilities, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherComposition != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, image_urls: images, final_product_image_urls: finalProductImages, colors: colors, certifications: certifications, status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success('Fabric saved as draft successfully!');
@@ -497,7 +497,7 @@ const EditProductNormal = (props) => {
                                                                 <>
                                                                     {images.length > 6 && index + 1 > 6 ?
                                                                         <Col lg={2} key={image.id} className="image-preview mt-3">
-                                                                            <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '170px' }}>
+                                                                            <div className="image-dnd" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '170px' }}>
                                                                                 <div className="dnd-actions-overlay">
                                                                                     <FaTimesCircle size="25px" onClick={() => handleRemove(index)} className="remove-icon cursor-pointer text-danger" />
                                                                                 </div>
@@ -505,7 +505,7 @@ const EditProductNormal = (props) => {
                                                                         </Col>
                                                                         :
                                                                         <Col lg={2} key={image.id} className="image-preview">
-                                                                            <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '170px' }}>
+                                                                            <div className="image-dnd" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '170px' }}>
                                                                                 <div className="dnd-actions-overlay">
                                                                                     <FaTimesCircle size="25px" onClick={() => handleRemove(index)} className="remove-icon cursor-pointer text-danger" />
                                                                                 </div>
@@ -517,7 +517,7 @@ const EditProductNormal = (props) => {
                                                                     <>
                                                                         {images.length > 4 && index + 1 > 4 ?
                                                                             <Col lg={3} key={image.id} className="image-preview mt-3">
-                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '175px' }}>
+                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '175px' }}>
                                                                                     <div className="dnd-actions-overlay">
                                                                                         <FaTimesCircle size="25px" onClick={() => handleRemove(index)} className="remove-icon cursor-pointer text-danger" />
                                                                                     </div>
@@ -525,7 +525,7 @@ const EditProductNormal = (props) => {
                                                                             </Col>
                                                                             :
                                                                             <Col lg={3} key={image.id} className="image-preview">
-                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '175px' }}>
+                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '175px' }}>
                                                                                     <div className="dnd-actions-overlay">
                                                                                         <FaTimesCircle size="25px" onClick={() => handleRemove(index)} className="remove-icon cursor-pointer text-danger" />
                                                                                     </div>
@@ -537,7 +537,7 @@ const EditProductNormal = (props) => {
                                                                     <>
                                                                         {images.length > 6 && index + 1 > 6 ?
                                                                             <Col lg={2} key={image.id} className="image-preview mt-3">
-                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '170px' }}>
+                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '170px' }}>
                                                                                     <div className="dnd-actions-overlay">
                                                                                         <FaTimesCircle size="25px" onClick={() => handleRemove(index)} className="remove-icon cursor-pointer text-danger" />
                                                                                     </div>
@@ -545,7 +545,7 @@ const EditProductNormal = (props) => {
                                                                             </Col>
                                                                             :
                                                                             <Col lg={2} key={image.id} className="image-preview">
-                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '170px' }}>
+                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '170px' }}>
                                                                                     <div className="dnd-actions-overlay">
                                                                                         <FaTimesCircle size="25px" onClick={() => handleRemove(index)} className="remove-icon cursor-pointer text-danger" />
                                                                                     </div>
@@ -661,7 +661,7 @@ const EditProductNormal = (props) => {
                                                                 <>
                                                                     {finalProductImages.length > 6 && index + 1 > 6 ?
                                                                         <Col lg={2} key={image.id} className="image-preview mt-3">
-                                                                            <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '170px' }}>
+                                                                            <div className="image-dnd" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '170px' }}>
                                                                                 <div className="dnd-actions-overlay">
                                                                                     <FaTimesCircle size="25px" onClick={() => handleRemoveFinal(index)} className="remove-icon cursor-pointer text-danger" />
                                                                                 </div>
@@ -669,7 +669,7 @@ const EditProductNormal = (props) => {
                                                                         </Col>
                                                                         :
                                                                         <Col lg={2} key={image.id} className="image-preview">
-                                                                            <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '170px' }}>
+                                                                            <div className="image-dnd" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '170px' }}>
                                                                                 <div className="dnd-actions-overlay">
                                                                                     <FaTimesCircle size="25px" onClick={() => handleRemoveFinal(index)} className="remove-icon cursor-pointer text-danger" />
                                                                                 </div>
@@ -681,7 +681,7 @@ const EditProductNormal = (props) => {
                                                                     <>
                                                                         {finalProductImages.length > 4 && index + 1 > 4 ?
                                                                             <Col lg={3} key={image.id} className="image-preview mt-3">
-                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '175px' }}>
+                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '175px' }}>
                                                                                     <div className="dnd-actions-overlay">
                                                                                         <FaTimesCircle size="25px" onClick={() => handleRemoveFinal(index)} className="remove-icon cursor-pointer text-danger" />
                                                                                     </div>
@@ -689,7 +689,7 @@ const EditProductNormal = (props) => {
                                                                             </Col>
                                                                             :
                                                                             <Col lg={3} key={image.id} className="image-preview">
-                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '175px' }}>
+                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '175px' }}>
                                                                                     <div className="dnd-actions-overlay">
                                                                                         <FaTimesCircle size="25px" onClick={() => handleRemoveFinal(index)} className="remove-icon cursor-pointer text-danger" />
                                                                                     </div>
@@ -701,7 +701,7 @@ const EditProductNormal = (props) => {
                                                                     <>
                                                                         {finalProductImages.length > 6 && index + 1 > 6 ?
                                                                             <Col lg={2} key={image.id} className="image-preview mt-3">
-                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '170px' }}>
+                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '170px' }}>
                                                                                     <div className="dnd-actions-overlay">
                                                                                         <FaTimesCircle size="25px" onClick={() => handleRemoveFinal(index)} className="remove-icon cursor-pointer text-danger" />
                                                                                     </div>
@@ -709,7 +709,7 @@ const EditProductNormal = (props) => {
                                                                             </Col>
                                                                             :
                                                                             <Col lg={2} key={image.id} className="image-preview">
-                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '170px' }}>
+                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '170px' }}>
                                                                                     <div className="dnd-actions-overlay">
                                                                                         <FaTimesCircle size="25px" onClick={() => handleRemoveFinal(index)} className="remove-icon cursor-pointer text-danger" />
                                                                                     </div>

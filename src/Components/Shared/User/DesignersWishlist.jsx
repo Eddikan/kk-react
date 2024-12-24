@@ -47,7 +47,7 @@ const DesignerWishlists = (props) => {
     };
 
     async function designerWishlistUpdate(e) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 fetchData({ currentUser: currentUser, token: token });
@@ -60,7 +60,7 @@ const DesignerWishlists = (props) => {
     }
 
     async function toggleAddViewCount(id) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/' + id + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
+        axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio/view/' + id + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 // toast.success('Design saved as draft successfully!');
@@ -140,7 +140,7 @@ const DesignerWishlists = (props) => {
                                                         var designerWishlist_image = designerWishlist.user?.image;
                                                         var user = designerWishlist.user;
                                                         if (user.image) {
-                                                            var designerWishlistImage = process.env.REACT_APP_STORAGE_URL + 'user/' + user.image;
+                                                            var designerWishlistImage = import.meta.env.VITE_REACT_APP_STORAGE_URL + 'user/' + user.image;
                                                         } else {
                                                             if (user.gender == "Female") {
                                                                 var designerWishlistImage = FemalePlaceholder;

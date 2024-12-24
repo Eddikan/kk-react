@@ -597,7 +597,7 @@ const BodyMeasurementStep = ({ user, currentUser, reload, token }) => {
             ...profileFormData,
             body_measurement: JSON.stringify(checklistData)
         };
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token, { ...updatedProfileFormData, body_measurement_complete: 1 }).then((response) => {
+        axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token, { ...updatedProfileFormData, body_measurement_complete: 1 }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 const data = response.data.data;
@@ -658,7 +658,7 @@ const BodyMeasurementStep = ({ user, currentUser, reload, token }) => {
 
         e.preventDefault();
         setFormStatus(true);
-            axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token + '&gender=' + value).then((response) => {
+            axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token + '&gender=' + value).then((response) => {
                 const success = response.data.status;
                 if (success == 'Success') {
                     const data = response.data.data;
@@ -677,7 +677,7 @@ const BodyMeasurementStep = ({ user, currentUser, reload, token }) => {
 
     async function submitBack(e) {
         e.preventDefault();
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
+        axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 reload();

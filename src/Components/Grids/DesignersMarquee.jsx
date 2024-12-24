@@ -26,7 +26,7 @@ const DesignersMarquee = (props) => {
     const token = cookies.token;
 
     const getDesigners = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer?current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const toggleGetUser = (e) => {
@@ -34,7 +34,7 @@ const DesignersMarquee = (props) => {
     }
 
     async function wishlistDesignerUpdate(e) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
             } else {
@@ -82,7 +82,7 @@ const DesignersMarquee = (props) => {
                                             <>
                                                 {designer.user.image && designer.user.image != "" ?
                                                     <div className="marquee-item">
-                                                        <div onClick={() => toggleGetUser(designer.user.id)} className="designer-marquee cursor-pointer" style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${designer.user.image})`}}>
+                                                        <div onClick={() => toggleGetUser(designer.user.id)} className="designer-marquee cursor-pointer" style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${designer.user.image})`}}>
                                                             
                                                         </div>
                                                     </div>

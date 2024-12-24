@@ -98,7 +98,7 @@ const SignUp = () => {
   }
 
   const getUser = async (e) => {
-    return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + e);
+    return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + e);
   };
 
   const getUserDetails = (e) => {
@@ -163,7 +163,7 @@ const SignUp = () => {
 
   async function addTempCartToCart(data) {
     // setReorderLoading(true);
-    axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart/bulk', { order_items: data.order_items, user_id: data.user_id }).then((response) => {
+    axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'cart/bulk', { order_items: data.order_items, user_id: data.user_id }).then((response) => {
       const success = response.data.status;
       if (success == 'Success') {
         const data = response.data.data;
@@ -183,7 +183,7 @@ const SignUp = () => {
 
   async function addTempFavoritesToFavorites(data) {
     // setReorderLoading(true);
-    axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/item/wishlist/bulk', { favorites: data.favorites, user_id: data.user_id }).then((response) => {
+    axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio/item/wishlist/bulk', { favorites: data.favorites, user_id: data.user_id }).then((response) => {
       const success = response.data.status;
       if (success == 'Success') {
         const data = response.data.data;
@@ -210,7 +210,7 @@ const SignUp = () => {
       completed_questionnaire = 1;
     }
 
-    axios.post(process.env.REACT_APP_API_ENDPOINT + 'register', { ...registerFormData, interested_in: interestedIn, completed_questionnaire: completed_questionnaire }).then((response) => {
+    axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'register', { ...registerFormData, interested_in: interestedIn, completed_questionnaire: completed_questionnaire }).then((response) => {
       const success = response.data.status;
       if (success == 'Success') {
         const data = response.data.data;
@@ -329,7 +329,7 @@ const SignUp = () => {
   ];
 
   async function createGoogleUser(e) {
-    axios.post(process.env.REACT_APP_API_ENDPOINT + 'user/google/register', { ...e, ...googleRegisterFormData }).then((response) => {
+    axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/google/register', { ...e, ...googleRegisterFormData }).then((response) => {
       const success = response.data.status;
       if (success == 'Success') {
         const data = response.data.data;
@@ -434,7 +434,7 @@ const SignUp = () => {
       const data = {
         email: googleEmail
       };
-      axios.post(process.env.REACT_APP_API_ENDPOINT + 'user/email', data).then((response) => {
+      axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/email', data).then((response) => {
         const success = response.data.status;
         if (success == 'Success') {
           const data = response.data.data;

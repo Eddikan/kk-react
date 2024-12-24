@@ -101,7 +101,7 @@ const ViewSellerProfile = () => {
         setUploadStatus("loading");
         const dataArray = new FormData();
         dataArray.append("image", event);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'user/image?user_id=' + sellerId + '&token=' + token, dataArray, {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/image?user_id=' + sellerId + '&token=' + token, dataArray, {
             headers: {
                 "Content-Type": "multipart/form-data"
             }
@@ -129,7 +129,7 @@ const ViewSellerProfile = () => {
     };
 
     async function updateProfilePicture(e) {
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + sellerId + '?user_id=' + sellerId + '&token=' + token, {
+        axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + sellerId + '?user_id=' + sellerId + '&token=' + token, {
             image: e
         }).then((response) => {
             const success = response.data.status;
@@ -316,7 +316,7 @@ const ViewSellerProfile = () => {
                                             :
                                             <>
                                                 {userImage ?
-                                                    <div className="profile-image" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
+                                                    <div className="profile-image" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
                                                     :
                                                     <div className="profile-image" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
                                                 }

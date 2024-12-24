@@ -6,7 +6,7 @@ const GetUserWishlistsData = async (data) => {
     const currentUser = data.currentUser;
     const token = data.token;
     try {
-        const response = await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/'+currentUser+'/wishlist?user_id='+currentUser+'&token='+token);
+        const response = await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/'+currentUser+'/wishlist?user_id='+currentUser+'&token='+token);
         return response.data;
     } catch (error) {
         // Handle the error or show a toast message

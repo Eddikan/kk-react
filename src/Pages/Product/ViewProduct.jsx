@@ -115,7 +115,7 @@ const ViewProduct = () => {
         setAddReviewShow(!addReviewShow);
 
         if (e?.[0]?.image_url) {
-            setActiveImage(process.env.REACT_APP_STORAGE_URL + 'product/' + e[0].image_url);
+            setActiveImage(import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + e[0].image_url);
         } else {
             setActiveImage(PlaceholderImage);
         }
@@ -223,7 +223,7 @@ const ViewProduct = () => {
                     setProductPrice(Number(productData.price).toFixed(2))
                 }
                 if (productData.image_urls?.[0]?.image_url) {
-                    setActiveImage(process.env.REACT_APP_STORAGE_URL + 'product/' + productData.image_urls[0].image_url);
+                    setActiveImage(import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + productData.image_urls[0].image_url);
                 } else {
                     setActiveImage(PlaceholderImage);
                 }
@@ -279,7 +279,7 @@ const ViewProduct = () => {
     }
 
     async function wishlistUpdate(e) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'wishlist/update', e).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'wishlist/update', e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 fetchData(productId);
@@ -293,7 +293,7 @@ const ViewProduct = () => {
 
     async function reviewUpdate() {
         setAddReviewLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/review/' + reviewId, reviewFormData).then((response) => {
+        axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'product/review/' + reviewId, reviewFormData).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success('Review updated successfully!');
@@ -309,7 +309,7 @@ const ViewProduct = () => {
     }
 
     async function reviewAdd() {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/review', reviewFormData).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'product/review', reviewFormData).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success('Review added successfully!');
@@ -327,7 +327,7 @@ const ViewProduct = () => {
     async function addToCart(e) {
         setAddToCartLoading(true);
         if (parseInt(e.quantity) > 0){
-            axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart', e).then((response) => {
+            axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'cart', e).then((response) => {
                 const success = response.data.status;
                 if (success == 'Success') {
                     toast.success("Fabric added to cart successfully!");
@@ -430,7 +430,7 @@ const ViewProduct = () => {
     async function buyNow(e) {
         setBuyNowLoading(true);
         if (parseInt(e.quantity) > 0){
-            axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart', e).then((response) => {
+            axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'cart', e).then((response) => {
                 const success = response.data.status;
                 const data = response.data.data;
                 if (success == 'Success') {
@@ -451,7 +451,7 @@ const ViewProduct = () => {
     }
 
     const getProductReview = async (e) => {
-        await axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/review/' + e + '?user_id=' + currentUser + '&token=' + token)
+        await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'product/review/' + e + '?user_id=' + currentUser + '&token=' + token)
             .then((response) => {
                 const result = response.data.data;
                 if (result) {
@@ -478,7 +478,7 @@ const ViewProduct = () => {
     }
 
     const getProductReviews = async () => {
-        await axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/' + productId + '/review?user_id=' + currentUser + '&token=' + token)
+        await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'product/' + productId + '/review?user_id=' + currentUser + '&token=' + token)
             .then((response) => {
                 const data = response.data;
                 const result = data.data;
@@ -570,7 +570,7 @@ const ViewProduct = () => {
                                                                 </>
                                                                 :
                                                                 <>
-                                                                    <ResponsiveVideo src={process.env.REACT_APP_STORAGE_URL + 'products/videos/' + product.video_demo_url} />
+                                                                    <ResponsiveVideo src={import.meta.env.VITE_REACT_APP_STORAGE_URL + 'products/videos/' + product.video_demo_url} />
                                                                 </>
                                                         }
                                                     </>
@@ -643,7 +643,7 @@ const ViewProduct = () => {
                                                                                 <div className="d-flex">
                                                                                     <div className="user">
                                                                                         {user.image && user.image != "" ?
-                                                                                            <div className="profile-image small" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + user.image + ")" }}></div>
+                                                                                            <div className="profile-image small" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'user/' + user.image + ")" }}></div>
                                                                                             :
                                                                                             <div className="profile-image small" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
                                                                                         }
@@ -701,7 +701,7 @@ const ViewProduct = () => {
                                                         {product.user.image ? (
                                                             <div
                                                                 className='designer-photo'
-                                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${product.user.image})` }}
+                                                                style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${product.user.image})` }}
                                                             ></div>
                                                         ) : (
                                                             <div
@@ -798,7 +798,7 @@ const ViewProduct = () => {
                                                                     <div
                                                                         className="zoomed-image"
                                                                         style={{
-                                                                            backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}product/${zoomedImage})`,
+                                                                            backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}product/${zoomedImage})`,
                                                                             backgroundPosition: `${mousePosition.x}% ${mousePosition.y}%`,
                                                                             backgroundSize: '300%',
                                                                         }}
@@ -1246,7 +1246,7 @@ const ViewProduct = () => {
                                                 {product.user.image ? (
                                                     <div
                                                         className='designer-photo'
-                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${product.user.image})` }}
+                                                        style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${product.user.image})` }}
                                                     ></div>
                                                 ) : (
                                                     <div
@@ -1346,7 +1346,7 @@ const ViewProduct = () => {
                                                                         <div className="d-flex">
                                                                             <div className="user">
                                                                                 {user.image && user.image != "" ?
-                                                                                    <div className="profile-image small" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + user.image + ")" }}></div>
+                                                                                    <div className="profile-image small" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'user/' + user.image + ")" }}></div>
                                                                                     :
                                                                                     <div className="profile-image small" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
                                                                                 }

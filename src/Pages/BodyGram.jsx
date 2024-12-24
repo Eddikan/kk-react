@@ -9,8 +9,8 @@ const BodyGram = () => {
     const [frontPhotoBase64, setFrontPhotoBase64] = useState('');
     const [rightPhotoBase64, setRightPhotoBase64] = useState('');
     const [iframeToken, setIframeToken] = useState('');
-    const orgId = process.env.REACT_APP_ORG_ID;
-    const apiKey = process.env.REACT_APP_API_KEY;
+    const orgId = import.meta.env.VITE_REACT_APP_ORG_ID;
+    const apiKey = import.meta.env.VITE_REACT_APP_API_KEY;
 
     useEffect(() => {
         const tokenUrl = `https://platform.bodygram.com/api/orgs/${orgId}/scan-tokens`;

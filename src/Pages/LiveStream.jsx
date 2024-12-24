@@ -35,7 +35,7 @@ const LiveStreams = (props) => {
     };
 
     const getLiveStream = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'livestream/' + livestreamId + '?current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'livestream/' + livestreamId + '?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     function returnFormattedDate(date) {

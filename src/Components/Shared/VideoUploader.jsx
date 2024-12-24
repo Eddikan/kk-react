@@ -66,9 +66,9 @@ const VideoDragAndDrop = (props) => {
         const updatedVideoUrls = [...videoUrl];
         let apiLink = "";
         if (videoType == "portfolio") {
-            apiLink = process.env.REACT_APP_API_ENDPOINT+'portfolio/items/video/upload?current_user_id='+current_user_id+'&token='+token;
+            apiLink = import.meta.env.VITE_REACT_APP_API_ENDPOINT+'portfolio/items/video/upload?current_user_id='+current_user_id+'&token='+token;
         } else {
-            apiLink = process.env.REACT_APP_API_ENDPOINT+'product/video/upload?current_user_id='+current_user_id+'&token='+token;
+            apiLink = import.meta.env.VITE_REACT_APP_API_ENDPOINT+'product/video/upload?current_user_id='+current_user_id+'&token='+token;
         }
 
         for (const videoInfo of video) {
@@ -177,7 +177,7 @@ const VideoDragAndDrop = (props) => {
                                     <Col lg={12}>
                                         <div style={{ minHeight: 140 }} className="image-dnd cursor-pointer">
                                             <div>
-                                                <ResponsiveVideo src={process.env.REACT_APP_STORAGE_URL + 'products/videos/' + videoUrl} />
+                                                <ResponsiveVideo src={import.meta.env.VITE_REACT_APP_STORAGE_URL + 'products/videos/' + videoUrl} />
                                             </div>
                                             <div className="dnd-actions-overlay" onClick={handleChangeVideo} style={{ top: 0 }}></div>
                                         </div>

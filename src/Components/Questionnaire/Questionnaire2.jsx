@@ -133,7 +133,7 @@ const Questionnaire2 = (props) => {
     async function questionnaire2Submit(e) {
         e.preventDefault();
         setQuestionnaire2Loading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer?current_user_id=' + current_user_id + '&token=' + token, { ...questionnaire2Data, areas_of_specialization: selectedSpecialization, user_id: currentUser, portfolio_items: portfolioItems, availability: availability, pricing_structure: pricingStructure, post_type: postType }).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer?current_user_id=' + current_user_id + '&token=' + token, { ...questionnaire2Data, areas_of_specialization: selectedSpecialization, user_id: currentUser, portfolio_items: portfolioItems, availability: availability, pricing_structure: pricingStructure, post_type: postType }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 if (signupType == "designer_seller" || selectedSignupType == "designer_seller") {
@@ -272,7 +272,7 @@ const Questionnaire2 = (props) => {
                                                                         <>
                                                                             {portfolioItem.image_urls.map((image, imageIndex) => (
                                                                                 <Col lg={4} key={image.id} className="image-preview mt-3">
-                                                                                    <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image.image_url + ")", minHeight: '190px' }}>
+                                                                                    <div className="image-dnd" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'portfolio/' + image.image_url + ")", minHeight: '190px' }}>
                                                                                         <div className="dnd-actions-overlay"></div>
                                                                                     </div>
                                                                                 </Col>

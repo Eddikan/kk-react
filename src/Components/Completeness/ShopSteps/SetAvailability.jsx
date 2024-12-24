@@ -53,15 +53,15 @@ const SetAvailability = ({ user, reload, token, onStepPlusOne }) => {
    
 
     const postBusinessHours = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/availability?current_user_id=' + current_user_id + '&token=' + token, data);
+        return await axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/availability?current_user_id=' + current_user_id + '&token=' + token, data);
     };
 
     const getBusinessHours = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/availability/' + designerId + '?current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/availability/' + designerId + '?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const putBusinessHourss = async (data) => {
-        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/availability/' + designerId + '?current_user_id=' + current_user_id + '&token=' + token, data);
+        return await axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/availability/' + designerId + '?current_user_id=' + current_user_id + '&token=' + token, data);
     };
 
 

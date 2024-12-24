@@ -132,7 +132,7 @@ const UploadProduct = ({ onStepPlusTwo, onStepMinusTwo, user, singleStep }) => {
         setQuestionnaire3Loading(true);
 
         e.preventDefault();
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token, { shop_completed: 1 }).then((response) => {
+        axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token, { shop_completed: 1 }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 const user = response.data.data.user;
@@ -206,7 +206,7 @@ const UploadProduct = ({ onStepPlusTwo, onStepMinusTwo, user, singleStep }) => {
                                                 <Row className="portfolio-row">
                                                     {products.map((product, index) => {
                                                         if (product.image_urls?.[0]?.image_url) {
-                                                            var productImage = process.env.REACT_APP_STORAGE_URL + 'product/' + product.image_urls[0].image_url;
+                                                            var productImage = import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + product.image_urls[0].image_url;
                                                         } else {
                                                             var productImage = PlaceholderImage;
                                                         }

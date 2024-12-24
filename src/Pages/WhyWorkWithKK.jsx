@@ -52,7 +52,7 @@ const WhyWorkWithKK = (props) => {
 
     async function onFilterChange(data) {
         setEcoFabricsLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?current_user_id=' + current_user_id + '&token=' + token, data).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'product/filter?current_user_id=' + current_user_id + '&token=' + token, data).then((response) => {
             const selectedDesigns = response.data.data;
             if (selectedDesigns) {
                 setEcofabrics(selectedDesigns);
@@ -68,7 +68,7 @@ const WhyWorkWithKK = (props) => {
     }
 
     async function onWishlistChange(data) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?current_user_id=' + current_user_id + '&token=' + token, data).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'product/filter?current_user_id=' + current_user_id + '&token=' + token, data).then((response) => {
             const selectedDesigns = response.data.data;
             if (selectedDesigns) {
                 setEcofabrics(selectedDesigns);
@@ -104,7 +104,7 @@ const WhyWorkWithKK = (props) => {
     };
 
     async function wishlistUpdate(e) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 onWishlistChange({
@@ -145,7 +145,7 @@ const WhyWorkWithKK = (props) => {
     };
 
     async function toggleAddViewCount(id) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/view/' + id + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
+        axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'product/view/' + id + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 // toast.success('Fabric saved as draft successfully!');
@@ -217,7 +217,7 @@ const WhyWorkWithKK = (props) => {
                                                     <Row className="designs-row">
                                                         {ecofabrics.map((fabric, index) => {
                                                             if (fabric.image_urls?.[0]?.image_url) {
-                                                                var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
+                                                                var fabricImage = import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
                                                             } else {
                                                                 var fabricImage = PlaceholderImage;
                                                             }

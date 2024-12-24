@@ -40,7 +40,7 @@ const ViewDesign = (props) => {
                 setPortfolioLoading(false);
                 setImages(portfolioData.image_urls);
                 if (portfolioData.image_urls?.[0]?.image_url) {
-                    setActiveImage(process.env.REACT_APP_STORAGE_URL + 'portfolio/' + portfolioData.image_urls[0].image_url);
+                    setActiveImage(import.meta.env.VITE_REACT_APP_STORAGE_URL + 'portfolio/' + portfolioData.image_urls[0].image_url);
                 } else {
                     setActiveImage(PlaceholderImage);
                 }
@@ -76,7 +76,7 @@ const ViewDesign = (props) => {
                                             {/* {portfolio?.user?.image !== '' && portfolio?.user?.image !== null ? (
                                         <div
                                             className='user-photo'
-                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${portfolio?.user?.image})` }}
+                                            style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${portfolio?.user?.image})` }}
                                         >
                                         </div>
                                     ) : (
@@ -118,7 +118,7 @@ const ViewDesign = (props) => {
                                                     <div key={index} className="single-image-slider-fabrics mb-4"
                                                         style={{
                                                             backgroundImage:
-                                                                `url(${process.env.REACT_APP_STORAGE_URL}portfolio/${image.image_url})`
+                                                                `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}portfolio/${image.image_url})`
                                                         }}
                                                     >
                                                     </div>
@@ -134,7 +134,7 @@ const ViewDesign = (props) => {
                                                         {/* {singleDesign.image !== '' && singleDesign.image !== '-' ? (
                                                         <div
                                                             className='user-photo'
-                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
+                                                            style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
                                                         >
                                                         </div>
                                                     ) : (

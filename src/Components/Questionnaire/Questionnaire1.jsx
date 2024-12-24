@@ -70,7 +70,7 @@ const Questionnaire1 = (props) => {
     async function questionnaire1Submit(e) {
         e.preventDefault();
         setQuestionnaire1Loading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/'+currentUser + '?current_user_id=' + current_user_id + '&token=' + token, { ...questionnaire1Data, interested_in: interestedIn } ).then((response) => {
+        axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/'+currentUser + '?current_user_id=' + current_user_id + '&token=' + token, { ...questionnaire1Data, interested_in: interestedIn } ).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 // reloadPage(true);

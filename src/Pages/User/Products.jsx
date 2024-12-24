@@ -67,7 +67,7 @@ const Products = (props) => {
 
     async function ProductDraftSubmit(e) {
         setProductDraftLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/' + e + '?user_id=' + currentUser + '&token=' + token, { status: 'Draft' }).then((response) => {
+        axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'product/' + e + '?user_id=' + currentUser + '&token=' + token, { status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success('Fabric saved as draft successfully!');
@@ -85,7 +85,7 @@ const Products = (props) => {
 
     async function ProductPublishSubmit(e) {
         setProductPublishLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/' + e + '?user_id=' + currentUser + '&token=' + token, { status: 'Active' }).then((response) => {
+        axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'product/' + e + '?user_id=' + currentUser + '&token=' + token, { status: 'Active' }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success('Fabric published successfully!');
@@ -103,7 +103,7 @@ const Products = (props) => {
 
     async function ProductDeleteSubmit(e) {
         setProductDeleteLoading(true);
-        axios.delete(process.env.REACT_APP_API_ENDPOINT + 'product/' + productId + '?user_id=' + currentUser + '&token=' + token).then((response) => {
+        axios.delete(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'product/' + productId + '?user_id=' + currentUser + '&token=' + token).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success('Fabric deleted successfully!');
@@ -163,7 +163,7 @@ const Products = (props) => {
                                                         <Col className={`product-grid-image mb-3`} xs="4" md="2">
                                                             <div
                                                                 className={`product-grid-div w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`}
-                                                                style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + object.image_urls[0].image_url + ")" }}
+                                                                style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + object.image_urls[0].image_url + ")" }}
                                                             >
 
                                                                 <div className="product-overlay">

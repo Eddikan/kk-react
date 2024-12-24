@@ -58,7 +58,7 @@ const VendorFeedBackSurvey = (props) => {
     const [modalHeading, setModalHeading] = useState('');
 
     const postVendorSurvey = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'vendor-feedback-survey', data);
+        return await axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'vendor-feedback-survey', data);
     };
 
     function toggleUnderConstruction(message) {

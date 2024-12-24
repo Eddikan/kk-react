@@ -33,7 +33,7 @@ const AdminGeneralSurvey = (props) => {
     let PageSize = 10;
 
     const getGeneralSurvey = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'general-feedback-survey');
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'general-feedback-survey');
     };
 
     function toggleUnderConstruction(message) {
@@ -42,7 +42,7 @@ const AdminGeneralSurvey = (props) => {
     };
 
     const handleChangePage = (pageNumber) => {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'general-feedback-survey?page=' + pageNumber + '&user_id=' + currentUser)
+        axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'general-feedback-survey?page=' + pageNumber + '&user_id=' + currentUser)
             .then((response) => {
                 const data = response.data;
                 setCurrentPage(pageNumber);
@@ -159,7 +159,7 @@ const AdminGeneralSurvey = (props) => {
                                                                                                 {generalFeedBack.user?.image != '' && generalFeedBack.user?.image != null ? (
                                                                                                     <div
                                                                                                         className='user-photo-survey'
-                                                                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${generalFeedBack.user?.image})` }}
+                                                                                                        style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${generalFeedBack.user?.image})` }}
                                                                                                     >
                                                                                                     </div>
                                                                                                 ) : (

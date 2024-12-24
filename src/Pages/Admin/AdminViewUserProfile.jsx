@@ -107,7 +107,7 @@ const AdminViewUserProfile = () => {
         setUploadStatus("loading");
         const dataArray = new FormData();
         dataArray.append("image", event);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'user/image?user_id=' + userId + '&token=' + token, dataArray, {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/image?user_id=' + userId + '&token=' + token, dataArray, {
             headers: {
                 "Content-Type": "multipart/form-data"
             }
@@ -135,7 +135,7 @@ const AdminViewUserProfile = () => {
     };
 
     async function updateProfilePicture(e) {
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + userId + '?user_id=' + userId + '&token=' + token, {
+        axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + userId + '?user_id=' + userId + '&token=' + token, {
             image: e
         }).then((response) => {
             const success = response.data.status;
@@ -322,7 +322,7 @@ const AdminViewUserProfile = () => {
                                             :
                                             <>
                                                 {userImage ?
-                                                    <div className="profile-image" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
+                                                    <div className="profile-image" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
                                                     :
                                                     <div className="profile-image" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
                                                 }

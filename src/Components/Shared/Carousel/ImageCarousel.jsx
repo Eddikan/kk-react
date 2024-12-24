@@ -71,17 +71,17 @@ const ImageSlider = (props) => {
                                 {index == 0 ?
                                     <SwiperSlide className="swiper-slide-thumb-active side-swiper" key={index}>
                                         {type == 'product' ?
-                                            <div className="slider-image cursor-pointer side-slider-image" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")" }}></div>
+                                            <div className="slider-image cursor-pointer side-slider-image" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")" }}></div>
                                             :
-                                            <div className="slider-image cursor-pointer side-slider-image" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image.image_url + ")" }}></div>
+                                            <div className="slider-image cursor-pointer side-slider-image" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'portfolio/' + image.image_url + ")" }}></div>
                                         }
                                     </SwiperSlide>
                                     :
                                     <SwiperSlide key={index}  className="side-swiper">
                                         {type == 'product' ?
-                                            <div className="slider-image cursor-pointer side-slider-image" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")" }}></div>
+                                            <div className="slider-image cursor-pointer side-slider-image" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")" }}></div>
                                             :
-                                            <div className="slider-image cursor-pointer side-slider-image" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image.image_url + ")" }}></div>
+                                            <div className="slider-image cursor-pointer side-slider-image" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'portfolio/' + image.image_url + ")" }}></div>
                                         }
                                     </SwiperSlide>
                                 }
@@ -110,7 +110,7 @@ const ImageSlider = (props) => {
                                         onMouseMove={(e) => handleMouseMove(e, image.image_url)}
                                         onMouseLeave={handleMouseLeave}
                                         style={{
-                                            backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}product/${image.image_url})`,
+                                            backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}product/${image.image_url})`,
                                         }}
                                     />
                                 ) : (
@@ -119,7 +119,7 @@ const ImageSlider = (props) => {
                                         onMouseMove={handleMouseMove}
                                         onMouseLeave={handleMouseLeave}
                                         style={{
-                                            backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}portfolio/${image.image_url})`,
+                                            backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}portfolio/${image.image_url})`,
                                         }}
                                     />
                                 )}

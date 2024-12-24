@@ -131,7 +131,7 @@ const EditSeller = () => {
     async function submitProfile(e) {
         e.preventDefault();
         setUserFormLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + sellerId + '?user_id=' + sellerId + '&current_user_id=' + current_user_id + '&token=' + token, userFormData).then((response) => {
+        axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + sellerId + '?user_id=' + sellerId + '&current_user_id=' + current_user_id + '&token=' + token, userFormData).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 const data = response.data.data;
@@ -157,7 +157,7 @@ const EditSeller = () => {
         if (areasOfSpecializationData.length > 0) {
             e.preventDefault();
             setUserFormLoading(true);
-            axios.put(process.env.REACT_APP_API_ENDPOINT + 'seller/' + seller.id + '?user_id=' + sellerId + '&current_user_id=' + current_user_id + '&token=' + token, { areas_of_specialization: areasOfSpecializationData }).then((response) => {
+            axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'seller/' + seller.id + '?user_id=' + sellerId + '&current_user_id=' + current_user_id + '&token=' + token, { areas_of_specialization: areasOfSpecializationData }).then((response) => {
                 const success = response.data.status;
                 if (success == 'Success') {
                     const data = response.data.data;
@@ -223,7 +223,7 @@ const EditSeller = () => {
                                     <div className="d-flex column-gap-20">
                                         <div>
                                             {userImage ?
-                                                <div className="profile-image-view" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
+                                                <div className="profile-image-view" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
                                                 :
                                                 <div className="profile-image-view" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
                                             }

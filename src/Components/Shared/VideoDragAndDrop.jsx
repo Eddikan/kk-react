@@ -80,9 +80,9 @@ const VideoDragAndDrop = (props) => {
 
       let apiLink = "";
       if (videoType == "portfolio") {
-        apiLink = process.env.REACT_APP_API_ENDPOINT + 'portfolio/items/video/upload?current_user_id=' + current_user_id + '&token=' + token;
+        apiLink = import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio/items/video/upload?current_user_id=' + current_user_id + '&token=' + token;
       } else {
-        apiLink = process.env.REACT_APP_API_ENDPOINT + 'product/video/upload?current_user_id=' + current_user_id + '&token=' + token;
+        apiLink = import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'product/video/upload?current_user_id=' + current_user_id + '&token=' + token;
       }
 
       try {
@@ -215,7 +215,7 @@ const VideoDragAndDrop = (props) => {
                   :
                   <Col lg={12}>
                     <div className='image-dnd' style={{ minHeight: 140 }}>
-                      <ResponsiveVideo src={process.env.REACT_APP_STORAGE_URL + 'products/videos/' + videoUrl} />
+                      <ResponsiveVideo src={import.meta.env.VITE_REACT_APP_STORAGE_URL + 'products/videos/' + videoUrl} />
                       <div className="dnd-actions-overlay" style={{ top: 0 }}>
                         <FaTimesCircle size="25px" onClick={(e) => handleRemove(e)} className="remove-icon cursor-pointer text-danger" />
                       </div>

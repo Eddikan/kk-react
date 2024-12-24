@@ -65,19 +65,19 @@ const Calendar = (props) => {
     const [formStatus, setFormStatus] = useState('standby');
 
     // const postSetAppointment = async (data) => {
-    //     return await axios.post(process.env.REACT_APP_API_ENDPOINT + '/calendar/availability', data);
+    //     return await axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + '/calendar/availability', data);
     // };
 
     const postBusinessHours = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/availability?user_id=' + currentUser, data);
+        return await axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/availability?user_id=' + currentUser, data);
     };
 
     const putBusinessHourss = async (data) => {
-        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/availability/' + designerId, data);
+        return await axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/availability/' + designerId, data);
     };
 
     const getBusinessHours = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/availability/' + designerId);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/availability/' + designerId);
     };
 
     const handleChangeAppointment = (e) => {

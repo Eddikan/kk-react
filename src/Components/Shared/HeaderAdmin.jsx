@@ -56,11 +56,11 @@ const HeaderAdmin = () => {
     const completedQuestionnaire = cookies.completed_questionnaire;
 
     const getUser = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const getNotifications = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'notification?current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'notification?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     // removeCookies
@@ -315,7 +315,7 @@ const HeaderAdmin = () => {
 
                                                 <div className="user-dropdown nav-link" ref={userRef}>
                                                     {userImage ?
-                                                        <div className="header-user-photo cursor-pointer" onClick={toggleUserMenu} style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
+                                                        <div className="header-user-photo cursor-pointer" onClick={toggleUserMenu} style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
                                                         :
                                                         <div className="header-user-photo cursor-pointer" onClick={toggleUserMenu} style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
                                                     }

@@ -160,7 +160,7 @@ const EditProduct = (props) => {
       
           try {
             const response = await axios.post(
-              `${process.env.REACT_APP_API_ENDPOINT}product/image?current_user_id=${current_user_id}&token=${token}`,
+              `${import.meta.env.VITE_REACT_APP_API_ENDPOINT}product/image?current_user_id=${current_user_id}&token=${token}`,
               dataArray,
               {
                 headers: {
@@ -287,7 +287,7 @@ const EditProduct = (props) => {
         e.preventDefault();
         if (images) {
             setProductLoading(true);
-            axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/'+productId+'?current_user_id=' + current_user_id + '&token=' + token, {...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherComposition != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, image_urls: images, colors: colors, certifications: certifications,  status: 'Active' }).then((response) => {
+            axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'product/'+productId+'?current_user_id=' + current_user_id + '&token=' + token, {...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherComposition != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, image_urls: images, colors: colors, certifications: certifications,  status: 'Active' }).then((response) => {
                 const success = response.data.status;
                 if(success == 'Success') {
                     toast.success('Fabric updated successfully!');
@@ -313,7 +313,7 @@ const EditProduct = (props) => {
     async function ProductDraftSubmit(e) {
         e.preventDefault();
         setProductDraftLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/'+productId+'?current_user_id=' + current_user_id + '&token=' + token, {...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherComposition != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, image_urls: images, colors: colors, certifications: certifications, status: 'Draft' }).then((response) => {
+        axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'product/'+productId+'?current_user_id=' + current_user_id + '&token=' + token, {...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherComposition != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, image_urls: images, colors: colors, certifications: certifications, status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
                 toast.success('Fabric saved as draft successfully!');
@@ -346,7 +346,7 @@ const EditProduct = (props) => {
                                         
                                         {images.length > 3 && index > 3 ?
                                             <Col lg={2} key={image.id} className="image-preview mt-3">
-                                                <div className="image-dnd" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'product/'+image.image_url+")", minHeight: '170px'}}>
+                                                <div className="image-dnd" style={{ backgroundImage: "url("+import.meta.env.VITE_REACT_APP_STORAGE_URL+'product/'+image.image_url+")", minHeight: '170px'}}>
                                                 <div className="dnd-actions-overlay">
                                                     <FaTimesCircle size="25px" onClick={() => handleRemove(index)} className="remove-icon cursor-pointer text-danger" />
                                                 </div>
@@ -354,7 +354,7 @@ const EditProduct = (props) => {
                                             </Col>
                                             :
                                             <Col lg={2} key={image.id} className="image-preview">
-                                                <div className="image-dnd" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'product/'+image.image_url+")", minHeight: '170px'}}>
+                                                <div className="image-dnd" style={{ backgroundImage: "url("+import.meta.env.VITE_REACT_APP_STORAGE_URL+'product/'+image.image_url+")", minHeight: '170px'}}>
                                                 <div className="dnd-actions-overlay">
                                                     <FaTimesCircle size="25px" onClick={() => handleRemove(index)} className="remove-icon cursor-pointer text-danger" />
                                                 </div>

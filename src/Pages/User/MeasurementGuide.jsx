@@ -108,7 +108,7 @@ const MeasurementGuide = (props) => {
     };
 
     async function submitMeasurementGuide(e) {
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, { measurement_guide: e }).then((response) => {
+        axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, { measurement_guide: e }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 const data = response.data.data;
@@ -201,7 +201,7 @@ const MeasurementGuide = (props) => {
                                                                                             {element.value && element.value.length > 0 && element.value != "" ?
                                                                                                 <>
                                                                                                     {element.value.map((image, imageIndex) => (
-                                                                                                        <img key={imageIndex} src={process.env.REACT_APP_STORAGE_URL + 'product/' + image?.image_url} className="w-100 mb-3 image-height-preview" alt="" />
+                                                                                                        <img key={imageIndex} src={import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + image?.image_url} className="w-100 mb-3 image-height-preview" alt="" />
                                                                                                     ))}
                                                                                                 </>
                                                                                                 :
@@ -222,7 +222,7 @@ const MeasurementGuide = (props) => {
                                                                                                 : element.type == "Video" && element.value != "" ?
                                                                                                     <>
                                                                                                         <div className="mb-3">
-                                                                                                            <ResponsiveVideo src={process.env.REACT_APP_STORAGE_URL + 'products/videos/' + element.value} />
+                                                                                                            <ResponsiveVideo src={import.meta.env.VITE_REACT_APP_STORAGE_URL + 'products/videos/' + element.value} />
                                                                                                         </div>
                                                                                                     </>
                                                                                                     : element.type == "Line Break" ?

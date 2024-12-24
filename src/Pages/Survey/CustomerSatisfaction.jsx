@@ -49,7 +49,7 @@ const CustomerSatisfaction = (props) => {
 
 
     const postCustomerSurvey = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'customer-satisfaction-survey', data);
+        return await axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'customer-satisfaction-survey', data);
     };
 
     function toggleUnderConstruction(message) {

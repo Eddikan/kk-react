@@ -323,7 +323,7 @@ const Profile = () => {
             }
         }
 
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, { ...verificationFormData, id_country: selected, primary_id_front_img: primaryFrontPhoto, primary_id_back_img: primaryBackPhoto, first_secondary_id_front_img: firstSecondaryFrontPhoto, first_secondary_id_back_img: firstSecondaryBackPhoto, second_secondary_id_front_img: secondSecondaryFrontPhoto, second_secondary_id_back_img: secondSecondaryBackPhoto }).then((response) => {
+        axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, { ...verificationFormData, id_country: selected, primary_id_front_img: primaryFrontPhoto, primary_id_back_img: primaryBackPhoto, first_secondary_id_front_img: firstSecondaryFrontPhoto, first_secondary_id_back_img: firstSecondaryBackPhoto, second_secondary_id_front_img: secondSecondaryFrontPhoto, second_secondary_id_back_img: secondSecondaryBackPhoto }).then((response) => {
             const success = response.data.status;
             if (success === 'Success') {
                 setVerificationIDShow(false);
@@ -586,7 +586,7 @@ const Profile = () => {
         setUploadStatus("loading");
         const dataArray = new FormData();
         dataArray.append("image", event);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'user/image?user_id=' + currentUser + '&token=' + token, dataArray, {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/image?user_id=' + currentUser + '&token=' + token, dataArray, {
             headers: {
                 "Content-Type": "multipart/form-data"
             }
@@ -623,7 +623,7 @@ const Profile = () => {
     }
 
     async function updateProfilePicture(e) {
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, {
+        axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, {
             image: e
         }).then((response) => {
             const success = response.data.status;
@@ -667,7 +667,7 @@ const Profile = () => {
     }
 
     async function updateSecurity(fieldName, value) {
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, {
+        axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, {
             [fieldName]: value
         }).then((response) => {
             const success = response.data.status;
@@ -692,7 +692,7 @@ const Profile = () => {
             toast.error('New Password and Confirm New Password does not match');
         } else {
             setFormStatus('loading');
-            axios.post(process.env.REACT_APP_API_ENDPOINT + 'password/change?user_id=' + currentUser + '&token=' + token, {...updatePasswordFormData, user_id: currentUser, token: token}).then((response) => {
+            axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'password/change?user_id=' + currentUser + '&token=' + token, {...updatePasswordFormData, user_id: currentUser, token: token}).then((response) => {
                 const success = response.data.status;
                 const data = response.data.data;
                 if (success === 'Success') {
@@ -923,7 +923,7 @@ const Profile = () => {
                                             :
                                             <>
                                                 {userImage ?
-                                                    <div className="profile-image" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
+                                                    <div className="profile-image" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
                                                     :
                                                     <div className="profile-image" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
                                                 }

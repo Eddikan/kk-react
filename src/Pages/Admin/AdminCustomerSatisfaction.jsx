@@ -32,7 +32,7 @@ const AdminCustomerSatisfaction = (props) => {
     let PageSize = 10;
 
     const getCustomerSurvey = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'customer-satisfaction-survey?current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'customer-satisfaction-survey?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     function toggleUnderConstruction(message) {
@@ -41,7 +41,7 @@ const AdminCustomerSatisfaction = (props) => {
     };
 
     const handleChangePage = (pageNumber) => {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'customer-satisfaction-survey?page=' + pageNumber + '&current_user_id=' + current_user_id + '&token=' + token)
+        axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'customer-satisfaction-survey?page=' + pageNumber + '&current_user_id=' + current_user_id + '&token=' + token)
             .then((response) => {
                 const data = response.data;
                 setCurrentPage(pageNumber);
@@ -162,7 +162,7 @@ const AdminCustomerSatisfaction = (props) => {
                                                                                                 {customerSurvey.user?.image != '' && customerSurvey.user?.image != null ? (
                                                                                                     <div
                                                                                                         className='user-photo-survey'
-                                                                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${customerSurvey.user?.image})` }}
+                                                                                                        style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${customerSurvey.user?.image})` }}
                                                                                                     >
                                                                                                     </div>
                                                                                                 ) : (

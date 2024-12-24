@@ -762,7 +762,7 @@ const EditProfile = () => {
         try {
             setProvincesLoading(true);
             const response = await axios.post(
-                process.env.REACT_APP_LOCATION_API_ENDPOINT + 'countries/states',
+                import.meta.env.VITE_REACT_APP_LOCATION_API_ENDPOINT + 'countries/states',
                 requestData, // JSON body with country
                 {
                     headers: {
@@ -796,7 +796,7 @@ const EditProfile = () => {
         try {
             setCitiesLoading(true);
             const response = await axios.post(
-                process.env.REACT_APP_LOCATION_API_ENDPOINT + 'countries/state/cities',
+                import.meta.env.VITE_REACT_APP_LOCATION_API_ENDPOINT + 'countries/state/cities',
                 requestData, // JSON body with country and state
                 {
                     headers: {
@@ -938,7 +938,7 @@ const EditProfile = () => {
 
         e.preventDefault();
         setProfileFormLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token + '&gender=' + value).then((response) => {
+        axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token + '&gender=' + value).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 const data = response.data.data;
@@ -976,7 +976,7 @@ const EditProfile = () => {
             // ...(bodyMeasurementShow && { body_measurement: JSON.stringify(checklistData) }),
         };
 
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, updatedProfileFormData).then((response) => {
+        axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, updatedProfileFormData).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 const data = response.data.data;
@@ -1003,7 +1003,7 @@ const EditProfile = () => {
         if (areasOfSpecializationData.length > 0) {
             e.preventDefault();
             setProfileFormLoading(true);
-            axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designer.id + '?user_id=' + currentUser + '&token=' + token, { areas_of_specialization: areasOfSpecializationData }).then((response) => {
+            axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/' + designer.id + '?user_id=' + currentUser + '&token=' + token, { areas_of_specialization: areasOfSpecializationData }).then((response) => {
                 const success = response.data.status;
                 if (success == 'Success') {
                     const data = response.data.data;
@@ -1132,7 +1132,7 @@ const EditProfile = () => {
                                     <div className="d-flex column-gap-20">
                                         <div>
                                             {userImage ?
-                                                <div className="profile-image" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
+                                                <div className="profile-image" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
                                                 :
                                                 <div className="profile-image" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
                                             }

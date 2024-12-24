@@ -33,7 +33,7 @@ const ProductGrid = (props) => {
 
 
     async function wishlistUpdate(e, id) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 setReloadCount(reloadCount + 1);
@@ -87,7 +87,7 @@ const ProductGrid = (props) => {
                                 <Row className="portfolio-row">
                                     {products.map((product) => {
                                         if (product.image_urls?.[0]?.image_url) {
-                                            var productImage = process.env.REACT_APP_STORAGE_URL + 'product/' + product.image_urls[0].image_url;
+                                            var productImage = import.meta.env.VITE_REACT_APP_STORAGE_URL + 'product/' + product.image_urls[0].image_url;
                                         } else {
                                             var productImage = PlaceholderImage;
                                         }

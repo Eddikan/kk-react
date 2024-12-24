@@ -95,7 +95,7 @@ const Designers = (props) => {
                                 {designers.map((designer, index) => (
                                     <div key={index} className="designers-grid mb-3">
                                         {designer.user.image ? (
-                                            <div className="designers-grid-div w-100" style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${designer.user.image})` }}>
+                                            <div className="designers-grid-div w-100" style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${designer.user.image})` }}>
                                                 <div className='bg-black-faded designer-overlay'>
                                                     <div className="designer-details">
                                                         <h3 className="designer-name text-white fs-25 mb-1">{designer.user.first_name && designer.user.first_name !== "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name !== "" ? designer.user.last_name : "-"}</h3>

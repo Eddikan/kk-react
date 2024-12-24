@@ -93,7 +93,7 @@ const NewPortfolioShopManager = (props) => {
 
         if (portfolioData.image_urls) {
             setPortfolioLoading(true);
-            axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item?current_user_id=' + current_user_id + '&token=' + token, {...portfolioData, colors: colors, tags: tags, materials: materials, status: 'Active' }).then((response) => {
+            axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio_item?current_user_id=' + current_user_id + '&token=' + token, {...portfolioData, colors: colors, tags: tags, materials: materials, status: 'Active' }).then((response) => {
                 const success = response.data.status;
                 if(success == 'Success') {
                     toast.success('Design added successfully!');

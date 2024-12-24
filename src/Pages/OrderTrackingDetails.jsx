@@ -61,15 +61,15 @@ const OrderTracking = (props) => {
     }
 
     const getAddCarts = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + '/#?current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + '/#?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     // const getUser = async () => {
-    //     return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + designerId);
+    //     return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + designerId);
     // };
 
     const getOrderItem = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'order/item/' + orderItemId + '?current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'order/item/' + orderItemId + '?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     function handleOnEnter(text) {
@@ -276,7 +276,7 @@ const OrderTracking = (props) => {
                                         {user.image && (
                                             <div
                                                 className='user-photo-order me-2'
-                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${user.image})` }}
+                                                style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${user.image})` }}
                                             >
                                             </div>
                                         )}
@@ -500,7 +500,7 @@ const OrderTracking = (props) => {
                                             {user.image && (
                                                 <div
                                                     className='user-photo'
-                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${user.image})` }}
+                                                    style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${user.image})` }}
                                                 >
                                                 </div>
                                             )}

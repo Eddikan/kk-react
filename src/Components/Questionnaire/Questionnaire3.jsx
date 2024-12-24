@@ -133,7 +133,7 @@ const Questionnaire3 = (props) => {
     async function questionnaire3Submit(e) {
         e.preventDefault();
         setQuestionnaire3Loading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'seller?current_user_id=' + current_user_id + '&token=' + token, {...questionnaire3Data, types_of_fabric: typesOfFabric, user_id: currentUser, products: productItems, availability: availability, post_type: postType, pricing_structure: pricingStructure  }).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'seller?current_user_id=' + current_user_id + '&token=' + token, {...questionnaire3Data, types_of_fabric: typesOfFabric, user_id: currentUser, products: productItems, availability: availability, post_type: postType, pricing_structure: pricingStructure  }).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
                 const data = response.data.data;
@@ -265,7 +265,7 @@ const Questionnaire3 = (props) => {
                                                                         <>
                                                                             {productItem.image_urls.map((image, imageIndex) => (
                                                                                 <Col lg={4} key={image.id} className="image-preview mt-3">
-                                                                                    <div className="image-dnd" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'product/'+image.image_url+")", minHeight: '190px'}}>
+                                                                                    <div className="image-dnd" style={{ backgroundImage: "url("+import.meta.env.VITE_REACT_APP_STORAGE_URL+'product/'+image.image_url+")", minHeight: '190px'}}>
                                                                                         <div className="dnd-actions-overlay"></div>
                                                                                     </div>
                                                                                 </Col>
@@ -278,7 +278,7 @@ const Questionnaire3 = (props) => {
                                                                         <>
                                                                             {productItem.final_product_image_urls.map((image, imageIndex) => (
                                                                                 <Col lg={4} key={image.id} className="image-preview mt-3">
-                                                                                    <div className="image-dnd" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'product/'+image.image_url+")", minHeight: '190px'}}>
+                                                                                    <div className="image-dnd" style={{ backgroundImage: "url("+import.meta.env.VITE_REACT_APP_STORAGE_URL+'product/'+image.image_url+")", minHeight: '190px'}}>
                                                                                         <div className="dnd-actions-overlay"></div>
                                                                                     </div>
                                                                                 </Col>

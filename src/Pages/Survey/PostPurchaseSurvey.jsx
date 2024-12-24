@@ -35,7 +35,7 @@ const PostPurchaseSurvey = (props) => {
     const [submitLoading, setSubmitLoading] = useState(true);
 
     const postPurchaseSurvey = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'post-purchase-survey', data);
+        return await axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'post-purchase-survey', data);
     };
 
     const useQuery = () => {

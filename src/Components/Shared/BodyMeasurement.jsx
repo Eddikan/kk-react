@@ -625,7 +625,7 @@ const BodyMeasurement = ({ userData }) => {
 
         const updatedProfileFormData = {body_measurement: JSON.stringify(bodyMeasurementFormData)};
 
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token, updatedProfileFormData).then((response) => {
+        axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token, updatedProfileFormData).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 const data = response.data.data;

@@ -76,15 +76,15 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
 
 
     const postSetAppointment = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designer_id + '/set/appointment?current_user_id=' + current_user_id, data);
+        return await axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/' + designer_id + '/set/appointment?current_user_id=' + current_user_id, data);
     };
 
     const getAvailabilities = async (e) => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designer_id + '/availability?date=' + e + '?current_user_id=' + current_user_id + '&token' + token);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/' + designer_id + '/availability?date=' + e + '?current_user_id=' + current_user_id + '&token' + token);
     };
 
     const getDesignerAppointment = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designer_id + '/appointment?current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/' + designer_id + '/appointment?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     function convertTo12HourFormat(time24) {

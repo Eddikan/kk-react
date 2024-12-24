@@ -58,7 +58,7 @@ const CountryData = {
     GQ: { name: 'Equatorial Guinea', language: 'Spanish', languageCode: 'es', currency: 'XAF', currencyCode: 'FCFA', rate: 556.23 },
     ER: { name: 'Eritrea', language: 'Tigrinya', languageCode: 'ti', currency: 'ERN', currencyCode: 'Nfk', rate: 15.00 },
     EE: { name: 'Estonia', language: 'Estonian', languageCode: 'et', currency: 'EUR', currencyCode: '€', rate: 0.82 },
-    SZ: { name: 'Eswatini', language: 'Swazi', languageCode: 'ss', currency: 'SZL', currencyCode: 'E', rate: 13.60 },
+    // SZ: { name: 'Eswatini', language: 'Swazi', languageCode: 'ss', currency: 'SZL', currencyCode: 'E', rate: 13.60 },
     ET: { name: 'Ethiopia', language: 'Amharic', languageCode: 'am', currency: 'ETB', currencyCode: 'Br', rate: 41.95 },
     FJ: { name: 'Fiji', language: 'Fijian', languageCode: 'fj', currency: 'FJD', currencyCode: 'FJD$', rate: 2.06 },
     FI: { name: 'Finland', language: 'Finnish', languageCode: 'fi', currency: 'EUR', currencyCode: '€', rate: 0.82 },

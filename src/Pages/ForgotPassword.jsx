@@ -24,7 +24,7 @@ const ForgotPassword = () => {
     const currentUser = cookies.currentUser;
 
     const postForgotPassword = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'password/forgot', data);
+        return await axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'password/forgot', data);
     };
 
     const handleChangePassword = (e) => {

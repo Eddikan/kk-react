@@ -672,15 +672,15 @@ const VideoConferencing = (props) => {
     let room = document.querySelector("whereby-embed");
 
     const getAppointment = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentId + '?current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentId + '?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const putSchedule = async (data) => {
-        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentId + '?current_user_id=' + current_user_id  + '&token=' + token, data);
+        return await axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentId + '?current_user_id=' + current_user_id  + '&token=' + token, data);
     };
 
     const putUser = async (data) => {
-        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token, data);
+        return await axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token, data);
     };
 
     const toggleSaveAppointmentModal = () => {
@@ -772,7 +772,7 @@ const VideoConferencing = (props) => {
         });
 
         e.preventDefault();
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token + '&gender=' + value).then((response) => {
+        axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token + '&gender=' + value).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 // toast.success('Profile updated successfully!');

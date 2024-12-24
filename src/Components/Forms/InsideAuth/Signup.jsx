@@ -56,12 +56,12 @@ const SignUp = ({ onSignup, showLogin }) => {
     };
 
     const getUserCartItems = async (e) => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + e + '/cart');
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + e + '/cart');
     };
 
     async function addTempCartToCart(data) {
         // setReorderLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart/bulk', { order_items: data.order_items, user_id: data.user_id }).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'cart/bulk', { order_items: data.order_items, user_id: data.user_id }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 getUserCartItems(data.user_id).then((response) => {
@@ -94,7 +94,7 @@ const SignUp = ({ onSignup, showLogin }) => {
 
     async function addTempFavoritesToFavorites(data) {
         // setReorderLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/item/wishlist/bulk', { favorites: data.favorites, user_id: data.user_id }).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio/item/wishlist/bulk', { favorites: data.favorites, user_id: data.user_id }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 const data = response.data.data;
@@ -115,7 +115,7 @@ const SignUp = ({ onSignup, showLogin }) => {
     async function registerSubmit(e) {
         e.preventDefault();
         setRegisterFormLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'register', { ...registerFormData, interested_in: interestedIn }).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'register', { ...registerFormData, interested_in: interestedIn }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 const data = response.data.data;

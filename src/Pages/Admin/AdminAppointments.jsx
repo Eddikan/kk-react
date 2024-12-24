@@ -77,16 +77,16 @@ const AdminAppointments = (props) => {
     let PageSize = 10;
 
     const getAppointments = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'appointment?current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'appointment?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const putReschedule = async (data) => {
-        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentEditId + '?current_user_id=' + current_user_id + '&token=' + token, data);
+        return await axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentEditId + '?current_user_id=' + current_user_id + '&token=' + token, data);
     };
 
     const toggleEditAppointmentModal = (id) => {
         setAppointmentEditId(id);
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'appointment/' + id + '?current_user_id=' + current_user_id + '&token=' + token).then(response => {
+        axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'appointment/' + id + '?current_user_id=' + current_user_id + '&token=' + token).then(response => {
             const result = response.data.data;
             setConsultationFormData(result);
         })
@@ -187,7 +187,7 @@ const AdminAppointments = (props) => {
     }
 
     const handleChangePage = (pageNumber) => {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'appointment?page=' + pageNumber + '&current_user_id=' + current_user_id + '&token=' + token)
+        axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'appointment?page=' + pageNumber + '&current_user_id=' + current_user_id + '&token=' + token)
             .then((response) => {
                 const data = response.data;
                 const result = data.data;
@@ -320,7 +320,7 @@ const AdminAppointments = (props) => {
                                                                                             {appointment.designer?.user?.image != '' && appointment.designer?.user?.image != null ? (
                                                                                                 <div
                                                                                                     className='user-photo-appointment'
-                                                                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${appointment.designer?.user?.image})` }}
+                                                                                                    style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${appointment.designer?.user?.image})` }}
                                                                                                 >
                                                                                                 </div>
                                                                                             ) : (

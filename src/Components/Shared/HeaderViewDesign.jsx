@@ -57,14 +57,14 @@ const HeaderViewDesign = () => {
     const completedQuestionnaire = cookies.completed_questionnaire;
 
     const getUser = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const getFabrics = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + '/product/fabric' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + '/product/fabric' + currentUser + '?current_user_id=' + current_user_id + '&token=' + token);
     };
     const getUserOrders = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/order?current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/order?current_user_id=' + current_user_id + '&token=' + token);
     }
 
     // removeCookies

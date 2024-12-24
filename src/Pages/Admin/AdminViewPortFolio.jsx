@@ -68,7 +68,7 @@ const AdminViewPortFolio = () => {
         setAddReviewShow(!addReviewShow);
 
         if (e?.[0]?.image_url) {
-            setActiveImage(process.env.REACT_APP_STORAGE_URL + 'portfolio/' + e[0].image_url);
+            setActiveImage(import.meta.env.VITE_REACT_APP_STORAGE_URL + 'portfolio/' + e[0].image_url);
         } else {
             setActiveImage(PlaceholderImage);
         }
@@ -97,7 +97,7 @@ const AdminViewPortFolio = () => {
                 setPortfolioLoading(false);
                 setImages(portfolioData.image_urls);
                 if (portfolioData.image_urls?.[0]?.image_url) {
-                    setActiveImage(process.env.REACT_APP_STORAGE_URL + 'portfolio/' + portfolioData.image_urls[0].image_url);
+                    setActiveImage(import.meta.env.VITE_REACT_APP_STORAGE_URL + 'portfolio/' + portfolioData.image_urls[0].image_url);
                 } else {
                     setActiveImage(PlaceholderImage);
                 }
@@ -181,7 +181,7 @@ const AdminViewPortFolio = () => {
                                                 <Col lg="12" className="d-flex justify-content-between">
                                                     <div className='mb-0 d-flex portfolio-designer'>
                                                         {/* {portfolio.user.image ? (
-                                                        <div className='designer-photo' style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${portfolio.user.image})` }}
+                                                        <div className='designer-photo' style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${portfolio.user.image})` }}
                                                         >
                                                         </div>
                                                     ) : (
@@ -259,7 +259,7 @@ const AdminViewPortFolio = () => {
                                                 <div className='d-flex justify-content-between'>
                                                     <div className='mb-0 d-flex portfolio-designer'>
                                                         {portfolio.user.image ? (
-                                                            <div className='designer-photo' style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${portfolio.user.image})` }}
+                                                            <div className='designer-photo' style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${portfolio.user.image})` }}
                                                             >
                                                             </div>
                                                         ) : (
@@ -417,7 +417,7 @@ const AdminViewPortFolio = () => {
                                                         {portfolio.user.image && (
                                                             <div
                                                                 className='designer-photo'
-                                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${portfolio.user.image})` }}
+                                                                style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${portfolio.user.image})` }}
                                                             >
                                                             </div>
                                                         )}

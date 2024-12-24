@@ -153,7 +153,7 @@ const AdminPortfolioGrid = (props) => {
 
         setDesignImages(image_urls);
         if (image_urls?.[0]?.image_url) {
-            setActiveImage(process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image_urls[0].image_url);
+            setActiveImage(import.meta.env.VITE_REACT_APP_STORAGE_URL + 'portfolio/' + image_urls[0].image_url);
         } else {
             setActiveImage(PlaceholderImage);
         }
@@ -167,7 +167,7 @@ const AdminPortfolioGrid = (props) => {
 
     async function PortfolioDeleteSubmit(e) {
         setPortfolioDeleteLoading(true);
-        axios.delete(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/' + portfolioId + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
+        axios.delete(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio_item/' + portfolioId + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success('Design deleted successfully!');
@@ -186,7 +186,7 @@ const AdminPortfolioGrid = (props) => {
 
     async function PortfolioDraftSubmit(e) {
         setPortfolioDraftLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/' + e + '?current_user_id=' + current_user_id + '&token=' + token, { status: 'Draft' }).then((response) => {
+        axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio_item/' + e + '?current_user_id=' + current_user_id + '&token=' + token, { status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success('Design saved as draft successfully!');
@@ -204,7 +204,7 @@ const AdminPortfolioGrid = (props) => {
 
     async function PortfolioPublishSubmit(e) {
         setPortfolioPublishLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/' + e + '?current_user_id=' + current_user_id + '&token=' + token, { status: 'Active' }).then((response) => {
+        axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio_item/' + e + '?current_user_id=' + current_user_id + '&token=' + token, { status: 'Active' }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success('Design published successfully!');
@@ -240,7 +240,7 @@ const AdminPortfolioGrid = (props) => {
                                 <Row className="portfolio-row">
                                     {portfolio.map((object, index) => {
                                         if (object.image_urls?.[0]?.image_url) {
-                                            var portfolioImage = process.env.REACT_APP_STORAGE_URL + 'portfolio/' + object.image_urls[0].image_url;
+                                            var portfolioImage = import.meta.env.VITE_REACT_APP_STORAGE_URL + 'portfolio/' + object.image_urls[0].image_url;
                                         } else {
                                             var portfolioImage = PlaceholderImage;
                                         }
@@ -372,7 +372,7 @@ const AdminPortfolioGrid = (props) => {
                             {singleDesign.image !== '' && singleDesign.image !== '-' ? (
                                 <div
                                     className='user-photo'
-                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
+                                    style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
                                 >
                                 </div>
                             ) : (
@@ -410,7 +410,7 @@ const AdminPortfolioGrid = (props) => {
                                                         <div key={index} className="single-image-slider-fabrics"
                                                             style={{
                                                                 backgroundImage:
-                                                                    `url(${process.env.REACT_APP_STORAGE_URL}portfolio/${image.image_url})`
+                                                                    `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}portfolio/${image.image_url})`
                                                             }}
                                                         >
                                                         </div>
@@ -434,7 +434,7 @@ const AdminPortfolioGrid = (props) => {
                                                     {singleDesign.image !== '' && singleDesign.image !== '-' ? (
                                                         <div
                                                             className='user-photo'
-                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
+                                                            style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
                                                         >
                                                         </div>
                                                     ) : (
@@ -483,7 +483,7 @@ const AdminPortfolioGrid = (props) => {
                                                             {singleDesign.image !== '' && singleDesign.image !== '-' ? (
                                                                 <div
                                                                     className='user-photo-modal mb-2 '
-                                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
+                                                                    style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
                                                                 >
                                                                 </div>
                                                             ) : (
@@ -550,7 +550,7 @@ const AdminPortfolioGrid = (props) => {
                                         {singleDesign.image !== '' && singleDesign.image !== '-' ? (
                                             <div
                                                 className='user-photo-side mb-4 '
-                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
+                                                style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
                                             >
                                             </div>
                                         ) : (
@@ -665,7 +665,7 @@ const AdminPortfolioGrid = (props) => {
                                 {singleDesign.image && (
                                     <div
                                         className='user-photo-message mb-2 '
-                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
+                                        style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
                                     >
                                     </div>
                                 )}
@@ -717,7 +717,7 @@ const AdminPortfolioGrid = (props) => {
                                                         <div key={index} className="single-image-slider-share mb-4"
                                                             style={{
                                                                 backgroundImage:
-                                                                    `url(${process.env.REACT_APP_STORAGE_URL}portfolio/${image.image_url})`
+                                                                    `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}portfolio/${image.image_url})`
                                                             }}
                                                         >
                                                         </div>
@@ -727,7 +727,7 @@ const AdminPortfolioGrid = (props) => {
                                                             {singleDesign.image !== '' && singleDesign.image !== '-' ? (
                                                                 <div
                                                                     className='user-photo-share mt-1'
-                                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
+                                                                    style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
                                                                 >
                                                                 </div>
                                                             ) : (

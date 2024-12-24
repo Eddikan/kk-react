@@ -105,7 +105,7 @@ const EditPortfolio = (props) => {
 
             try {
                 const response = await axios.post(
-                    `${process.env.REACT_APP_API_ENDPOINT}portfolio/image?current_user_id=${current_user_id}&token=${token}`,
+                    `${import.meta.env.VITE_REACT_APP_API_ENDPOINT}portfolio/image?current_user_id=${current_user_id}&token=${token}`,
                     dataArray,
                     {
                         headers: {
@@ -157,7 +157,7 @@ const EditPortfolio = (props) => {
         e.preventDefault();
         if (images) {
             setPortfolioLoading(true);
-            axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/' + portfolioId + '?current_user_id=' + current_user_id + '&token=' + token, { ...portfolioData, image_urls: images, portfolio_item_category_ids: categoryIds, seasons: seasons, colors: colors, tags: tags, materials: materials, genders: genders, status: 'Active' }).then((response) => {
+            axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio_item/' + portfolioId + '?current_user_id=' + current_user_id + '&token=' + token, { ...portfolioData, image_urls: images, portfolio_item_category_ids: categoryIds, seasons: seasons, colors: colors, tags: tags, materials: materials, genders: genders, status: 'Active' }).then((response) => {
                 const success = response.data.status;
                 if (success == 'Success') {
                     toast.success('Design updated successfully!');
@@ -183,7 +183,7 @@ const EditPortfolio = (props) => {
     async function PortfolioDraftSubmit(e) {
         e.preventDefault();
         setPortfolioDraftLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/' + portfolioId + '?current_user_id=' + current_user_id + '&token=' + token, { ...portfolioData, image_urls: images, portfolio_item_category_ids: categoryIds, seasons: seasons, colors: colors, tags: tags, materials: materials, genders: genders, status: 'Draft' }).then((response) => {
+        axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio_item/' + portfolioId + '?current_user_id=' + current_user_id + '&token=' + token, { ...portfolioData, image_urls: images, portfolio_item_category_ids: categoryIds, seasons: seasons, colors: colors, tags: tags, materials: materials, genders: genders, status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success('Design saved as draft successfully!');
@@ -270,7 +270,7 @@ const EditPortfolio = (props) => {
     };
 
     async function getCategories(id) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'design/filter/type?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
+        axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'design/filter/type?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
             const data = response.data;
             if (data) {
                 const filters = data.data;
@@ -288,7 +288,7 @@ const EditPortfolio = (props) => {
 
     async function addCategory(e) {
         e.preventDefault();
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio-item-categories?current_user_id=' + current_user_id + '&token=' + token, { name: categorySearchTerm, user_id: currentUser }).then((response) => {
+        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio-item-categories?current_user_id=' + current_user_id + '&token=' + token, { name: categorySearchTerm, user_id: currentUser }).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
                 const category = response.data.data;
@@ -329,7 +329,7 @@ const EditPortfolio = (props) => {
                                                                 <>
                                                                     {images.length > 6 && index + 1 > 6 ?
                                                                         <Col lg={2} key={image.id} className="image-preview mt-3">
-                                                                            <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image.image_url + ")", minHeight: '170px' }}>
+                                                                            <div className="image-dnd" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'portfolio/' + image.image_url + ")", minHeight: '170px' }}>
                                                                                 <div className="dnd-actions-overlay">
                                                                                     <FaTimesCircle size="25px" onClick={() => handleRemove(index)} className="remove-icon cursor-pointer text-danger" />
                                                                                 </div>
@@ -337,7 +337,7 @@ const EditPortfolio = (props) => {
                                                                         </Col>
                                                                         :
                                                                         <Col lg={2} key={image.id} className="image-preview">
-                                                                            <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image.image_url + ")", minHeight: '170px' }}>
+                                                                            <div className="image-dnd" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'portfolio/' + image.image_url + ")", minHeight: '170px' }}>
                                                                                 <div className="dnd-actions-overlay">
                                                                                     <FaTimesCircle size="25px" onClick={() => handleRemove(index)} className="remove-icon cursor-pointer text-danger" />
                                                                                 </div>
@@ -349,7 +349,7 @@ const EditPortfolio = (props) => {
                                                                     <>
                                                                         {images.length > 4 && index + 1 > 4 ?
                                                                             <Col lg={3} key={image.id} className="image-preview mt-3">
-                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image.image_url + ")", minHeight: '175px' }}>
+                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'portfolio/' + image.image_url + ")", minHeight: '175px' }}>
                                                                                     <div className="dnd-actions-overlay">
                                                                                         <FaTimesCircle size="25px" onClick={() => handleRemove(index)} className="remove-icon cursor-pointer text-danger" />
                                                                                     </div>
@@ -357,7 +357,7 @@ const EditPortfolio = (props) => {
                                                                             </Col>
                                                                             :
                                                                             <Col lg={3} key={image.id} className="image-preview">
-                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image.image_url + ")", minHeight: '175px' }}>
+                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'portfolio/' + image.image_url + ")", minHeight: '175px' }}>
                                                                                     <div className="dnd-actions-overlay">
                                                                                         <FaTimesCircle size="25px" onClick={() => handleRemove(index)} className="remove-icon cursor-pointer text-danger" />
                                                                                     </div>
@@ -369,7 +369,7 @@ const EditPortfolio = (props) => {
                                                                     <>
                                                                         {images.length > 6 && index + 1 > 6 ?
                                                                             <Col lg={2} key={image.id} className="image-preview mt-3">
-                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image.image_url + ")", minHeight: '170px' }}>
+                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'portfolio/' + image.image_url + ")", minHeight: '170px' }}>
                                                                                     <div className="dnd-actions-overlay">
                                                                                         <FaTimesCircle size="25px" onClick={() => handleRemove(index)} className="remove-icon cursor-pointer text-danger" />
                                                                                     </div>
@@ -377,7 +377,7 @@ const EditPortfolio = (props) => {
                                                                             </Col>
                                                                             :
                                                                             <Col lg={2} key={image.id} className="image-preview">
-                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image.image_url + ")", minHeight: '170px' }}>
+                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + import.meta.env.VITE_REACT_APP_STORAGE_URL + 'portfolio/' + image.image_url + ")", minHeight: '170px' }}>
                                                                                     <div className="dnd-actions-overlay">
                                                                                         <FaTimesCircle size="25px" onClick={() => handleRemove(index)} className="remove-icon cursor-pointer text-danger" />
                                                                                     </div>

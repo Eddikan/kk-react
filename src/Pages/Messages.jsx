@@ -52,11 +52,11 @@ const Messages = (props) => {
     }
 
     const getAddCarts = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + '/#?current_user_id=' + current_user_id + '&token=' + token);
+        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + '/#?current_user_id=' + current_user_id + '&token=' + token);
     };
 
     const postCheckOut = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + '/#?current_user_id=' + current_user_id + '&token' + token, data);
+        return await axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + '/#?current_user_id=' + current_user_id + '&token' + token, data);
     };
 
     const handleChangePaymentInfo = (e) => {
