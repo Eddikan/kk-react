@@ -1,46 +1,39 @@
-import globals from "globals";
-import pluginJs from "@eslint/js";
-import pluginReact from "eslint-plugin-react";
-import pluginJsxA11y from "eslint-plugin-jsx-a11y";
+import js from '@eslint/js'
+import globals from 'globals'
+import react from 'eslint-plugin-react'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
 
-/** @type {import('eslint').Linter.FlatConfig[]} */
 export default [
-  // Define file extensions and general configuration
+  { ignores: ['dist'] },
   {
-    files: ["**/*.{js,mjs,cjs,jsx}"],
+    files: ['**/*.{js,jsx}'],
     languageOptions: {
-      ecmaVersion: "latest", // Set the ECMAScript version
-      sourceType: "module", // Enable ES modules
-      globals: globals.browser, // Include browser-specific globals
-    },
-  },
-
-  // JavaScript recommended rules
-  pluginJs.configs.recommended,
-
-  // React recommended rules
-  pluginReact.configs.flat.recommended,
-
-  // JSX Accessibility rules
-  {
-    plugins: {
-      "jsx-a11y": pluginJsxA11y,
-    },
-    rules: {
-      ...pluginJsxA11y.configs.recommended.rules,
-       "react/prop-types": "off"
-    },
-  },
-
-  // Additional React settings
-  {
-    settings: {
-      react: {
-        version: "detect", // Automatically detect React version
+      ecmaVersion: 2020,
+      globals: globals.browser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        ecmaFeatures: { jsx: true },
+        sourceType: 'module',
       },
     },
+    settings: { react: { version: '18.3' } },
+    plugins: {
+      react,
+      'react-hooks': reactHooks,
+      'react-refresh': reactRefresh,
+    },
     rules: {
-      "react/react-in-jsx-scope": "off", // Disable React in scope rule for new JSX transforms
+      ...js.configs.recommended.rules,
+      ...react.configs.recommended.rules,
+      ...react.configs['jsx-runtime'].rules,
+      ...reactHooks.configs.recommended.rules,
+      'react/jsx-no-target-blank': 'off',
+      "react/prop-types": "off",
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowConstantExport: true },
+      ],
     },
   },
-];
+]
