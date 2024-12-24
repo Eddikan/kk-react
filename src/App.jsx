@@ -6,11 +6,10 @@ import "Assets/styles/overrides.css";
 
 import {Elements} from '@stripe/react-stripe-js';
 import {loadStripe} from '@stripe/stripe-js';
-import PortfolioGrid from "Components/Shared/PortfolioGrid";
-import EcoFriendly from "Components/Shared/EcoFriendly";
-const stripePromise = loadStripe("pk_test_51KH5FQEHRDNky8yNuVaslaQXG2zhzUjBuooEw7vp8LKMwMd5eEd5xt5RAL0UdiuVJf7dMAwllXdSiDkvvSp9qzT700fhQD4wrQ");
+import Home from "./Pages/Home"
+import About from "./Pages/About"
 
-const Home = lazy(() => import("./Pages/Home"));
+const stripePromise = loadStripe("pk_test_51KH5FQEHRDNky8yNuVaslaQXG2zhzUjBuooEw7vp8LKMwMd5eEd5xt5RAL0UdiuVJf7dMAwllXdSiDkvvSp9qzT700fhQD4wrQ");
 const LogIn = lazy(() => import("./Pages/LogIn"));
 const TwoFactorAuthentication = lazy(() => import("./Pages/TwoFactorAuthentication"));
 const ForgotPassword = lazy(() => import("./Pages/ForgotPassword"));
@@ -19,7 +18,6 @@ const SignUpPreferences = lazy(() => import("./Pages/SignUpPreference"))
 const EmailConfirmation = lazy(() => import("./Pages/EmailConfirmation"));
 const EmailConfirmed = lazy(() => import("./Pages/EmailConfirmed"));
 const Questionnaire = lazy(() => import("./Pages/Questionnaire"));
-const About = lazy(() => import("./Pages/About"));
 const Buttons = lazy(() => import("./Pages/Elements/Buttons"));
 const Forms = lazy(() => import("./Pages/Forms"));
 const Stripe = lazy(() => import("./Pages/Stripe"));
@@ -180,7 +178,15 @@ const BodyGram = lazy(() => import("./Pages/BodyGram"));
 
 //Measurement
 const Measurement = lazy(() => import("./Pages/Measurement"));
-
+const DelayedFallback = ({ delay, children }) => {
+  const [show, setShow] = React.useState(false);
+  React.useEffect(() => {
+    const timer = setTimeout(() => setShow(true), delay);
+    return () => clearTimeout(timer);
+  }, [delay]);
+  
+  return show ? children : null;
+};
 const LoadingPage = () => {
   return (
     <>
@@ -202,7 +208,7 @@ const App = () => {
           <Route path="/stripe/mobile" element={<StripeMobile />} />
         </Routes>
       </Elements>
-      <Suspense fallback={<LoadingPage />}>
+      <Suspense fallback={<DelayedFallback delay={300}><LoadingPage /></DelayedFallback>}>
         <Routes>
           <Route path="/" exact element={<Home />} />
           <Route path="/login" exact element={<LogIn />} />
