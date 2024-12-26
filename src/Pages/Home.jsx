@@ -1,20 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import Layout from '../Components/Layout/Layout';
 import { Link, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Button, Modal, Card } from 'react-bootstrap';
-import Designers from 'Components/Shared/Designers';
 import '../Assets/styles/Home/style.css'
 import Designs from 'Components/Shared/Designs';
 import Fabrics from 'Components/Shared/Fabrics';
 import EcoFriendly from 'Components/Shared/EcoFriendly';
 import CustomerSatisfactionCta from 'Components/Shared/Home/CustomerSatisfactionCta';
-import HomeVideo from 'Assets/videos/kouture-homepage-video.mp4'
-import ShopByCategory from 'Components/Shared/ShopByCategory';
 import { useCookies } from 'react-cookie';
 import DesignIcon from 'Assets/images/user-box/dress.png';
 import FabricIcon from 'Assets/images/user-box/fabric.png';
 import DesignerIcon from 'Assets/images/user-box/edit-tools.png';
-import KoutureLogo from 'Assets/images/kouture-konect-logo.png';
 import DesignsPreview from 'Components/Grids/DesignsPreview';
 import FabricsPreview from 'Components/Grids/FabricsPreview';
 import Signup from 'Components/Forms/User/Signup'
@@ -25,7 +21,6 @@ import { IoIosSearch } from 'react-icons/io';
 import BrowseDesigners from 'Assets/images/home-modal/browse-designers.png';
 import ShopFabrics from 'Assets/images/home-modal/shop-fabrics.png';
 import ExploreDesigns from 'Assets/images/home-modal/explore-designs.png';
-import Marquee from 'react-fast-marquee';
 import JoinKoutureBG from 'Assets/images/join-kouture.png';
 import DesignersMarquee from 'Components/Grids/DesignersMarquee';
 import { FaArrowRightLong } from "react-icons/fa6";
@@ -37,11 +32,9 @@ import DesignerVendorModalIcon from 'Assets/images/icons/sewing-modal-icon-purpl
 
 const Home = (props) => {
   const navigate = useNavigate();
-  const [fullscreen, setFullscreen] = useState(true);
-  const [userModalShowold, setUserModalShowold] = useState(false);
   const [userModalShow, setUserModalShow] = useState(false);
 
-  const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+  const [cookies] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
   const [reloadCount, setReloadCount] = useState(0);
   const [userDesignerLink, setUserDesignerLink] = useState("/sign-up?type=user&option=designers");
   const [userFabricLink, setUserFabricLink] = useState("/sign-up?type=user&option=fabrics");
@@ -89,7 +82,6 @@ const Home = (props) => {
     }
 
   }, [reloadCount]);
-console.log('check',import.meta.env.VITE_REACT_APP_API_ENDPOINT)
   return (
     <Layout>
       {/* <HeroSection /> */}
@@ -101,7 +93,7 @@ console.log('check',import.meta.env.VITE_REACT_APP_API_ENDPOINT)
             <Row>
               <Col lg='6' className="my-auto" >
                 <div className="mt-5 align-text-center">
-                  <h1 className="mb-0 fw-bold">Fashion Redefined</h1>
+                  <h1 className="mb-0 fw-bold">Fashion Redefined change</h1>
                   <h2 className="fw-bold">Your Unique Look Starts Here</h2>
                   <p className='mx-0 mt-40 pb-5 text-justify subtitle'>Discover premium fabrics, connect with top fashion designers,
                     and get personalized style consultations all in one place.</p>
@@ -274,7 +266,8 @@ console.log('check',import.meta.env.VITE_REACT_APP_API_ENDPOINT)
       </Modal>
 
       {/* User Box */}
-      <Modal show={userModalShowold} backdrop="static" centered size="lg" fullscreen={false} onHide={() => setUserModalShow(false)}>
+      {/* copy this  */}
+      <Modal show={false} backdrop="static" centered size="lg" fullscreen={false} onHide={() => setUserModalShow(false)}>
         <Modal.Body className="py-5">
           <button type="button" className="btn-close no-header-close" onClick={() => setUserModalShow(false)} aria-label="Close"></button>
           <Container className="narrow-850 h-100">
