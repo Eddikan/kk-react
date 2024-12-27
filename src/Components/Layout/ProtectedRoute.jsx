@@ -1,14 +1,11 @@
 import { Navigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-
-const isAuthenticated = () => {
-  return false; // Set to false for testing unauthorized access
-};
-
+import { useCookies } from "react-cookie";
 const ProtectedRoute = ({ children }) => {
-  if (!isAuthenticated()) {
+  const [cookies] = useCookies(["isLoggedIn"]);
+  const isLoggedIn = cookies.isLoggedIn;
+  if (!isLoggedIn) {
     toast.error("You need to login to access this page");
-
     return (
       <>
         <Toaster position="top-right" reverseOrder={false} />
@@ -17,7 +14,7 @@ const ProtectedRoute = ({ children }) => {
     );
   }
 
-  if (!isAuthenticated()) {
+  if (!isLoggedIn) {
     return null; // Render nothing while waiting for the redirect
   }
 
