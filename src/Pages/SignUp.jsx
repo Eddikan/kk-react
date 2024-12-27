@@ -1,28 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import { Email, domains } from '@smastrom/react-email-autocomplete'
-import { googleLogout, useGoogleLogin } from '@react-oauth/google';
+import {  useGoogleLogin } from '@react-oauth/google';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import LayoutNoFooter from '../Components/Layout/LayoutNoFooter';
 import { Container, Row, Col, Button, Card, Modal } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import '../Assets/styles/SignUp/style.css';
-import GoogleIcon from '../Assets/images/google-icon.png';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import KoutureLogo from 'Assets/images/kouture-konect-icon.png';
-import { IoEyeOutline, IoEyeOffOutline, IoInformationCircle  } from "react-icons/io5";
-import { connectFirestoreEmulator } from '@firebase/firestore';
+import { IoEyeOutline, IoEyeOffOutline  } from "react-icons/io5";
 import { FcGoogle } from "react-icons/fc";
-import Layout from '../Components/Layout/Layout';
 
 const initialRegisterData = Object.freeze({
   email: '',
   password: '',
   password_confirmation: '',
   event_date: '',
-  over_18: ''
+  over_18: '',
+  date_of_birth: '' // Add date of birth to initial state
 });
 
 const SignUp = () => {
@@ -56,25 +53,13 @@ const SignUp = () => {
   const [infoModalShow, setInfoModalShow] = useState(false);
 
   const currentUser = cookies.currentUser;
-  const isLoggedIn = cookies.isLoggedIn;
-  const userDetails = cookies.userDetails;
-  const userRole = cookies.userRole;
-  const token = cookies.token;
   const [tempCart, setTempCart] = useState(cookies.tempCart ?? []);
   const [tempFavorites, setTempFavorites] = useState(cookies.tempFavorites ?? []);
   const over_18 = cookies.over_18;
 
   const [selectedOption, setSelectedOption] = useState('');
 
-  const handleInterestChange = (value) => {
-    if (interestedIn.includes(value)) {
-      // Remove the value if it's already checked
-      setInterestedIn(interestedIn.filter(item => item !== value));
-    } else {
-      // Add the value if it's not checked
-      setInterestedIn([...interestedIn, value]);
-    }
-  };
+  
 
   const handleChange = (e) => {
     setRegisterFormData({
@@ -83,12 +68,7 @@ const SignUp = () => {
     })
   };
 
-  const handleChangeOver18 = (e) => {
-    setRegisterFormData({
-      ...registerFormData,
-      over_18: e,
-    })
-  }
+
 
   const handleChangeEmail = (e) => {
     setRegisterFormData({
@@ -347,9 +327,6 @@ const SignUp = () => {
           const user_details = { currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at, signup_type: user.signup_type, email: user.email, is_seller: user.is_seller, is_designer: user.is_designer }
           setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
           setCookie('isLoggedIn', true, { path: '/' });
-          setCookie('token', data.token, { path: '/' });
-          setCookie('signup_type', user.signup_type, { path: '/' });
-          setCookie('completed_questionnaire', user.completed_questionnaire, { path: '/' });
           setCookie('token', data.token, { path: '/' });
           setTimeout(function () {
             navigate("/admin/users");
@@ -614,6 +591,10 @@ const SignUp = () => {
                             <IoEyeOffOutline className="form-input-icon cursor-pointer hi-eye-off off-eye" onClick={function () { setShowConfirmPassword(true); }} />
                           }
                         </div>
+                      </Form.Group>
+                      <Form.Group className='mb-4'>
+                        <Form.Label>Date of Birth</Form.Label>
+                        <FormControl type='date' name='date_of_birth' onChange={handleChange} className='mr-sm-2 custom-form' required />
                       </Form.Group>
                       <div className="alert alert-primary bg-white text-black mb-0 small lh-1-7 fs-12" style={{lineHeight: 1.3}} role="alert">
                         As part of our ongoing commitment to security and user safety, we are requiring users to provide a valid identification document for access to certain enhanced features on our platform.
