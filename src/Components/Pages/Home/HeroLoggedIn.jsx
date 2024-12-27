@@ -1,15 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import Layout from 'Components/Layout/Layout';
-import { Link, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Button, Modal, Card } from 'react-bootstrap';
-import Designers from 'Components/Shared/Designers';
+import {  useNavigate } from 'react-router-dom';
+import { Container, Row, Col } from 'react-bootstrap';
 import 'Assets/styles/Home/style.css'
-import { useCookies } from 'react-cookie';
-import HomeVideo from 'Assets/videos/kouture-homepage-video.mp4';
-
-import FabricsVideo from 'Assets/videos/kouture-fabrics-video.mp4';
-import DesignersVideo from 'Assets/videos/kouture-designers-video.mp4';
-import DesignsVideo from 'Assets/videos/kouture-designs-video.mp4';
 import FindFashionDesigners from 'Assets/images/find-fashion-designers.png';
 import ShopFabrics from 'Assets/images/shop-fabrics.png';
 import ExploreDesigns from 'Assets/images/explore-designs.png';

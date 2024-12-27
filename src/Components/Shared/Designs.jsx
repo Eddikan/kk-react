@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Row, Col, Button, ModalHeader, Card, ModalFooter } from 'react-bootstrap';
 import UserPlaceholder from 'Assets/images/placeholders/user.png';
 import toast from 'react-hot-toast';
-import GetDesignsData from 'Utils/GetDesignsData';
-import { GoAlertFill, GoHeart, GoStar } from "react-icons/go";
+import { GoAlertFill, GoStar } from "react-icons/go";
 import PinIcon from 'Assets/images/pin.png';
 import { useCookies } from 'react-cookie';
 import Modal from 'react-bootstrap/Modal';
@@ -14,18 +13,17 @@ import { AiFillMessage } from "react-icons/ai";
 import { PiNotepadFill } from "react-icons/pi";
 import { ImEmbed2 } from "react-icons/im";
 import DressPlaceholder from 'Assets/images/placeholder-dress.jpeg';
-import { BsCartPlus } from 'react-icons/bs';
 import { IoShareSocial, IoInformationOutline, IoVideocam, IoCloseOutline } from "react-icons/io5";
 import 'Assets/styles/Design/style.css';
 import Carousel from 'react-multi-carousel';
 import CopyTo from 'Utils/CopyLink';
-import MeetingChat from 'Components/Chat/MeetingChat';
 import axios from 'axios';
 import { FaArrowRight } from "react-icons/fa6";
+import { useGetDesignsDataQuery } from "store/api/designersApi";
 
 
 const Designs = (props) => {
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser','token', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites', 'favoriteItemCount']);
+    const [cookies, setCookie] = useCookies(['currentUser','token', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites', 'favoriteItemCount']);
     const navigate = useNavigate();
     const reloadCount = props.reloadCount;
     const currentUser = props.currentUser;
@@ -33,9 +31,7 @@ const Designs = (props) => {
     const token = cookies.token;
     const userRole = cookies.userRole;
     const limit = props.limit ?? 16;
-    const [designs, setDesigns] = useState([]);
-    const [designsLoading, setDesignsLoading] = useState(true);
-
+ 
     const [portfoliosImage, setPortfolioImage] = useState(false);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [singleDesign, setSingleDesign] = useState('');
@@ -73,9 +69,7 @@ const Designs = (props) => {
         }
     };
 
-    const showSignupModal = (e) => {
-        props.onSignup(e);
-    }
+  
 
     function toggleDescription() {
         setDescriptionShow(true);
@@ -87,10 +81,6 @@ const Designs = (props) => {
 
     function toggleShareModal() {
         setShareShowModal(true);
-    }
-
-    function toggleMessage() {
-        setMessageShow(true);
     }
 
     function toggleUnderConstruction(message) {
@@ -130,37 +120,16 @@ const Designs = (props) => {
         }
     }
 
-    const fetchData = async (e) => {
-        try {
-            const designsData = await GetDesignsData(e);
-            if (designsData) {
-                setDesigns(designsData);
-                setDesignsLoading(false);
-            } else {
-                toast.error('An error occured. Please try again or contact the administrator.');
-                setDesignsLoading(false);
-            }
-        } catch (error) {
-            toast.error('An error occured. Please try again or contact the administrator.');
-            setDesignsLoading(false);
-        }
-    };
-
-    async function toggleSortDesigns(type, sort) {
-        axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio/design' + type + sort + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
-            const selectedDesigns = response.data.data;
-            if (selectedDesigns) {
-                setDesigns(selectedDesigns);
-                setDesignsLoading(false);
-            } else {
-                toast.error('An error occured. Please try again or contact the administrator.');
-                setDesignsLoading(false);
-            }
-        }).catch(() => {
-            toast.error('An error occured. Please try again or contact the administrator.');
-            setDesignsLoading(false);
-        });
-    }
+   
+     const {
+        data: designs,
+        error,
+        isLoading: designsLoading,
+      } = useGetDesignsDataQuery({
+        current_user_id,
+        token,
+      });
+    
 
     async function toggleAddViewCount(id) {
         axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio/view/' + id + '?current_user_id=' + current_user_id + '&token=' + token).then((response) => {
@@ -216,9 +185,8 @@ const Designs = (props) => {
         setTempFavorites(updatedFavorites);
     };
 
-    useEffect(() => {
-        fetchData(currentUser);
-    }, [reloadCount]);
+ 
+    if (error) return <p>There has been an error getting the desigs.</p>;
 
     return (
         <>
@@ -236,45 +204,16 @@ const Designs = (props) => {
                         {designs && designs.length > 0 ?
                             <>
                                 <Row className="designs-row">
-                                    {/* {currentUser ?
-                                        <Col lg="12" className='d-flex justify-content-end'>
-                                            <div style={{ position: "relative" }}>
-                                                <select
-                                                    className="form-control mb-3 me-2 sort-input"
-                                                    onChange={(e) => {
-                                                        const selectedOption = e.target.value;
-                                                        if (selectedOption === "New") {
-                                                            toggleSortDesigns("?date=", "desc");
-                                                        } else if (selectedOption === "Most Viewed") {
-                                                            toggleSortDesigns("?views=", "desc");
-                                                        } else if (selectedOption === "Most Liked") {
-                                                            toggleSortDesigns("?likes=", "desc");
-                                                        } else {
-                                                            toggleSortDesigns("", "");
-                                                        }
-                                                    }}
-                                                >
-                                                    <option value="">All</option>
-                                                    <option value="New">Recent Design</option>
-                                                    <option value="Most Viewed">Most Viewed</option>
-                                                    <option value="Most Liked">Most Liked</option>
-                                                </select>   
-                                                <div style={{ position: "absolute", right: "20px", top: "10px", pointerEvents: "none" }} >
-                                                    <IoIosArrowDown />
-                                                </div>
-                                            </div>
-                                        </Col>
-                                        :
-                                        null
-                                    } */}
+                                   
                                     {/* <img src={object.url} className='designs-img'/> */}
                                     {designs.slice(0, 8).map((design, index) => {
+                                        let designImage
                                         if (design.image_urls?.[0]?.image_url) {
-                                            var designImage = import.meta.env.VITE_REACT_APP_STORAGE_URL + 'portfolio/' + design.image_urls[0].image_url;
+                                             designImage = import.meta.env.VITE_REACT_APP_STORAGE_URL + 'portfolio/' + design.image_urls[0].image_url;
                                         } else {
-                                            var designImage = PlaceholderImage;
+                                             designImage = PlaceholderImage;
                                         }
-                                        var wishlist_user_ids = design.wishlist_user_ids ?? [];
+                                        const wishlist_user_ids = design.wishlist_user_ids ?? [];
                                         const userWishlist = wishlist_user_ids.includes(currentUser);
 
                                         return (
