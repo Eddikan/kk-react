@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import AdminSidebar from 'Components/Shared/AdminSidebar';
+import  {  useState } from 'react';
 import Layout from 'Components/Layout/Layout';
 import { Container, Row, Col, Button, Modal, Card, Form } from 'react-bootstrap';
-import { TbMessageX } from "react-icons/tb";
 import { IoCloseOutline } from "react-icons/io5";
 import { useCookies } from 'react-cookie';
 import { GoAlertFill } from "react-icons/go";
@@ -11,13 +8,10 @@ import GoBack from 'Components/Shared/GoBack';
 import 'Assets/styles/Survey/style.css';
 import toast from 'react-hot-toast';
 import axios from "axios";
-import GetUserPortfolioData from 'Utils/GetUserPortfolioData';
-import GetFabricsData from 'Utils/GetFabricsData';
 import AboutImage from 'Assets/images/about.png';
 import PortfolioImage from 'Assets/images/porfolio-profile.png';
 import FabricsImage from 'Assets/images/fabrics-profile.png';
 import CalendarImage from 'Assets/images/profile-calendar.png';
-import Loading from "Components/Shared/Loading";
 
 const initialVendorSurvey = Object.freeze({
     most_like: '',
@@ -47,9 +41,8 @@ const profileImages =
     ]
 
 const VendorFeedBackSurvey = (props) => {
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+    const [cookies, ] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
-    const userDetails = cookies.userDetails;
     const [clearFormModal, setClearFormModal] = useState(false);
     const [vendorFormData, setVendorFormData] = useState(initialVendorSurvey);
     const [reloadCount, setReloadCount] = useState(0);
@@ -61,10 +54,6 @@ const VendorFeedBackSurvey = (props) => {
         return await axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'vendor-feedback-survey', data);
     };
 
-    function toggleUnderConstruction(message) {
-        setUnderConstructionShow(true);
-        setModalHeading(message);
-    }
 
     const toggleEmptyField = () => {
         setVendorFormData(initialVendorSurvey);

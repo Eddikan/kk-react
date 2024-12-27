@@ -10,13 +10,8 @@ import GetUserData from 'Utils/GetUserData';
 import GoBack from '../../Components/Shared/GoBack';
 import { useCookies } from 'react-cookie';
 import toast from 'react-hot-toast';
-import { GoArrowUpRight } from "react-icons/go";
 import AdminPortfolio from 'Components/Shared/Admin/AdminPortfolioGrid';
 import AdminFabrics from 'Components/Shared/Admin/AdminFabricsGrid';
-
-import PortfolioGrid from 'Components/Shared/PortfolioGrid';
-import FeaturedDesign from 'Components/Shared/FeaturedDesign';
-
 import LoadingPage from 'Components/Shared/LoadingPage';
 import { GoPencil } from "react-icons/go";
 import axios from 'axios';
