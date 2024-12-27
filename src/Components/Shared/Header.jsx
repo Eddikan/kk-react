@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Card, Modal } from "react-bootstrap";
+import localforage from 'localforage';
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Form from "react-bootstrap/Form";
@@ -239,8 +240,9 @@ const Header = () => {
     setRegisterModalShow(!registerModalShow);
   };
 
-  const logOut = () => {
+  const logOut = async() => {
     removeCookies();
+    await localforage.clear();
     localStorage.clear()
     persistor.purge();
     navigate("/login");
