@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage"; // Default storage (localStorage for web)
+import localforage from "localforage"; // Using localforage for IndexedDB
 import { combineReducers } from "redux";
 import authReducer from "./slices/authSlice";
 import userReducer from "./slices/userSlice";
@@ -38,11 +38,9 @@ const fabricsTransform = createTransform(
 
 const persistConfig = {
   key: "koutureKonnect",
-  storage,
+  storage: localforage, // Using localforage for IndexedDB storage
   transforms: [fabricsTransform], // Use the transform
   blacklist: [wishlistApi.reducerPath], // Don't persist these reducers
-
-  
 };
 
 // Combine Reducers
@@ -66,7 +64,8 @@ export const store = configureStore({
       serializableCheck: false, // Required for redux-persist
     })
       .concat(designersApi.middleware)
-      .concat(fabricsApi.middleware).concat(wishlistApi.middleware)
+      .concat(fabricsApi.middleware)
+      .concat(wishlistApi.middleware)
 });
 
 // Persistor

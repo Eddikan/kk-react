@@ -1,4 +1,3 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
@@ -26,7 +25,7 @@ root.render(
     <GoogleOAuthProvider clientId="766257099679-9tknmarbin95ka99g25km3eea92ergqb.apps.googleusercontent.com">
         <PayPalScriptProvider options={{ "client-id": import.meta.env.VITE_REACT_APP_PAYPAL_CLIENT_ID }}>
             <Provider store={store}>
-                <PersistGate loading={<div>Loading...</div>} persistor={persistor}>
+                <PersistGate loading={<div></div>} persistor={persistor}>
                     <GoogleTranslate />
                     <App />
                 </PersistGate>
