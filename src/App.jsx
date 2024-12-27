@@ -16,7 +16,6 @@ const stripePromise = loadStripe(
   "pk_test_51KH5FQEHRDNky8yNuVaslaQXG2zhzUjBuooEw7vp8LKMwMd5eEd5xt5RAL0UdiuVJf7dMAwllXdSiDkvvSp9qzT700fhQD4wrQ"
 );
 
-
 import Home from "./Pages/Home";
 import About from "./Pages/About";
 import AdminCustomerSatisfaction from "./Pages/Admin/AdminCustomerSatisfaction";
@@ -189,7 +188,7 @@ const BodyGram = lazy(() => import("./Pages/BodyGram"));
 
 //Measurement
 const Measurement = lazy(() => import("./Pages/Measurement"));
- const stripeRoutes = [
+const stripeRoutes = [
   {
     path: "/stripe",
     element: <Stripe />,
@@ -199,7 +198,7 @@ const Measurement = lazy(() => import("./Pages/Measurement"));
     element: <StripeMobile />,
   },
 ];
- const unAuthenticatedRoutes = [
+const unAuthenticatedRoutes = [
   {
     path: "/login",
     element: <LogIn />,
@@ -313,10 +312,6 @@ const Measurement = lazy(() => import("./Pages/Measurement"));
     element: <UnderConstruction />,
   },
 
-  {
-    path: "/about-kouture-konect",
-    element: <About />,
-  },
   {
     path: "/how-it-works",
     element: <UnderConstruction />,
@@ -464,9 +459,8 @@ const Measurement = lazy(() => import("./Pages/Measurement"));
     path: "/product/:productId",
     element: <ViewProduct />,
   },
-
 ];
- const authenticatedRoutes = [
+const authenticatedRoutes = [
   {
     path: "/:user/profile",
     element: <UserProfile />,
@@ -529,7 +523,7 @@ const Measurement = lazy(() => import("./Pages/Measurement"));
     path: "/user/center/portfolio",
     element: <UserPortfolio />,
   },
- 
+
   {
     path: "/user/center/product/add",
     element: <AddNewProduct />,
@@ -624,7 +618,6 @@ const Measurement = lazy(() => import("./Pages/Measurement"));
   },
 ];
 
-
 const DelayedFallback = ({ delay, children }) => {
   const [show, setShow] = React.useState(false);
   React.useEffect(() => {
@@ -665,6 +658,7 @@ const App = () => {
         }
       >
         <Routes>
+          <Route path="/about-kouture-konect" exact element={<About />} />
           {unAuthenticatedRoutes.map((route, index) => (
             <Route
               key={index}
@@ -678,11 +672,7 @@ const App = () => {
               key={index}
               path={route.path}
               exact
-              element={
-                <ProtectedRoute >
-                  {route.element}
-                </ProtectedRoute>
-              }
+              element={<ProtectedRoute>{route.element}</ProtectedRoute>}
             />
           ))}
 
