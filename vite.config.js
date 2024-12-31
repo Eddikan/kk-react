@@ -76,7 +76,7 @@ export default defineConfig({
       services: path.resolve(__dirname, "./src/services"),
     },
   },
-  server: {
-    historyApiFallback: true, // Handle SPA routing during development
-  },
+  // server: {
+  //   historyApiFallback: true, // Handle SPA routing during development
+  // },
 });
