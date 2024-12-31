@@ -3526,3 +3526,31 @@ span.rti--tag {
 .file-message-container{
     max-width: 250px;
 }
+
+.footer h5 {
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+.footer p {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+@media (max-width: 767px) {
+  .footer {
+    text-align: center;
+  }
+
+  .footer h5 {
+    font-size: 16px;
+  }
+
+  .footer p {
+    font-size: 13px;
+  }
+  .footer-link-container{
+    display: grid;
+    grid-template-columns: 1fr 1fr 
+  }
+}
