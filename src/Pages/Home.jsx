@@ -69,7 +69,7 @@ const Home = () => {
             <Row>
               <Col lg="6" className="my-auto">
                 <div className="mt-5 align-text-center">
-                  <h1 className="mb-0 fw-bold">Fashion Redefined</h1>
+                  <h1 className="mb-0 fw-bold">Fashion Redefined.</h1>
                   <h2 className="fw-bold">Your Unique Look Starts Here</h2>
                   <p className="mx-0 mt-40 pb-5 text-justify subtitle">
                     Discover premium fabrics, connect with top fashion

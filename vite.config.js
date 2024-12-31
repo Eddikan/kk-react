@@ -8,7 +8,6 @@ import { fileURLToPath } from "url";
 // Define __dirname for ES Modules
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-
 export default defineConfig({
   plugins: [
     react(),
@@ -36,7 +35,7 @@ export default defineConfig({
             sizes: "512x512",
           },
         ],
-        start_url: ".",
+        start_url: "/",
         display: "standalone",
         theme_color: "#000000",
         background_color: "#ffffff",
@@ -49,13 +48,20 @@ export default defineConfig({
             options: {
               cacheName: 'assets-cache',
               expiration: {
-                maxEntries: 50, // Adjust max entries as needed
-                maxAgeSeconds: 30 * 24 * 60 * 60, // Cache for 30 days
+                maxEntries: 50,
+                maxAgeSeconds: 30 * 24 * 60 * 60,
               },
             },
           },
+          {
+            urlPattern: ({ request }) => request.mode === "navigate",
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "html-cache",
+            },
+          },
         ],
-        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MB
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
       },
     }),
   ],
@@ -69,5 +75,8 @@ export default defineConfig({
       hooks: path.resolve(__dirname, "./src/hooks"),
       services: path.resolve(__dirname, "./src/services"),
     },
+  },
+  server: {
+    historyApiFallback: true, // Handle SPA routing during development
   },
 });
