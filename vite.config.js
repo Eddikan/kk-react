@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import legacy from "@vitejs/plugin-legacy";
-// import { VitePWA } from "vite-plugin-pwa";
+import { VitePWA } from "vite-plugin-pwa";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -14,56 +14,56 @@ export default defineConfig({
     legacy({
       targets: [">0.2%", "not dead", "not op_mini all"],
     }),
-    // VitePWA({
-    //   manifest: {
-    //     short_name: "Kouture Konnect",
-    //     name: "Kouture Konnect",
-    //     icons: [
-    //       {
-    //         src: "favicon.ico",
-    //         sizes: "64x64 32x32 24x24 16x16",
-    //         type: "image/x-icon",
-    //       },
-    //       {
-    //         src: "logo192.png",
-    //         type: "image/png",
-    //         sizes: "192x192",
-    //       },
-    //       {
-    //         src: "logo512.png",
-    //         type: "image/png",
-    //         sizes: "512x512",
-    //       },
-    //     ],
-    //     start_url: "/",
-    //     display: "standalone",
-    //     theme_color: "#000000",
-    //     background_color: "#ffffff",
-    //   },
-    //   workbox: {
-    //     runtimeCaching: [
-    //       {
-    //         urlPattern: ({ url }) => url.pathname.startsWith('/src/Assets'),
-    //         handler: 'CacheFirst',
-    //         options: {
-    //           cacheName: 'assets-cache',
-    //           expiration: {
-    //             maxEntries: 50,
-    //             maxAgeSeconds: 30 * 24 * 60 * 60,
-    //           },
-    //         },
-    //       },
-    //       {
-    //         urlPattern: ({ request }) => request.mode === "navigate",
-    //         handler: "NetworkFirst",
-    //         options: {
-    //           cacheName: "html-cache",
-    //         },
-    //       },
-    //     ],
-    //     maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
-    //   },
-    // }),
+    VitePWA({
+      manifest: {
+        short_name: "Kouture Konnect",
+        name: "Kouture Konnect",
+        icons: [
+          {
+            src: "favicon.ico",
+            sizes: "64x64 32x32 24x24 16x16",
+            type: "image/x-icon",
+          },
+          {
+            src: "logo192.png",
+            type: "image/png",
+            sizes: "192x192",
+          },
+          {
+            src: "logo512.png",
+            type: "image/png",
+            sizes: "512x512",
+          },
+        ],
+        start_url: "/",
+        display: "standalone",
+        theme_color: "#000000",
+        background_color: "#ffffff",
+      },
+      workbox: {
+        runtimeCaching: [
+          {
+            urlPattern: ({ url }) => url.pathname.startsWith('/src/Assets'),
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'assets-cache',
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 30 * 24 * 60 * 60,
+              },
+            },
+          },
+          {
+            urlPattern: ({ request }) => request.mode === "navigate",
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "html-cache",
+            },
+          },
+        ],
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+      },
+    }),
   ],
   resolve: {
     alias: {
@@ -76,7 +76,10 @@ export default defineConfig({
       services: path.resolve(__dirname, "./src/services"),
     },
   },
-  // server: {
-  //   historyApiFallback: true, // Handle SPA routing during development
-  // },
+  server: {
+    historyApiFallback: true, // Handle SPA routing during development
+  },
+  build: {
+    outDir: "dist",
+  },
 });
