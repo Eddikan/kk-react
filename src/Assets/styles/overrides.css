@@ -3529,3 +3529,8 @@ span.rti--tag {
 .file-message-container{
     max-width: 250px;
 }
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
