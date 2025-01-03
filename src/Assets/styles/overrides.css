@@ -1379,6 +1379,9 @@ a {
 .modal-dialog.modal-lg {
     max-width: 800px !important;
 }
+.modal-dialog.modal-xl {
+    max-width: 1000px !important;
+}
 
 #measurement-guide.modal-dialog {
     max-width: 1000px !important;

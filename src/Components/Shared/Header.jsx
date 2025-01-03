@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Card, Modal } from "react-bootstrap";
-import localforage from 'localforage';
+import localforage from "localforage";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Form from "react-bootstrap/Form";
@@ -13,7 +13,7 @@ import { Container, Button, Col, Row } from "react-bootstrap";
 import { FaChevronDown } from "react-icons/fa6";
 import { IoIosPower } from "react-icons/io";
 import { BsCartCheck, BsShopWindow } from "react-icons/bs";
-import { persistor } from 'store';  // 
+import { persistor } from "store"; //
 import {
   IoCalendarClearOutline,
   IoCartOutline,
@@ -81,7 +81,6 @@ const Header = () => {
   const [userWishlistOpen, setUserWishlistOpen] = useState(false);
   const [userImage, setUserImage] = useState("");
   const [user, setUser] = useState("");
-  const [reloadCount, setReloadCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
   const [notificationsLoading, setNotificationsLoading] = useState(true);
   const [cartItemCount, setCartItemCount] = useState(
@@ -89,7 +88,6 @@ const Header = () => {
   );
   const [favoritesCount, setFavoritesCount] = useState(0);
   const [favorites, setFavorites] = useState([]);
-  const [registerModalShow, setRegisterModalShow] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
 
   const [userType, setUserType] = useState("user");
@@ -125,8 +123,6 @@ const Header = () => {
         token
     );
   };
-
- 
 
   const getNotifications = async () => {
     return await axios.get(
@@ -203,8 +199,7 @@ const Header = () => {
     if (bellRef.current && !bellRef.current.contains(event.target)) {
       setUserBellOpen(false);
     }
-  
-  
+
     if (countryRef.current && !countryRef.current.contains(event.target)) {
       setUserCountryOpen(false);
     }
@@ -236,14 +231,11 @@ const Header = () => {
     setUserWishlistOpen(!userWishlistOpen);
   };
 
-  const viewRegisterModal = () => {
-    setRegisterModalShow(!registerModalShow);
-  };
 
-  const logOut = async() => {
+  const logOut = async () => {
     removeCookies();
     await localforage.clear();
-    localStorage.clear()
+    localStorage.clear();
     persistor.purge();
     navigate("/login");
   };
@@ -426,7 +418,7 @@ const Header = () => {
         setFavoritesCount(totalFavoritesCount);
       }
     }
-  }, [reloadCount]);
+  }, []);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -1209,12 +1201,12 @@ const Header = () => {
                         <a className="nav-link pb-0" href={hrefLogin}>
                           Sign In
                         </a>
-                        <a
+                        <Link
+                          to={`/sign-up`}
                           className="nav-link cursor-pointer border-bottom pb-3 mb-2 text-decoration-none"
-                          onClick={viewRegisterModal}
                         >
                           Register
-                        </a>
+                        </Link>
                         {isLoggedIn && (
                           <>
                             <a
@@ -1378,171 +1370,6 @@ const Header = () => {
               <p className="fs-20 text-black">Under Construction</p>
             </Card.Body>
           </Card>
-        </Modal.Body>
-      </Modal>
-
-      <Modal
-        show={registerModalShow}
-        centered
-        size="lg"
-
-        fullscreen={false}
-        onHide={() => setRegisterModalShow(false)}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title></Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {/* <Container className="h-100">
-            <Row className="h-100">
-              <Col lg="12" className="text-center header-register-modal">
-                <img src={KoutureIcon} alt="kouture-icon" width="38px" />
-                <h2 className="my-4">Are you over 18 years old?</h2>
-                <p className="fs-14">
-                  Welcome to Kouture Konect! If you’re under 18, please have a
-                  parent or guardian ready to supervise your account as you
-                  continue.
-                </p>
-                <Col lg={12} className="text-center my-4">
-                  <a href="/sign-up">
-                    <button
-                      className="mx-5 px-4 py-2 rounded bg-white border border-secondary border-gold-hover"
-                      onClick={() => setCookie("over_18", "No", { path: "/" })}
-                    >
-                      <strong>No</strong> <br />I am under 18
-                    </button>
-                  </a>
-                  <a href="/sign-up">
-                    <button
-                      className="mx-5 px-4 py-2 rounded bg-white border border-secondary border-gold-hover"
-                      onClick={() => setCookie("over_18", "Yes", { path: "/" })}
-                    >
-                      <strong>Yes</strong> <br />I am over 18
-                    </button>
-                  </a>
-                  <p className="my-4">
-                    Already have an account?{" "}
-                    <a href="/login" className="modal-login-btn text-gold ">
-                      Login
-                    </a>{" "}
-                  </p>
-                </Col>
-              </Col>
-            </Row>
-          </Container> */}
-             <Container className="narrow-850 h-100">
-              <Row className=" align-items-center h-100">
-                <Col lg="12">
-                  {/* <h3 className="text-center fw-600 mb-5">I am looking for...</h3> */}
-                  <h3 className="shop-modal-intro text-center fw-bold mt-5 mb-2">
-                  why are you here?
-                  </h3>
-                  <p className="modal-subtitle text-center mb-50">
-                    To get started, please select one of the options:
-                  </p>
-                  <Row>
-                    <Col lg="4" className="mb-90">
-                      {/* onClick={() => showSignupModal('user_designer')} */}
-                      <Card
-                        onClick={() => {
-                          window.location.href = "/sign-up?type=designer";
-                        }}
-                        className="shop-modal-card cursor-pointer bg-white"
-                      >
-                        <Card.Body className="shop-modal-card-body">
-                          <img
-                            src={DesignerModalIcon}
-                            alt="Designers"
-                            className="shop-card-icon"
-                          />
-                          <div className="user-box shop-modal-card-content text-center justify-content-center">
-                            <div className="text-start w-100">
-                              <p className="mb-0 fs-12">I am a</p>
-                              <h3 className="shop-modal-title fs-30 fw-600 lh-35 mt-2">
-                                Designer
-                              </h3>
-                            </div>
-                          </div>
-                        </Card.Body>
-                      </Card>
-                    </Col>
-                    <Col lg="4" className="mb-90">
-                      {/* onClick={() => handleShowFabrics()} */}
-                      <Card
-                        onClick={() => {
-                          window.location.href = "/sign-up?type=seller";
-                        }}
-                        className="shop-modal-card cursor-pointer bg-white"
-                      >
-                        <Card.Body className="shop-modal-card-body">
-                          <img
-                            src={FabricModalIcon}
-                            alt="Fabrics"
-                            className="shop-card-icon"
-                          />
-                          <div className="user-box shop-modal-card-content text-center justify-content-center">
-                            <div className="text-start w-100">
-                              <p className="mb-0 fs-12">I am a</p>
-                              <h3 className="shop-modal-title fs-30 fw-600 lh-35 mt-2">
-                                Fabric Vendor
-                              </h3>
-                            </div>
-                          </div>
-                        </Card.Body>
-                      </Card>
-                    </Col>
-                    <Col lg="4" className="mb-90">
-                      {/* onClick={() => handleShowDesigns()} */}
-                      <Card
-                        onClick={() => {
-                          window.location.href =
-                            "/sign-up?type=designer_seller";
-                        }}
-                        className="shop-modal-card cursor-pointer bg-white"
-                      >
-                        <Card.Body className="shop-modal-card-body">
-                          <img
-                            src={DesignerVendorModalIcon}
-                            alt="Designs"
-                            className="shop-card-icon"
-                          />
-                          <div className="user-box shop-modal-card-content text-center justify-content-center">
-                            <div className="text-start w-100">
-                              <p className="mb-0 fs-12">I am both a</p>
-                              <h3 className="shop-modal-title fs-30 fw-600 lh-35 mt-2">
-                                Designer & <br /> Fabric Vendor
-                              </h3>
-                            </div>
-                          </div>
-                        </Card.Body>
-                      </Card>
-                    </Col>
-                    <Col lg="4" className="mb-90">
-                      {/* onClick={() => handleShowDesigns()} */}
-                      <Card
-                        onClick={() => {
-                          window.location.href =
-                            "/sign-up?type=customer";
-                        }}
-                        className="shop-modal-card cursor-pointer bg-white"
-                      >
-                        <Card.Body className="shop-modal-card-body">
-                       
-                          <div className="user-box shop-modal-card-content text-center justify-content-center">
-                            <div className="text-start w-100">
-                              <p className="mb-0 fs-12">I am a</p>
-                              <h3 className="shop-modal-title fs-30 fw-600 lh-35 mt-2">
-                              customer
-                              </h3>
-                            </div>
-                          </div>
-                        </Card.Body>
-                      </Card>
-                    </Col>
-                  </Row>
-                </Col>
-              </Row>
-            </Container>
         </Modal.Body>
       </Modal>
 
