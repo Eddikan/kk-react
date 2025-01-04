@@ -93,9 +93,9 @@ const Users = (props) => {
     };
 
     useEffect(() => {
-        if (userRole !== 'Admin') {
-            navigate('/')
-        }
+        // if (userRole !== 'Admin') {
+        //     navigate('/')
+        // }
         getUsers()
             .then((response) => {
                 setUsersLoading(false);

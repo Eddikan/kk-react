@@ -13,6 +13,8 @@ import toast from "react-hot-toast";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import { FcGoogle } from "react-icons/fc";
 import SignupTypeModal from "Components/Modals/SignupTypeModal";
+import { setEmail } from "store/slices/userSlice"; // Adjust the path as necessary
+import { useDispatch } from "react-redux";
 
 const initialRegisterData = Object.freeze({
   email: "",
@@ -22,7 +24,10 @@ const initialRegisterData = Object.freeze({
   date_of_birth: "", // Add date of birth to initial state
 });
 
+
 const SignUp = () => {
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
   const useQuery = () => {
     return new URLSearchParams(useLocation().search);
@@ -30,7 +35,7 @@ const SignUp = () => {
   let query = useQuery();
   const redirectTo = query.get("redirect_to") || "";
 
-  const [cookies, setCookie, removeCookie] = useCookies([
+  const [cookies, setCookie] = useCookies([
     "currentUser",
     "isLoggedIn",
     "userDetails",
@@ -40,12 +45,11 @@ const SignUp = () => {
     "tempFavorites",
   ]);
 
-  const [signupType, setSignupType] = useState(query.get("type"));
+  const [signupType, setSignupType] = useState("customer");
   const [signupOption, setSignupOption] = useState(query.get("option"));
   const [registerFormData, setRegisterFormData] = useState(initialRegisterData);
   const [googleRegisterFormData, setGoogleRegisterFormData] = useState(null);
   const [registerFormLoading, setRegisterFormLoading] = useState(false);
-  const [interestedIn, setInterestedIn] = useState([]);
   // Signup with Google
   const [loginFormLoading, setLoginFormLoading] = useState(false);
   const [googleUser, setGoogleUser] = useState(null);
@@ -59,11 +63,7 @@ const SignUp = () => {
   const [infoModalShow, setInfoModalShow] = useState(false);
 
   const currentUser = cookies.currentUser;
-  const [tempCart, setTempCart] = useState(cookies.tempCart ?? []);
-  const [tempFavorites, setTempFavorites] = useState(
-    cookies.tempFavorites ?? []
-  );
-
+ 
   const [selectedOption, setSelectedOption] = useState("");
 
   const handleChange = (e) => {
@@ -109,12 +109,10 @@ const SignUp = () => {
               navigate("/user/seller-form");
             } else if (signupType === "designer_seller") {
               navigate("/user/designer-form?type=designer_seller");
-            } 
-            else if (signupType === "customer") {
-              // handle custome for now 
+            } else if (signupType === "customer") {
+              // handle custome for now
               navigate("/user/preferences");
-            } 
-            else {
+            } else {
               navigate("/sign-up/preferences");
             }
           } else {
@@ -206,89 +204,38 @@ const SignUp = () => {
   async function registerSubmit(e) {
     e.preventDefault();
     setRegisterFormLoading(true);
+    try {
+      const response = await axios.post(
+        import.meta.env.VITE_REACT_APP_API_ENDPOINT + "auth/register",
 
-    let completed_questionnaire = 0;
-    if (selectedOption === "No") {
-      completed_questionnaire = 1;
-    }
-
-    axios
-      .post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + "register", {
-        ...registerFormData,
-        interested_in: interestedIn,
-        completed_questionnaire: completed_questionnaire,
-      })
-      .then((response) => {
-        const success = response.data.status;
-        if (success == "Success") {
-          const data = response.data.data;
-          const user = data.user;
-          if (tempCart && tempCart.length > 0) {
-            addTempCartToCart({ order_items: tempCart, user_id: user.id });
-            removeCookie("tempCart", { path: "/" });
-          }
-
-          if (tempFavorites && tempFavorites.length > 0) {
-            addTempFavoritesToFavorites({
-              favorites: tempFavorites,
-              user_id: user.id,
-            });
-            removeCookie("tempFavorites", { path: "/" });
-          }
-
-          toast.success("Successfully signed up!");
-          setCookie("currentUser", JSON.stringify(user.id), { path: "/" });
-          setCookie("userRole", JSON.stringify(user.role), { path: "/" });
-          const user_details = {
-            currentUser: user.id,
-            id: user.id,
-            first_name: user.first_name,
-            last_name: user.last_name,
-            image: user.image,
-            email_verified_at: user.email_verified_at,
-            signup_type: user.signup_type,
-          };
-          setCookie("userDetails", JSON.stringify(user_details), { path: "/" });
-          let signupTypeOption = "";
-          if (signupType == "designer") {
-            signupTypeOption = "designer";
-          } else if (signupType == "seller") {
-            signupTypeOption = "seller";
-          } else if (signupType == "designer_seller") {
-            signupTypeOption = "designer_seller";
-          } else {
-            signupTypeOption = signupType;
-          }
-          setCookie("signup_type", signupTypeOption, { path: "/" });
-          setCookie("completed_questionnaire", user.completed_questionnaire, {
-            path: "/",
-          });
-          setCookie("isLoggedIn", true, { path: "/" });
-          setCookie("token", data.token, { path: "/" });
-          setTimeout(function () {
-            getUserDetails(user.id);
-          }, 500);
-        } else {
-          const errors = response.data.errors;
-          if (errors.email) {
-            toast.error(errors.email[0]);
-          }
-          if (errors.password) {
-            toast.error(errors.password[0]);
-          } else {
-            errors.map((error) => {
-              toast.error(error);
-              return null; // React requires a return value, so we return null here
-            });
-          }
+        {
+          type: signupType, // Accepts types: seller, designer, customer, designer_and_seller
+          email: registerFormData.email,
+          password: registerFormData.password,
+          password_confirmation: registerFormData.password_confirmation,
+          date_of_birth: registerFormData.date_of_birth,
         }
-        setRegisterFormLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        setRegisterFormLoading(false);
-        toast.error("Something went wrong, please contact the administrator!");
+      );
+      console.log("respons eis", response);
+      const success = response.data.success;
+      if (success) {
+        // dispatch email here
+
+        dispatch(setEmail(response.data.data.email));
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      const errors = error.response.data.errors;
+      // eslint-disable-next-line no-unused-vars
+      Object.entries(errors).forEach(([_, messages]) => {
+        messages.forEach((message) => {
+          toast.error(message); // Use your preferred toast type (e.g., success, warning, error)
+        });
       });
+      setRegisterFormLoading(false);
+    } finally {
+      setRegisterFormLoading(false);
+    }
   }
 
   const isValidEmail = (email) => {
@@ -748,16 +695,19 @@ const SignUp = () => {
                       )}
                     </div>
                   </Form.Group>
-                  <Form.Group className="mb-4">
-                    <Form.Label>Date of Birth</Form.Label>
-                    <FormControl
-                      type="date"
-                      name="date_of_birth"
-                      onChange={handleChange}
-                      className="mr-sm-2 custom-form"
-                      required
-                    />
-                  </Form.Group>
+                  {signupType !== "customer" && (
+                    <Form.Group className="mb-4">
+                      <Form.Label>Date of Birth</Form.Label>
+                      <FormControl
+                        type="date"
+                        name="date_of_birth"
+                        onChange={handleChange}
+                        className="mr-sm-2 custom-form"
+                        required={signupType !== "customer"}
+                      />
+                    </Form.Group>
+                  )}
+
                   <div
                     className="alert alert-primary bg-white text-black mb-0 small lh-1-7 fs-12"
                     style={{ lineHeight: 1.3 }}

@@ -83,7 +83,7 @@ const SignupTypeModal = ({
                 </Col>
                 <Col lg="3" className="mb-90">
                   <Card
-                    onClick={() => handleCardClick("designer_seller")}
+                    onClick={() => handleCardClick("designer_and_seller")}
                     className="shop-modal-card cursor-pointer bg-white"
                   >
                     <Card.Body className="shop-modal-card-body">

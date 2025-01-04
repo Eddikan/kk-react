@@ -201,9 +201,10 @@ const LogIn = () => {
   async function loginSubmit(e) {
     e.preventDefault();
     setLoginFormLoading(true);
-    axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'login?device_id=' + deviceId, loginFormData).then((response) => {
-      const success = response.data.status;
-      if (success == 'Success') {
+    axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'auth/login', loginFormData).then((response) => {
+      const success = response.data.success;
+      console.log('res ',response)
+      if (success ) {
         const data = response.data.data;
         const user = data.user;
         if (data?.two_factor_authentication == 'Both' ) {
