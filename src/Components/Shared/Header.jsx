@@ -14,6 +14,8 @@ import { FaChevronDown } from "react-icons/fa6";
 import { IoIosPower } from "react-icons/io";
 import { BsCartCheck, BsShopWindow } from "react-icons/bs";
 import { persistor } from "store"; //
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   IoCalendarClearOutline,
   IoCartOutline,
@@ -74,6 +76,7 @@ const Header = () => {
     "favoriteItemCount",
     "over_18",
   ]);
+  const dispatch = useDispatch();
 
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [userBellOpen, setUserBellOpen] = useState(false);
@@ -101,7 +104,18 @@ const Header = () => {
   const [modalHeading, setModalHeading] = useState();
   const [search, setSearch] = useState(headerSearch ?? "");
   const [activeTab, setActiveTab] = useState(headerType ?? "Designers");
-  const currentUser = cookies.currentUser;
+  const currenStoreUser = useSelector((state) => state.user.user);
+  const currentUser = useSelector((state) => state.user.user.email);
+  const is_seller = currenStoreUser.type == "seller" ? true : false;
+  const is_designer = currenStoreUser.type == "designer" ? true : false;
+  //   const currentUser =  {
+  //     "first_name": "",
+  //     "last_name": "",
+  //     "email": "alsyrob@hieuclone.com",
+  //     "avatar": null,
+  //     "status": "Default",
+  //     "type": "customer"
+  // }
   const current_user_id = cookies.currentUser;
   const token = cookies.token;
   const userDetails = cookies.userDetails;
@@ -231,13 +245,15 @@ const Header = () => {
     setUserWishlistOpen(!userWishlistOpen);
   };
 
-
   const logOut = async () => {
     removeCookies();
     await localforage.clear();
     localStorage.clear();
     persistor.purge();
-    navigate("/login");
+    // navigate("/login");
+
+    dispatch({ type: "RESET_STATE" });
+
   };
 
   function toggleUnderConstruction(message) {
@@ -723,7 +739,9 @@ const Header = () => {
                           className="nav-link cursor-pointer text-decoration-none border-bottom pb-3 mb-2"
                           style={{ pointerEvents: "none" }}
                         >
-                          Hi,&nbsp;{user.first_name}!
+                          {user.first_name
+                            ? ` Hi,&nbsp;{user.first_name} !`
+                            : "Hi"}
                         </a>
                         <a
                           className="nav-link cursor-pointer text-decoration-none pb-0"
@@ -751,7 +769,7 @@ const Header = () => {
                             My Designs
                           </a>
                         ) : null}
-                        {userDetails?.is_seller == 1 ? (
+                        {is_seller ? (
                           <a
                             className="nav-link cursor-pointer text-decoration-none pb-0"
                             href={`/${userType}/profile?tab=fabrics&tab_group=fabrics`}
@@ -919,8 +937,7 @@ const Header = () => {
                       <>
                         {user.shop_completed != 1 ? (
                           <>
-                            {(userDetails.is_seller == 1 ||
-                              userDetails.is_designer == 1) && (
+                            {(is_seller || is_designer) && (
                               <>
                                 <a href={`/user/shop/setup`}>
                                   <button
@@ -940,12 +957,11 @@ const Header = () => {
                           </>
                         ) : (
                           <>
-                            {(userDetails.is_seller == 1 ||
-                              userDetails.is_designer == 1) && (
+                            {(is_seller || is_designer) && (
                               <>
                                 <a
                                   href={`${
-                                    userDetails.is_designer == 1
+                                    is_designer == 1
                                       ? "/user/center/calendar"
                                       : "/user/center/products"
                                   }`}
@@ -1326,23 +1342,7 @@ const Header = () => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      {currentUser &&
-      (!userDetails.email_verified_at ||
-        userDetails.email_verified_at == "" ||
-        userDetails.email_verified_at == null) ? (
-        <div className="verify-email-notification">
-          <p className="text-center fw-600 fs-14 mb-0">
-            Verify your email to get the most out of Kouture Konect. Didn’t
-            receive an email?{" "}
-            <a
-              href="/email-confirmation"
-              className="fw-400 text-decoration-none"
-            >
-              Resend confirmation
-            </a>
-          </p>
-        </div>
-      ) : null}
+
       <Modal
         show={underConstructionShow}
         className="modal-preview"

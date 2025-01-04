@@ -1,10 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  profile: {
-    firstName: "",
-  }, // User profile information
-  email:"",
+  user: {}, // User profile information
+  email: "",
   preferences: {}, // User preferences (e.g., theme, language)
   loading: false, // Loading state for user-related operations
   error: null, // Error state for user-related operations
@@ -14,8 +12,8 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setProfile(state, action) {
-      state.profile = action.payload;
+    setUser(state, action) {
+      state.user = action.payload;
     },
     setEmail(state, action) {
       state.email = action.payload;
@@ -39,7 +37,7 @@ const userSlice = createSlice({
 });
 
 export const {
-  setProfile,
+  setUser,
   setEmail,
   updatePreferences,
   setLoading,

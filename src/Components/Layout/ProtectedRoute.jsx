@@ -1,15 +1,15 @@
 import { Navigate } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
-import { useCookies } from "react-cookie";
+// import toast, { Toaster } from "react-hot-toast";
+import { useSelector } from "react-redux";
+
 const ProtectedRoute = ({ children }) => {
-  const [cookies] = useCookies(["isLoggedIn"]);
-  const isLoggedIn = cookies.isLoggedIn;
+  const isLoggedIn = useSelector((state) => state.user.user.email);
   if (!isLoggedIn) {
-    toast.error("You need to login to access this page");
+    // toast.error("You need to login to access this page");
     return (
       <>
-        <Toaster position="top-right" reverseOrder={false} />
-        <Navigate to="/" />;
+        {/* <Toaster position="top-right" reverseOrder={false} /> */}
+        <Navigate to="/login" />;
       </>
     );
   }

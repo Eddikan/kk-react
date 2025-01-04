@@ -227,10 +227,8 @@ const SignUp = () => {
     } catch (error) {
       const errors = error.response.data.errors;
       // eslint-disable-next-line no-unused-vars
-      Object.entries(errors).forEach(([_, messages]) => {
-        messages.forEach((message) => {
-          toast.error(message); // Use your preferred toast type (e.g., success, warning, error)
-        });
+      errors.forEach((message) => {
+        toast.error(message); // Use your preferred toast type (e.g., success, warning, error)
       });
       setRegisterFormLoading(false);
     } finally {
