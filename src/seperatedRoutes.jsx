@@ -8,6 +8,7 @@ const TwoFactorAuthentication = lazy(() =>
   import("./Pages/TwoFactorAuthentication")
 );
 const ForgotPassword = lazy(() => import("./Pages/ForgotPassword"));
+const ResetPassword = lazy(() => import("./Pages/ResetPassword"));
 const SignUp = lazy(() => import("./Pages/SignUp"));
 const SignUpPreferences = lazy(() => import("./Pages/SignUpPreference"));
 const EmailConfirmation = lazy(() => import("./Pages/EmailConfirmation"));
@@ -189,6 +190,10 @@ export const unAuthenticatedRoutes = [
   {
     path: "/forgot-password",
     element: <ForgotPassword />,
+  },
+  {
+    path: "/reset-password",
+    element: <ResetPassword />,
   },
   {
     path: "/sign-up",

@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from "react";
+import React, {  Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { IoShirtSharp } from "react-icons/io5";
 import "bootstrap/dist/css/bootstrap.min.css";
