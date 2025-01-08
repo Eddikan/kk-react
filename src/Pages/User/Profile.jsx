@@ -45,36 +45,9 @@ import UserAppointments from 'Components/Shared/User/Appointments';
 import DesignerModalIcon from 'Assets/images/icons/designer-modal-icon-purple.png';
 import FabricModalIcon from 'Assets/images/icons/fabric-modal-icon-purple.png';
 import DesignerVendorModalIcon from 'Assets/images/icons/sewing-modal-icon-purple.png';
+import { useSelector } from "react-redux";
 
-const initialUserData = Object.freeze({
-    is_designer: 0,
-    is_tailor: 0,
-    is_seller: 0,
-    email: '',
-    short_bio: '',
-    long_bio: '',
-    first_name: '',
-    last_name: '',
-    gender: '',
-    date_of_birth: '',
-    address_line_1: '',
-    address_line_2: '',
-    city: '',
-    province: '',
-    postal_code: '',
-    country: '',
-    website: '',
-    phone_number: '',
-    secondary_email_address: '',
-    facebook: '',
-    twitter: '',
-    instagram: '',
-    linkedin: '',
-    pinterest: '',
-    behance: '',
-    youtube: '',
-    instagram: '',
-});
+
 
 const initialDesignerData = Object.freeze({
     design_inspirations: '',
@@ -97,8 +70,9 @@ const Profile = () => {
     let query = useQuery();
     const tab = query.get('tab');
     const tab_group = query.get('tab_group');
+    const currenStoreUser = useSelector((state) => state.user.user);
 
-    const [user, setUser] = useState(initialUserData);
+    const [user, setUser] = useState(currenStoreUser);
     const [designer, setDesigner] = useState(initialDesignerData);
     const [userLoading, setUserLoading] = useState(true);
     const [reloadCount, setReloadCount] = useState(0);
@@ -976,42 +950,21 @@ const Profile = () => {
                                                 }
                                             </Col>
                                         </Row>
-                                        <div className='mb-2 d-flex align-items-center'>
-                                            {/* {(user.profile_completeness > 0 && user.profile_completeness < 100) &&
-                                                <>
-                                                    <div>
-                                                        <Button href="/user/complete-profile" type='button' className='btn btn-primary'>
-                                                            <span>Complete your profile</span>
-                                                        </Button>
-                                                    </div>
-                                                </>
-                                            } */}
-                                            {/* {(user.shop_completed == 0 && (user.is_designer == 1 || user.is_seller == 1)) &&
-                                                <>
-                                                    <a href='/user/shop/setup' className='text-decoration-none'>
-                                                        <span><HiOutlineBuildingStorefront size={30} className={`text-gold me-2 ${user.profile_completeness != 100 && 'ms-4'}`} />
-                                                            <span className='fw-500 cursor-pointer'>
-                                                                Update your shop<FaArrowRightLong className='ms-2' /></span>
-                                                        </span>
-                                                    </a>
-                                                </>
-                                            } */}
-
-                                        </div>
-                                        {user.profile_completeness < 100 ?
+                                      
+                                        {user.profile_completeness.score < 100 ?
                                             <div className="completion-profile-section">
                                                 <Row>
                                                     <Col lg="3">
                                                         <div>
-                                                            <span className="fs-35 fw-500">{user.profile_completeness}%</span>
+                                                            <span className="fs-35 fw-500">{user.profile_completeness.score}%</span>
                                                             <p className='fs-16 lh-22 fw-500 mb-0 profile-completed-p'>of your profile is complete</p>
                                                         </div>
                                                     </Col>
                                                     <Col lg="9">
                                                         <div className="mt-11 mb-11">
                                                             <label className="progress-bar-value" htmlFor="progress-bar"></label>
-                                                            <progress id="progress-bar" className="w-50" value={user.profile_completeness} max="100"></progress>
-                                                            {user.profile_completeness < 100 ?
+                                                            <progress id="progress-bar" className="w-50" value={user.profile_completeness.score} max="100"></progress>
+                                                            {user.profile_completeness.score < 100 ?
                                                                 // <p className='fs-16 lh-22 fw-500 mb-0 profile-completed-p'>Your profile completion is at {user.profile_completeness}%</p>
                                                                 <p className='fs-16 lh-22 fw-500 mb-0 profile-completed-p'>To enhance your shopping experience, please complete your profile.</p>
                                                                 :
