@@ -685,7 +685,6 @@ export const initialBodyMeasurementData = {
 };
 
 export const initialChecklistData = {
-  measurement_checklist: 1,
   upper_neck_circumference: '',
   lower_neck_circumference: '',
   chest_circumference: '',

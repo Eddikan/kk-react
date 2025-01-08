@@ -15,9 +15,19 @@ export const mutationService = api.injectEndpoints({
         method: "PATCH",
         body: updateData,
       }),
-     
+    }),
+    updateUserBodyMeasurement: builder.mutation({
+      query: ({ ...updateData }) => ({
+        url: `user/measurement`,
+        method: "POST",
+        body: updateData,
+      }),
     }),
   }),
 });
 
-export const { useCreateUserMutation, useUpdateUserMutation } = mutationService;
+export const {
+  useCreateUserMutation,
+  useUpdateUserMutation,
+  useUpdateUserBodyMeasurementMutation,
+} = mutationService;

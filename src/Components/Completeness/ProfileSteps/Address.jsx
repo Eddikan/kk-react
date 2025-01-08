@@ -126,7 +126,7 @@ const AddressStep = ({ reload }) => {
 
   useEffect(() => {
     if (user) {
-      setProfileFormData(user);
+      setProfileFormData(user.address);
     }
   }, [user]);
 
@@ -144,6 +144,7 @@ const AddressStep = ({ reload }) => {
             <Form.Label>
               Address Line 1<span className="text-danger">*</span>
             </Form.Label>
+            {profileFormData.address_line_1}
             <FormControl
               type="text"
               name="address_line_1"
