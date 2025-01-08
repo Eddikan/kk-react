@@ -139,7 +139,6 @@ const LogIn = () => {
                       )}`}
                     >
                       Sign Up
-                      {isLoggedIn ?'true':'false'}
                     </Link>
                   </p>
                 </Form>

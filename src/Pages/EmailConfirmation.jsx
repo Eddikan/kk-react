@@ -62,8 +62,10 @@ const EmailConfirmation = () => {
       const success = response.data.success;
       if (success) {
         toast.success(response.data.message);
-        navigate("/login");
       }
+      setTimeout(() => {
+        navigate("/login");
+      }, 3000);
     } catch (error) {
       console.log("errror", error);
       const errors = error.response.data.errors;

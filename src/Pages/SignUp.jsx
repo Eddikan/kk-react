@@ -24,10 +24,8 @@ const initialRegisterData = Object.freeze({
   date_of_birth: "", // Add date of birth to initial state
 });
 
-
 const SignUp = () => {
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
   const useQuery = () => {
     return new URLSearchParams(useLocation().search);
@@ -63,7 +61,7 @@ const SignUp = () => {
   const [infoModalShow, setInfoModalShow] = useState(false);
 
   const currentUser = cookies.currentUser;
- 
+
   const [selectedOption, setSelectedOption] = useState("");
 
   const handleChange = (e) => {
@@ -110,7 +108,6 @@ const SignUp = () => {
             } else if (signupType === "designer_seller") {
               navigate("/user/designer-form?type=designer_seller");
             } else if (signupType === "customer") {
-              // handle custome for now
               navigate("/user/preferences");
             } else {
               navigate("/sign-up/preferences");
@@ -144,62 +141,9 @@ const SignUp = () => {
       });
   };
 
-  async function addTempCartToCart(data) {
-    // setReorderLoading(true);
-    axios
-      .post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + "cart/bulk", {
-        order_items: data.order_items,
-        user_id: data.user_id,
-      })
-      .then((response) => {
-        const success = response.data.status;
-        if (success == "Success") {
-          const data = response.data.data;
-          console.log(data);
-        } else {
-          const errors = response.data.errors;
-          errors.map((error) => {
-            toast.error(error);
-            return null; // React requires a return value, so we return null here
-          });
-        }
-        // setReorderLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        // setReorderLoading(false);
-        toast.error("Something went wrong, please contact the administrator!");
-      });
-  }
 
-  async function addTempFavoritesToFavorites(data) {
-    // setReorderLoading(true);
-    axios
-      .post(
-        import.meta.env.VITE_REACT_APP_API_ENDPOINT +
-          "portfolio/item/wishlist/bulk",
-        { favorites: data.favorites, user_id: data.user_id }
-      )
-      .then((response) => {
-        const success = response.data.status;
-        if (success == "Success") {
-          const data = response.data.data;
-          console.log("data", data);
-        } else {
-          const errors = response.data.errors;
-          errors.map((error) => {
-            toast.error(error);
-            return null; // React requires a return value, so we return null here
-          });
-        }
-        // setReorderLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        // setReorderLoading(false);
-        toast.error("Something went wrong, please contact the administrator!");
-      });
-  }
+
+ 
 
   async function registerSubmit(e) {
     e.preventDefault();
@@ -207,28 +151,23 @@ const SignUp = () => {
     try {
       const response = await axios.post(
         import.meta.env.VITE_REACT_APP_API_ENDPOINT + "auth/register",
-
         {
-          type: signupType, // Accepts types: seller, designer, customer, designer_and_seller
+          type: signupType,
           email: registerFormData.email,
           password: registerFormData.password,
           password_confirmation: registerFormData.password_confirmation,
           date_of_birth: registerFormData.date_of_birth,
         }
       );
-      console.log("respons eis", response);
       const success = response.data.success;
       if (success) {
-        // dispatch email here
-
         dispatch(setEmail(response.data.data.email));
         toast.success(response.data.message);
       }
     } catch (error) {
       const errors = error.response.data.errors;
-      // eslint-disable-next-line no-unused-vars
       errors.forEach((message) => {
-        toast.error(message); // Use your preferred toast type (e.g., success, warning, error)
+        toast.error(message);
       });
       setRegisterFormLoading(false);
     } finally {
@@ -243,7 +182,6 @@ const SignUp = () => {
 
   useEffect(() => {
     if (currentUser && currentUser !== "") {
-      // toast.error("You are already logged in!");
       if (signupType == "customer") {
         navigate("/");
       } else if (signupType == "designer") {
@@ -308,12 +246,12 @@ const SignUp = () => {
           const data = response.data.data;
           const user = data.user;
           if (user.designer) {
-            setCookie("currentUserDesigner", JSON.stringify(user.designer.id), {
+            setCookie("currentUserDesigner", JSON.stringify(user.designer?.id), {
               path: "/",
             });
           }
           if (user.seller) {
-            setCookie("currentUserSeller", JSON.stringify(user.seller.id), {
+            setCookie("currentUserSeller", JSON.stringify(user.seller?.id), {
               path: "/",
             });
           }
@@ -385,7 +323,7 @@ const SignUp = () => {
           } else {
             errors.map((error) => {
               toast.error(error);
-              return null; // React requires a return value, so we return null here
+              return null;
             });
           }
         }
@@ -446,12 +384,12 @@ const SignUp = () => {
               if (user.designer) {
                 setCookie(
                   "currentUserDesigner",
-                  JSON.stringify(user.designer.id),
+                  JSON.stringify(user.designer?.id),
                   { path: "/" }
                 );
               }
               if (user.seller) {
-                setCookie("currentUserSeller", JSON.stringify(user.seller.id), {
+                setCookie("currentUserSeller", JSON.stringify(user.seller?.id), {
                   path: "/",
                 });
               }
@@ -582,9 +520,6 @@ const SignUp = () => {
               className="d-flex flex-column justify-content-center py-4 mt-5 mb-5"
             >
               <div className="sign-up-container">
-                {/* <Link to="/">
-                  <img src={KoutureLogo} className="kouture-icon" alt="Kouture Konect" />
-                </Link> */}
                 <>
                   <h1 className="text-center">Sign up to Kouture Konect</h1>
                   <p className="text-center small fs-15 mb-0">
@@ -616,7 +551,6 @@ const SignUp = () => {
                     By clicking Continue with Google, you agree to Kouture
                     Konect’s Terms of Use and Privacy Policy.
                   </p>
-                  {/* <div className="divider-small mb-4 mt-3"></div> */}
                   <div className="custom-divider">or</div>
                 </>
                 <Form style={{ marginTop: "30px" }} onSubmit={registerSubmit}>
@@ -625,12 +559,11 @@ const SignUp = () => {
                     <Email
                       baseList={baseList}
                       refineList={domains}
-                      onChange={(e) => handleChangeEmail(e)} // or (newValue) => customSetter(newValue)
+                      onChange={(e) => handleChangeEmail(e)}
                       value={registerFormData.email}
                       className="form-control mr-sm-2 email-suggestion custom-form"
                       required
                     />
-                    {/* <FormControl type='email' name='email' onChange={handleChange} className='mr-sm-2' required /> */}
                   </Form.Group>
                   {registerFormData.email &&
                     registerFormData.email != "" &&
@@ -749,8 +682,6 @@ const SignUp = () => {
                 </Form>
               </div>
             </Col>
-            {/* <Col lg="4" className='with-bg'>
-            </Col> */}
           </Row>
         </Container>
       </section>
@@ -766,7 +697,6 @@ const SignUp = () => {
       >
         <Modal.Header closeButton className="pb-0">
           &nbsp;
-          {/* <Modal.Title><h5 className='modal-title text-left rufina-family fs-22'>Can Minors Sell on Kouture Konect?</h5></Modal.Title> */}
         </Modal.Header>
         <Modal.Body className="pt-0">
           <h2 className="modal-title fs-25 fw-600 pb-2 text-center">
