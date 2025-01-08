@@ -31,22 +31,22 @@ const AboutStep = ({ reload }) => {
 
   async function submitProfile(e) {
     if (
-      profileFormData.first_name === "" ||
-      profileFormData.first_name == null
+      profileFormData?.first_name === "" ||
+      profileFormData?.first_name == null
     ) {
       toast("First Name is required!", {
         icon: "⚠️",
       });
     } else if (
-      profileFormData.last_name === "" ||
-      profileFormData.first_name == null
+      profileFormData?.last_name === "" ||
+      profileFormData?.first_name == null
     ) {
       toast("Last Name is required!", {
         icon: "⚠️",
       });
     } else if (
-      profileFormData.gender === "" ||
-      profileFormData.gender == null
+      profileFormData?.gender === "" ||
+      profileFormData?.gender == null
     ) {
       toast("Gender is required!", {
         icon: "⚠️",
@@ -70,9 +70,12 @@ const AboutStep = ({ reload }) => {
         delete payload.date_of_birth;
       }
 
-      await updateUser({ type: "About", ...payload }).unwrap();
-      setCookie("aboutDone", "Yes", { path: "/" });
-      reload();
+      const res = await updateUser({ type: "ABOUT", ...payload }).unwrap();
+      if (res.success) {
+        setCookie("aboutDone", "Yes", { path: "/" });
+        toast.success(res.message);
+        reload();
+      }
     }
   }
 
@@ -88,7 +91,7 @@ const AboutStep = ({ reload }) => {
               <FormControl
                 type="text"
                 name="first_name"
-                value={profileFormData.first_name}
+                value={profileFormData?.first_name}
                 className="mr-sm-2"
                 onChange={handleChange}
                 required
@@ -103,7 +106,7 @@ const AboutStep = ({ reload }) => {
               <FormControl
                 type="text"
                 name="last_name"
-                value={profileFormData.last_name}
+                value={profileFormData?.last_name}
                 className="mr-sm-2"
                 onChange={handleChange}
                 required
@@ -121,7 +124,7 @@ const AboutStep = ({ reload }) => {
                   <FormControl
                     type="date"
                     name="date_of_birth"
-                    value={profileFormData.date_of_birth}
+                    value={profileFormData?.date_of_birth}
                     className="mr-sm-2"
                     onChange={handleChange}
                   />
@@ -141,7 +144,7 @@ const AboutStep = ({ reload }) => {
                   label="Male"
                   name="gender"
                   value="Male"
-                  checked={profileFormData.gender === "Male"}
+                  checked={profileFormData?.gender === "Male"}
                   onChange={handleChange}
                 />
               </Form.Group>
@@ -152,7 +155,7 @@ const AboutStep = ({ reload }) => {
                   label="Female"
                   name="gender"
                   value="Female"
-                  checked={profileFormData.gender === "Female"}
+                  checked={profileFormData?.gender === "Female"}
                   onChange={handleChange}
                 />
               </Form.Group>
@@ -171,7 +174,7 @@ const AboutStep = ({ reload }) => {
                     type="text"
                     maxLength="250"
                     name="short_bio"
-                    value={profileFormData.business_profile.short_bio}
+                    value={profileFormData?.business_profile?.short_bio}
                     className="mr-sm-2"
                     onChange={handleChange}
                     placeholder=""
@@ -179,7 +182,7 @@ const AboutStep = ({ reload }) => {
                 </Form.Group>
                 <p className="text-muted ms-1 fs-12 mb-4">
                   Your short bio is limited to 250 characters. (
-                  {250 - profileFormData.business_profile.short_bio?.length}{" "}
+                  {250 - profileFormData?.business_profile?.short_bio?.length}{" "}
                   characters left)
                 </p>
                 <Form.Group className="mb-3">
@@ -191,7 +194,7 @@ const AboutStep = ({ reload }) => {
                     as="textarea"
                     name="long_bio"
                     rows={5}
-                    value={profileFormData.business_profile.long_bio}
+                    value={profileFormData?.business_profile?.long_bio}
                     placeholder=""
                     onChange={handleChange}
                   />

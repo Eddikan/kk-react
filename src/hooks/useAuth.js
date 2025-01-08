@@ -186,7 +186,7 @@ const useAuth = () => {
         dispatch(setUser(user));
         setisLoggedIn(true);
         if (data.data.proceed_to_login) {
-          toast.success("Please Update your profile");
+          // toast.success("Please Update your profile");
         // give enough time for  rtk query
 
           setTimeout(() => {

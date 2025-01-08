@@ -37,7 +37,6 @@ import "Assets/styles/Headers/style.css";
 import toast from "react-hot-toast";
 import axios from "axios";
 import GetUserWishlistsData from "Utils/GetUserWishlistsData";
-import KoutureIcon from "Assets/images/kouture-konect-icon.png";
 import DesignIcon from "Assets/images/user-box/dress.png";
 import FabricIcon from "Assets/images/user-box/fabric.png";
 import DesignerIcon from "Assets/images/user-box/edit-tools.png";
@@ -56,6 +55,10 @@ const Header = () => {
     return new URLSearchParams(useLocation().search);
   };
   let query = useQuery();
+  const currenStoreUser = useSelector((state) => state.user.user);
+  const currentUser = useSelector((state) => state.user.user.email);
+  const is_seller = currenStoreUser.type == "seller" ? true : false;
+  const is_designer = currenStoreUser.type == "designer" ? true : false;
   const headerSearch = query.get("search");
   const headerType = query.get("type");
 
@@ -83,7 +86,7 @@ const Header = () => {
   const [userCountryOpen, setUserCountryOpen] = useState(false);
   const [userWishlistOpen, setUserWishlistOpen] = useState(false);
   const [userImage, setUserImage] = useState("");
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState(currenStoreUser);
   const [notifications, setNotifications] = useState([]);
   const [notificationsLoading, setNotificationsLoading] = useState(true);
   const [cartItemCount, setCartItemCount] = useState(
@@ -104,10 +107,7 @@ const Header = () => {
   const [modalHeading, setModalHeading] = useState();
   const [search, setSearch] = useState(headerSearch ?? "");
   const [activeTab, setActiveTab] = useState(headerType ?? "Designers");
-  const currenStoreUser = useSelector((state) => state.user.user);
-  const currentUser = useSelector((state) => state.user.user.email);
-  const is_seller = currenStoreUser.type == "seller" ? true : false;
-  const is_designer = currenStoreUser.type == "designer" ? true : false;
+
   //   const currentUser =  {
   //     "first_name": "",
   //     "last_name": "",
@@ -125,19 +125,6 @@ const Header = () => {
   const tempFavorites = cookies.tempFavorites;
   const currencyConversions = cookies.currencyConversions ?? "";
   const selectedCurrency = cookies.selectedCurrency ?? "";
-
-  const getUser = async () => {
-    return await axios.get(
-      import.meta.env.VITE_REACT_APP_API_ENDPOINT +
-        "user/" +
-        currentUser +
-        "?current_user_id=" +
-        current_user_id +
-        "&token=" +
-        token
-    );
-  };
-
   const getNotifications = async () => {
     return await axios.get(
       import.meta.env.VITE_REACT_APP_API_ENDPOINT +
@@ -180,29 +167,35 @@ const Header = () => {
 
   // removeCookies
   const removeCookies = () => {
-    removeCookie("token", { path: "/" });
-    removeCookie("userDetails", { path: "/" });
-    removeCookie("currencyConversions", { path: "/" });
-    removeCookie("userCurrency", { path: "/" });
-    removeCookie("userCurrencyCode", { path: "/" });
+    const allCookies = Object.keys(cookies);
 
-    removeCookie("isWelcome", { path: "/" });
-    removeCookie("currentUser", { path: "/" });
-    removeCookie("currentUserDesigner", { path: "/" });
-    removeCookie("currentUserSeller", { path: "/" });
-    removeCookie("isLoggedIn", { path: "/" });
-    removeCookie("userRole", { path: "/" });
-    removeCookie("selectedCartItems", { path: "/" });
-    removeCookie("tempCart", { path: "/" });
-    removeCookie("tempFavorites", { path: "/" });
-    removeCookie("cartItemCount", { path: "/" });
-    removeCookie("selectedCountry", { path: "/" });
-    removeCookie("selectedCountryCode", { path: "/" });
-    removeCookie("selectedLanguage", { path: "/" });
-    removeCookie("selectedCurrency", { path: "/" });
-    removeCookie("selectedCurrencyCode", { path: "/" });
-    removeCookie("cookieCheckoutDesigner", { path: "/" });
-    removeCookie("over_18", { path: "/" });
+    // Loop through each cookie name and remove it
+    allCookies.forEach((cookieName) => {
+      removeCookie(cookieName, { path: "/" }); // Ensure the path matches the one used when setting cookies
+    });
+    // removeCookie("token", { path: "/" });
+    // removeCookie("userDetails", { path: "/" });
+    // removeCookie("currencyConversions", { path: "/" });
+    // removeCookie("userCurrency", { path: "/" });
+    // removeCookie("userCurrencyCode", { path: "/" });
+
+    // removeCookie("isWelcome", { path: "/" });
+    // removeCookie("currentUser", { path: "/" });
+    // removeCookie("currentUserDesigner", { path: "/" });
+    // removeCookie("currentUserSeller", { path: "/" });
+    // removeCookie("isLoggedIn", { path: "/" });
+    // removeCookie("userRole", { path: "/" });
+    // removeCookie("selectedCartItems", { path: "/" });
+    // removeCookie("tempCart", { path: "/" });
+    // removeCookie("tempFavorites", { path: "/" });
+    // removeCookie("cartItemCount", { path: "/" });
+    // removeCookie("selectedCountry", { path: "/" });
+    // removeCookie("selectedCountryCode", { path: "/" });
+    // removeCookie("selectedLanguage", { path: "/" });
+    // removeCookie("selectedCurrency", { path: "/" });
+    // removeCookie("selectedCurrencyCode", { path: "/" });
+    // removeCookie("cookieCheckoutDesigner", { path: "/" });
+    // removeCookie("over_18", { path: "/" });
   };
 
   // Close the dropdown when clicking outside of it
@@ -253,7 +246,7 @@ const Header = () => {
     // navigate("/login");
 
     dispatch({ type: "RESET_STATE" });
-
+    toast.success("Logged out successfully");
   };
 
   function toggleUnderConstruction(message) {
@@ -339,49 +332,8 @@ const Header = () => {
   };
 
   useEffect(() => {
-    if (currencyConversions && currencyConversions != "") {
-      console.log("something");
-    } else {
-      getCurrencyConversions()
-        .then((response) => {
-          const status = response.status;
-          if (status == 200) {
-            const currencyData = response.data;
-            const currencyConversionsData = currencyData.results;
-            setCookie(
-              "currencyConversions",
-              JSON.stringify(currencyConversionsData),
-              { maxAge: 3600, path: "/" }
-            );
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching currency conversions:", error);
-        });
-    }
-  }, [selectedCurrency, currencyConversions]);
-
-  useEffect(() => {
     if (currentUser) {
       fetchData({ currentUser: currentUser, token: token });
-
-      getUser()
-        .then((response) => {
-          const selectedUser = response.data.data;
-          if (selectedUser) {
-            setUser(selectedUser);
-          } else {
-            toast.error(
-              "There has been an error getting the date, please try again!"
-            );
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching user:", error);
-          toast.error(
-            "There has been an error getting the date, please try again!"
-          );
-        });
 
       getNotifications()
         .then((response) => {
@@ -739,9 +691,7 @@ const Header = () => {
                           className="nav-link cursor-pointer text-decoration-none border-bottom pb-3 mb-2"
                           style={{ pointerEvents: "none" }}
                         >
-                          {user.first_name
-                            ? ` Hi,&nbsp;{user.first_name} !`
-                            : "Hi"}
+                          {user.first_name ? ` Hi, ${user.first_name} !` : "Hi"}
                         </a>
                         <a
                           className="nav-link cursor-pointer text-decoration-none pb-0"
@@ -947,10 +897,7 @@ const Header = () => {
                                     <BsShopWindow size={23} />{" "}
                                     <span className="ms-2">Shop Manager</span>
                                   </button>
-                                  {/* <div className="nav-link header-tooltip cursor-pointer">
-                                    <span className="icon-tooltiptext fs-14">Shop Manager</span>
-                                    <BsShopWindow size={23} />
-                                  </div> */}
+                              
                                 </a>
                               </>
                             )}
@@ -973,10 +920,7 @@ const Header = () => {
                                     <BsShopWindow size={23} />{" "}
                                     <span className="ms-2">Shop Manager</span>
                                   </button>
-                                  {/* <div className="nav-link header-tooltip cursor-pointer">
-                                    <span className="icon-tooltiptext fs-14">Shop Manager</span>
-                                    <BsShopWindow size={23} />
-                                  </div> */}
+                              
                                 </a>
                               </>
                             )}
