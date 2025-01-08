@@ -30,6 +30,7 @@ export const queryService = api.injectEndpoints({
           const { data } = await queryFulfilled;
           dispatch({ type: "users/setUser", payload: data });
         } catch (error) {
+          console.log('error',error)
           toast.error("Failed to fetch user details. Please try again.");
         }
       },
