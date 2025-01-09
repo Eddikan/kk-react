@@ -15,6 +15,7 @@ import { IoIosHelpCircleOutline } from "react-icons/io";
 import { measurementGuideData, initialChecklistData } from "Utils/assets";
 import { useSelector } from "react-redux";
 import { useUpdateUserBodyMeasurementMutation } from "store/api/mutations";
+
 const BodyMeasurementStep = ({ reload }) => {
   const [updateUserBodyMeasurement, { isLoading: isUpdating }] =
     useUpdateUserBodyMeasurementMutation();
@@ -37,7 +38,6 @@ const BodyMeasurementStep = ({ reload }) => {
   useEffect(() => {
     if (user) {
       setProfileFormData(user);
-      //   setChecklistData(user.body_measurement);
     }
   }, [user]);
 
@@ -49,7 +49,6 @@ const BodyMeasurementStep = ({ reload }) => {
       },
     };
     const res = await updateUserBodyMeasurement({ ...payload }).unwrap();
-    console.log("res", res);
     if (res.success) {
       setCookie("measurementDone", "Yes", { path: "/" });
       toast.success(res.message);
@@ -65,7 +64,6 @@ const BodyMeasurementStep = ({ reload }) => {
   };
 
   const toggleMeasurementGuideModal = (id) => {
-    // setModalHeadingMeasurementGuide(heading);
     const data = measurementGuidedataLookup[id];
     if (data) {
       setModalHeadingMeasurementGuide(data.title);
@@ -80,7 +78,6 @@ const BodyMeasurementStep = ({ reload }) => {
   };
 
   useEffect(() => {
-    // Create lookup object
     const lookup = measurementGuideData.reduce((acc, item) => {
       acc[item.id] = item;
       return acc;
