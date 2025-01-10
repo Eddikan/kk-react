@@ -1,12 +1,17 @@
-import React, {  Suspense } from "react";
+import React, { Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { IoShirtSharp } from "react-icons/io5";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "Assets/styles/overrides.css";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { unAuthenticatedRoutes, authenticatedRoutes, stripeRoutes } from "./seperatedRoutes";
+import {
+  unAuthenticatedRoutes,
+  authenticatedRoutes,
+  stripeRoutes,
+} from "./seperatedRoutes";
 import ProtectedRoute from "Components/Layout/ProtectedRoute";
+import NotFound from './Pages/NotFound'; // The 404 page
 
 // import {unAuthenticatedRoutes,authenticatedRoutes,stripeRoutes} from "./routePages"
 // dont delete these comments
@@ -15,8 +20,6 @@ import ProtectedRoute from "Components/Layout/ProtectedRoute";
 const stripePromise = loadStripe(
   "pk_test_51KH5FQEHRDNky8yNuVaslaQXG2zhzUjBuooEw7vp8LKMwMd5eEd5xt5RAL0UdiuVJf7dMAwllXdSiDkvvSp9qzT700fhQD4wrQ"
 );
-
-
 
 const DelayedFallback = ({ delay, children }) => {
   const [show, setShow] = React.useState(false);
@@ -71,14 +74,11 @@ const App = () => {
               key={index}
               path={route.path}
               exact
-              element={
-                <ProtectedRoute >
-                  {route.element}
-                </ProtectedRoute>
-              }
+              element={<ProtectedRoute>{route.element}</ProtectedRoute>}
             />
           ))}
-
+          {/* Other routes */}
+          <Route path="*" element={<NotFound />} />
           {/* <Route path="/checkout" exact element={
              <Elements stripe={stripePromise}>
                <Checkout />
