@@ -33,7 +33,7 @@ import TextLogo from "Assets/images/logos/kouture-text-logo.png";
 import "Assets/styles/Headers/style.css";
 import toast from "react-hot-toast";
 import axios from "axios";
-import useAuth from "hooks/useAuth"
+import useAuth from "hooks/useAuth";
 import GetUserWishlistsData from "Utils/GetUserWishlistsData";
 import DesignIcon from "Assets/images/user-box/dress.png";
 import FabricIcon from "Assets/images/user-box/fabric.png";
@@ -47,7 +47,7 @@ import FabricModalIcon from "Assets/images/icons/fabric-modal-icon-purple.png";
 import DesignerVendorModalIcon from "Assets/images/icons/sewing-modal-icon-purple.png";
 
 const Header = () => {
-  const {logOut} = useAuth();
+  const { logOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const useQuery = () => {
@@ -92,7 +92,6 @@ const Header = () => {
   const [favoritesCount, setFavoritesCount] = useState(0);
   const [favorites, setFavorites] = useState([]);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
-
 
   const userRef = useRef(null);
   const bellRef = useRef(null);
@@ -144,8 +143,6 @@ const Header = () => {
     );
   };
 
- 
-
   useEffect(() => {
     if (
       activeTab !== "Designers" &&
@@ -157,7 +154,6 @@ const Header = () => {
   }, [activeTab]);
 
   // removeCookies
-
 
   // Close the dropdown when clicking outside of it
   const handleClickOutside = (event) => {
@@ -198,8 +194,6 @@ const Header = () => {
   const toggleWishlistMenu = () => {
     setUserWishlistOpen(!userWishlistOpen);
   };
-
-
 
   function toggleUnderConstruction(message) {
     setUnderConstructionShow(!underConstructionShow);
@@ -849,7 +843,6 @@ const Header = () => {
                                     <BsShopWindow size={23} />{" "}
                                     <span className="ms-2">Shop Manager</span>
                                   </button>
-                              
                                 </a>
                               </>
                             )}
@@ -872,7 +865,6 @@ const Header = () => {
                                     <BsShopWindow size={23} />{" "}
                                     <span className="ms-2">Shop Manager</span>
                                   </button>
-                              
                                 </a>
                               </>
                             )}
@@ -1115,7 +1107,9 @@ const Header = () => {
                         </a>
                         <Link
                           to={`/sign-up`}
-                          className="nav-link cursor-pointer border-bottom pb-3 mb-2 text-decoration-none"
+                          className={`nav-link cursor-pointer  text-decoration-none
+                          ${isLoggedIn ? " border-bottom pb-3 mb-2 " : ""}
+                          `}
                         >
                           Register
                         </Link>
