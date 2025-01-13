@@ -5,7 +5,14 @@ import { useCookies } from "react-cookie";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
+import useAuth from "hooks/useAuth";
 import GetUserData from "Utils/GetUserData";
+import {
+  useUpdateUserAvatarMutation,
+  useUpdateUserSettingsMutation,
+  useUpdatePasswordMutation,
+} from "store/api/mutations";
+import { useGetProfileQuery } from "store/api/queries";
 
 const initialDesignerData = Object.freeze({
   design_inspirations: "",
@@ -22,13 +29,15 @@ const initialUpdatePasswordData = Object.freeze({
 });
 
 const useProfile = () => {
+  const { logOut } = useAuth();
+
   const useQuery = () => new URLSearchParams(useLocation().search);
   let query = useQuery();
   const tab = query.get("tab");
   const tab_group = query.get("tab_group");
-  const currenStoreUser = useSelector((state) => state.user.user);
+  const currentStoreUser = useSelector((state) => state.user.user);
 
-  const [user, setUser] = useState(currenStoreUser);
+  const [user, setUser] = useState(currentStoreUser);
 
   const [designer, setDesigner] = useState(initialDesignerData);
   const [userLoading, setUserLoading] = useState(true);
@@ -89,6 +98,15 @@ const useProfile = () => {
   const [showCaptureBackImage, setShowCaptureBackImage] = useState(false);
 
   const [iDName, setIDName] = useState("");
+  const [updateUserAvatar, { isLoading: isImageUpdating }] =
+    useUpdateUserAvatarMutation();
+  const [updateUserSettings, { isLoading: isSettingsUpdating }] =
+    useUpdateUserSettingsMutation();
+
+  const [updatePassword, { isLoading: isUpdatingPassword }] =
+    useUpdatePasswordMutation();
+
+  const { refetch: refetchUser } = useGetProfileQuery();
 
   const currentUser = cookies.currentUser;
   const token = cookies.token;
@@ -119,7 +137,6 @@ const useProfile = () => {
   const isSecondSecondaryPhotoUploaded =
     verificationFormData.second_secondary_id_name && secondSecondaryFrontPhoto;
 
-  const [userImage, setUserImage] = useState();
   const [uploadStatus, setUploadStatus] = useState("standby");
   const hiddenFileInputImg = useRef(null);
 
@@ -494,44 +511,13 @@ const useProfile = () => {
     }
   };
 
-  const submitDocument = (event) => {
-    setUploadStatus("loading");
+  const submitDocument = async (event) => {
     const dataArray = new FormData();
     dataArray.append("image", event);
-    axios
-      .post(
-        import.meta.env.VITE_REACT_APP_API_ENDPOINT +
-          "user/image?user_id=" +
-          currentUser +
-          "&token=" +
-          token,
-        dataArray,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      )
-      .then((response) => {
-        if (response.data.status == "Success") {
-          var media_id = response.data.data.id;
-          var profile_picture = response.data.data.image;
-          setUserImage(profile_picture);
-          updateProfilePicture(profile_picture);
-
-          let reader = new FileReader();
-          let file = event;
-
-          reader.onloadend = () => {};
-          reader.readAsDataURL(file);
-        }
-      })
-      .catch(() => {
-        toast.error(
-          "An error occured. Please try again or contact the administrator."
-        );
-        setUploadStatus("standby");
-      });
+    const res = await updateUserAvatar(dataArray).unwrap();
+    if (res.success) {
+      refetchUser();
+    }
   };
 
   const handleChangePassword = (e) => {
@@ -543,109 +529,18 @@ const useProfile = () => {
     });
   };
 
-  async function updateProfilePicture(e) {
-    axios
-      .put(
-        import.meta.env.VITE_REACT_APP_API_ENDPOINT +
-          "user/" +
-          currentUser +
-          "?user_id=" +
-          currentUser +
-          "&token=" +
-          token,
-        {
-          image: e,
-        }
-      )
-      .then((response) => {
-        const success = response.data.status;
-        if (success == "Success") {
-          toast.success("Profile picture updated successfully!");
-          setFormStatus("standby");
-          setUploadStatus("standby");
-          const data = response.data.data;
-          const user = data.user;
-          if (user.designer) {
-            setCookie("currentUserDesigner", JSON.stringify(user.designer.id), {
-              path: "/",
-            });
-          }
-          if (user.seller) {
-            setCookie("currentUserSeller", JSON.stringify(user.seller.id), {
-              path: "/",
-            });
-          }
-
-          const user_details = {
-            currentUser: user.id,
-            id: user.id,
-            first_name: user.first_name,
-            last_name: user.last_name,
-            image: user.image,
-            email_verified_at: user.email_verified_at,
-          };
-          setCookie("userDetails", JSON.stringify(user_details), { path: "/" });
-          setCookie("completed_questionnaire", user.completed_questionnaire, {
-            path: "/",
-          });
-          setCookie("signup_type", user.signup_type, { path: "/" });
-        } else {
-          toast.error(
-            "An error occured. Please try again or contact the administrator."
-          );
-          setFormStatus("standby");
-          setUploadStatus("standby");
-        }
-      })
-      .catch(() => {
-        toast.error(
-          "An error occured. Please try again or contact the administrator."
-        );
-        setFormStatus("standby");
-        setUploadStatus("standby");
-      });
-  }
-
-  async function handleEmailAuthChange(event) {
-    const newValue = event.target.checked ? 1 : 0;
-    updateSecurity("email_two_factor_authentication", newValue);
-  }
-
-  async function handleSMSAuthChange(event) {
-    const newValue = event.target.checked ? 1 : 0;
-    updateSecurity("sms_two_factor_authentication", newValue);
-  }
-
-  async function updateSecurity(fieldName, value) {
-    axios
-      .put(
-        import.meta.env.VITE_REACT_APP_API_ENDPOINT +
-          "user/" +
-          currentUser +
-          "?user_id=" +
-          currentUser +
-          "&token=" +
-          token,
-        {
-          [fieldName]: value,
-        }
-      )
-      .then((response) => {
-        const success = response.data.status;
-        const data = response.data.data;
-        if (success === "Success") {
-          toast.success("Profile updated successfully!");
-        } else {
-          toast.error(
-            "An error occured. Please try again or contact the administrator."
-          );
-        }
-      })
-      .catch(() => {
-        toast.error(
-          "An error occured. Please try again or contact the administrator."
-        );
-      });
+  async function handleTwoFAChange(event) {
+    const newValue = event.target.checked ? true : false;
+    const currentSettings = currentStoreUser.settings;
+    const payload = {
+      ...currentSettings,
+      two_factor_enabled: newValue,
+    };
+    const res = await updateUserSettings(payload).unwrap();
+    if (res.success) {
+      toast.success(res.message);
+      refetchUser();
+    }
   }
 
   async function updatePasswordSubmit(e) {
@@ -656,36 +551,21 @@ const useProfile = () => {
     ) {
       toast.error("New Password and Confirm New Password does not match");
     } else {
-      setFormStatus("loading");
-      axios
-        .post(
-          import.meta.env.VITE_REACT_APP_API_ENDPOINT +
-            "password/change?user_id=" +
-            currentUser +
-            "&token=" +
-            token,
-          { ...updatePasswordFormData, user_id: currentUser, token: token }
-        )
-        .then((response) => {
-          const success = response.data.status;
-          const data = response.data.data;
-          if (success === "Success") {
-            toast.success("Password updated successfully!");
-            setUpdatePasswordModalShow(false);
-            setFormStatus("standby");
-          } else {
-            toast.error(
-              "An error occured. Please try again or contact the administrator."
-            );
-            setFormStatus("standby");
-          }
-        })
-        .catch(() => {
-          toast.error(
-            "An error occured. Please try again or contact the administrator."
-          );
-          setFormStatus("standby");
-        });
+      const payload = {
+        password: updatePasswordFormData.new_password,
+        password_confirmation: updatePasswordFormData.confirm_password,
+        current_password: updatePasswordFormData.current_password,
+      };
+      const res = await updatePassword(payload).unwrap();
+      if (res.success) {
+        toast.success(res.message);
+        toast.success("Please Login with your new password");
+        setUpdatePasswordModalShow(false);
+        logOut();
+        // clear form inputs
+        // logout
+        // refetchUser();
+      }
     }
   }
 
@@ -799,7 +679,6 @@ const useProfile = () => {
         setSecondSecondaryFrontPhoto(userData.second_secondary_id_front_img);
         setSecondSecondaryBackPhoto(userData.second_secondary_id_back_img);
 
-        setUserImage(userData.image);
         setCookie("userDetails", JSON.stringify(userData), { path: "/" });
         if (userData.designer) {
           setDesigner(userData.designer);
@@ -869,8 +748,8 @@ const useProfile = () => {
     }
   }, [reloadCount]);
   useEffect(() => {
-    setUser(currenStoreUser);
-  }, [currenStoreUser]);
+    setUser(currentStoreUser);
+  }, [currentStoreUser]);
   return {
     user,
     setActiveTabGroup,
@@ -922,7 +801,7 @@ const useProfile = () => {
     webRef,
     isFirstSecondaryPhotoUploaded,
     isSecondSecondaryPhotoUploaded,
-    userImage,
+    isUpdatingPassword,
     uploadStatus,
     hiddenFileInputImg,
     navigate,
@@ -950,17 +829,16 @@ const useProfile = () => {
     handleChangeImg,
     submitDocument,
     handleChangePassword,
-    updateProfilePicture,
-    handleEmailAuthChange,
-    handleSMSAuthChange,
-    updateSecurity,
+    handleTwoFAChange,
     updatePasswordSubmit,
     showTab,
     fetchData,
     setSetupShopShow,
     setViewBackCapture,
     setUpdatePasswordModalShow,
-    setViewFrontCapture
+    setViewFrontCapture,
+    isImageUpdating,
+    isSettingsUpdating,
   };
 };
 

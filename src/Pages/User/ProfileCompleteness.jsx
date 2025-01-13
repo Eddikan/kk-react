@@ -12,6 +12,7 @@ import ThankyouStep from "Components/Completeness/ProfileSteps/Thankyou";
 import ProfileProgress from "Components/Completeness/Wizards/ProfileCompletenessProgress";
 import BodyMeasurementStep from "Components/Completeness/ProfileSteps/BodyMeasurement";
 import { useGetProfileQuery } from "store/api/queries";
+import GoBack from "Components/Shared/GoBack";
 
 const initialUserData = Object.freeze({
   is_designer: 0,
@@ -43,7 +44,6 @@ const initialUserData = Object.freeze({
 });
 
 const ProfileCompleteness = () => {
-  const [userLoading, setUserLoading] = useState(true);
   const [profileFormData, setProfileFormData] = useState(initialUserData);
   const [reloadCount, setReloadCount] = useState(0);
   const [aboutDone, setAboutDone] = useState("No");
@@ -90,6 +90,9 @@ const ProfileCompleteness = () => {
         <LoadingPage />
       ) : (
         <section id="profile" className="pt-30 pb-5 px-5">
+           <div>
+                    <GoBack fallBack="/user/profile" />
+                  </div>
           <Container>
             <Row className="">
               <Col md="3" className={`flex-grow-1 flex-shrink-0`}>

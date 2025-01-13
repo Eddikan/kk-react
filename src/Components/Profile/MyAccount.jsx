@@ -53,27 +53,27 @@ function MyAccount() {
               <div className="short-bio-designer mb-4">
                 <Form.Label
                   className={`me-3 ${
-                    user.phone_number && user.phone_number != "" ? "" : "mb-0"
+                    user?.phone_number && user?.phone_number != "" ? "" : "mb-0"
                   }`}
                   style={{ minWidth: "90px" }}
                 >
                   <input
                     type="checkbox"
-                    checked={user.email_two_factor_authentication}
+                    checked={user?.email_two_factor_authentication}
                     onChange={handleEmailAuthChange}
                     className="d-inline-block vertical-align-middle me-1"
                   />
                   <span className="fs-14">Enable Email Authentication</span>
                 </Form.Label>
                 <br />
-                {user.phone_number && user.phone_number != "" ? (
+                {user?.phone_number && user?.phone_number != "" ? (
                   <Form.Label
                     className="me-3 mb-0"
                     style={{ minWidth: "90px" }}
                   >
                     <input
                       type="checkbox"
-                      checked={user.sms_two_factor_authentication}
+                      checked={user?.sms_two_factor_authentication}
                       onChange={handleSMSAuthChange}
                       className="d-inline-block vertical-align-middle me-1"
                     />
@@ -136,13 +136,13 @@ function MyAccount() {
                             name="primary_id_name"
                             defaultValue=""
                             onChange={handleChangeVerification}
-                            value={verificationFormData.primary_id_name}
+                            value={verificationFormData?.primary_id_name}
                             required
                           >
                             <option value="">Select Primary IDs</option>
 
                             <option value="Driver's License">
-                              Driver&apos;s License
+                              Driver's License
                             </option>
                             <option value="Passport">Passport</option>
                             {selected === "PH" && (
@@ -157,7 +157,7 @@ function MyAccount() {
                                   PhilHealth ID
                                 </option>
                                 <option value="Postal ID">Postal ID</option>
-                                <option value="Voter's ID">Voter&apos;s ID</option>
+                                <option value="Voter's ID">Voter's ID</option>
                                 <option value="Professional Regulation (PRC) ID">
                                   Professional Regulation (PRC) ID
                                 </option>
@@ -347,7 +347,7 @@ function MyAccount() {
                               defaultValue=""
                               onChange={handleChangeVerification}
                               value={
-                                verificationFormData.first_secondary_id_name
+                                verificationFormData?.first_secondary_id_name
                               }
                               required
                             >
@@ -359,7 +359,7 @@ function MyAccount() {
                                       key={id}
                                       value={id}
                                       disabled={
-                                        verificationFormData.second_secondary_id_name ===
+                                        verificationFormData?.second_secondary_id_name ===
                                         id
                                       }
                                     >
@@ -371,7 +371,7 @@ function MyAccount() {
                             </select>
                           </Col>
                         </Row>
-                        {verificationFormData.first_secondary_id_name && (
+                        {verificationFormData?.first_secondary_id_name && (
                           <>
                             <Form.Group>
                               <Row className="mb-3">
@@ -492,8 +492,8 @@ function MyAccount() {
                           <>
                             <Row>
                               <Col>
-                                {verificationFormData.first_secondary_id_name ||
-                                verificationFormData.second_secondary_id_name ? (
+                                {verificationFormData?.first_secondary_id_name ||
+                                verificationFormData?.second_secondary_id_name ? (
                                   <>
                                     <select
                                       className="form-control mb-3 cursor-pointer"
@@ -501,7 +501,7 @@ function MyAccount() {
                                       defaultValue=""
                                       onChange={handleChangeVerification}
                                       value={
-                                        verificationFormData.second_secondary_id_name
+                                        verificationFormData?.second_secondary_id_name
                                       }
                                       required
                                     >
@@ -515,7 +515,7 @@ function MyAccount() {
                                               key={id}
                                               value={id}
                                               disabled={
-                                                verificationFormData.first_secondary_id_name ===
+                                                verificationFormData?.first_secondary_id_name ===
                                                 id
                                               }
                                             >
@@ -529,7 +529,7 @@ function MyAccount() {
                                 ) : null}
                               </Col>
                             </Row>
-                            {verificationFormData.second_secondary_id_name && (
+                            {verificationFormData?.second_secondary_id_name && (
                               <>
                                 <Form.Group>
                                   <Row>

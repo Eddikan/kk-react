@@ -19,7 +19,6 @@ const baseList = [
 ];
 
 const LogIn = () => {
-
   const {
     loginFormData,
     loginFormLoading,
@@ -31,8 +30,7 @@ const LogIn = () => {
     login,
     setShowPassword,
     redirect_to,
-    isLoggedIn
-  } = useAuth();
+  } = useAuth({ blockPage: true });
 
   return (
     <LayoutNoFooter>

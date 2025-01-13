@@ -7,7 +7,7 @@ export const queryService = api.injectEndpoints({
       query: () => "user/profile",
       keepUnusedDataFor: 0, // Disable caching
       refetchOnMountOrArgChange: true,
-      providesTags: ['Profile'],
+      providesTags: ["Profile"],
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
@@ -30,12 +30,17 @@ export const queryService = api.injectEndpoints({
           const { data } = await queryFulfilled;
           dispatch({ type: "users/setUser", payload: data });
         } catch (error) {
-          console.log('error',error)
+          console.log("error", error);
           toast.error("Failed to fetch user details. Please try again.");
         }
       },
     }),
+    resend2FA: builder.query({
+      query: (email, type) => ({
+        url: `auth/2fa/resend?email=${email}&type=${type}`,
+      }),
+    }),
   }),
 });
 
-export const { useGetProfileQuery, useGetUserByIdQuery } = queryService;
+export const { useGetProfileQuery, useGetUserByIdQuery,useResend2FAQuery } = queryService;

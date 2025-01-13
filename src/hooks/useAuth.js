@@ -7,8 +7,10 @@ import { setUser } from "store/slices/userSlice";
 import toast from "react-hot-toast";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useGetProfileQuery } from "store/api/queries";
+import localforage from "localforage";
+import { persistor } from "store"; //
 
-const useAuth = () => {
+const useAuth = ({ blockPage }={}) => {
   const [isLoggedIn, setisLoggedIn] = useState(false); // Example: check if user is logged in
 
   useGetProfileQuery(undefined, {
@@ -27,7 +29,8 @@ const useAuth = () => {
     password: "",
   });
   const [loginFormLoading, setLoginFormLoading] = useState(false);
-  const [cookies, setCookie] = useCookies([
+  const [cookies, setCookie, removeCookie] = useCookies([
+    "email",
     "isLoggedIn",
     "userDetails",
     "userRole",
@@ -154,7 +157,7 @@ const useAuth = () => {
       });
   };
 
-  const submitTwoFactor = async (email) => {
+  const submitTwoFactor = async () => {
     let uniqueId = deviceId;
 
     if (deviceId === undefined) {
@@ -167,6 +170,39 @@ const useAuth = () => {
     setLoginFormLoading(false);
   };
 
+  function loginLogic(response, redirect) {
+    const user = { ...response.data };
+    localStorage.setItem("kk-token", user.token);
+    delete user.token;
+    if (!response.proceed_to_login && response.type == "TWO_FACTOR") {
+      // navigate to 2FA
+      navigate(
+        `/two-factor-authentication?email=${user?.email}&2FA=${response?.available_two_fa_options}`
+      );
+      return;
+    }
+    dispatch(setUser(user));
+    setisLoggedIn(true);
+    if (response.proceed_to_login) {
+      // toast.success("Please Update your profile");
+      // give enough time for  rtk query
+      if (redirect && redirect != "" && redirect != null) {
+        navigate(redirect);
+      } else {
+        navigate("/");
+      }
+      if (user?.first_name) {
+        navigate("/");
+      } else {
+        setTimeout(() => {
+          navigate("/user/profile");
+        }, 2000);
+      }
+    } else {
+      toast.error("Two FA required");
+    }
+  }
+
   async function loginSubmit(e) {
     try {
       e.preventDefault();
@@ -176,25 +212,9 @@ const useAuth = () => {
         loginFormData
       );
       if (data.success) {
+        // handle 2FA
         toast.success(data.message);
-        const user = data.data.data;
-        localStorage.setItem("kk-token", user.token);
-        setCookie("email", data.email, { path: "/" });
-        setCookie("userDetails", JSON.stringify(user), { path: "/" });
-
-        delete user.token;
-        dispatch(setUser(user));
-        setisLoggedIn(true);
-        if (data.data.proceed_to_login) {
-          // toast.success("Please Update your profile");
-        // give enough time for  rtk query
-
-          setTimeout(() => {
-            navigate("/user/profile");
-          }, 2000);
-        } else {
-          toast.error("Two FA required");
-        }
+        loginLogic(data.data, redirect_to);
       }
     } catch (error) {
       console.log("error", error);
@@ -299,7 +319,7 @@ const useAuth = () => {
           if (errors.password) {
             toast.error(errors.password[0]);
           } else {
-            errors.map((error, index) => {
+            errors.map((error) => {
               toast.error(error);
               return null;
             });
@@ -308,6 +328,7 @@ const useAuth = () => {
         setLoginFormLoading(false);
       })
       .catch((error) => {
+        console.log(error);
         setLoginFormLoading(false);
         toast.error("Something went wrong, please contact the administrator!");
       });
@@ -319,12 +340,14 @@ const useAuth = () => {
   });
 
   useEffect(() => {
-    if (currentUser.email) {
-      toast.error("You are already logged in!");
-      if (currentUser.first_name != "") {
-        navigate("/user/profile");
+    if (blockPage) {
+      if (currentUser.email) {
+        toast.error("You are already logged in!");
+        if (currentUser.first_name != "") {
+          navigate("/user/profile");
+        }
+        navigate("/");
       }
-      navigate("/");
     }
   }, []);
 
@@ -508,8 +531,26 @@ const useAuth = () => {
         .catch((err) => console.log(err));
     }
   }, [googleEmail]);
+  const removeCookies = () => {
+    const allCookies = Object.keys(cookies);
 
+    // Loop through each cookie name and remove it
+    allCookies.forEach((cookieName) => {
+      removeCookie(cookieName, { path: "/" }); // Ensure the path matches the one used when setting cookies
+    });
+  };
+  const logOut = async () => {
+    removeCookies();
+    await localforage.clear();
+    localStorage.clear();
+    persistor.purge();
+    // navigate("/login");
+
+    dispatch({ type: "RESET_STATE" });
+    toast.success("Logged out successfully");
+  };
   return {
+    logOut,
     loginFormData,
     loginFormLoading,
     googleLoginLoading,
@@ -521,6 +562,7 @@ const useAuth = () => {
     setShowPassword,
     redirect_to,
     isLoggedIn,
+    loginLogic,
   };
 };
 

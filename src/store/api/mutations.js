@@ -16,11 +16,46 @@ export const mutationService = api.injectEndpoints({
         body: updateData,
       }),
     }),
+    updateUserAvatar: builder.mutation({
+      query: (updateData) => ({
+        url: `user/profile/upload-avatar`,
+        method: "POST",
+        body: updateData,
+      }),
+    }),
     updateUserBodyMeasurement: builder.mutation({
       query: ({ ...updateData }) => ({
         url: `user/measurement`,
         method: "POST",
         body: updateData,
+      }),
+    }),
+    updateUserSettings: builder.mutation({
+      query: ({ ...updateData }) => ({
+        url: `user/settings`,
+        method: "PUT",
+        body: updateData,
+      }),
+    }),
+    updatePassword: builder.mutation({
+      query: ({ ...updateData }) => ({
+        url: `user/profile/change-password`,
+        method: "PUT",
+        body: updateData,
+      }),
+    }),
+
+    regenerate2FA: builder.mutation({
+      query: ({ email, type }) => ({
+        url: `auth/2fa/resend?email=${email}&type=${type}`,
+        method: "GET",
+      }),
+    }),
+    TwoFALogin: builder.mutation({
+      query: ({ ...code }) => ({
+        url: `auth/2fa/verify`,
+        method: "POST",
+        body: code,
       }),
     }),
   }),
@@ -30,4 +65,9 @@ export const {
   useCreateUserMutation,
   useUpdateUserMutation,
   useUpdateUserBodyMeasurementMutation,
+  useUpdateUserAvatarMutation,
+  useUpdateUserSettingsMutation,
+  useUpdatePasswordMutation,
+  useRegenerate2FAMutation,
+  useTwoFALoginMutation,
 } = mutationService;

@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Card, Modal } from "react-bootstrap";
-import localforage from "localforage";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Form from "react-bootstrap/Form";
@@ -13,9 +12,7 @@ import { Container, Button, Col, Row } from "react-bootstrap";
 import { FaChevronDown } from "react-icons/fa6";
 import { IoIosPower } from "react-icons/io";
 import { BsCartCheck, BsShopWindow } from "react-icons/bs";
-import { persistor } from "store"; //
 import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
 import {
   IoCalendarClearOutline,
   IoCartOutline,
@@ -36,6 +33,7 @@ import TextLogo from "Assets/images/logos/kouture-text-logo.png";
 import "Assets/styles/Headers/style.css";
 import toast from "react-hot-toast";
 import axios from "axios";
+import useAuth from "hooks/useAuth"
 import GetUserWishlistsData from "Utils/GetUserWishlistsData";
 import DesignIcon from "Assets/images/user-box/dress.png";
 import FabricIcon from "Assets/images/user-box/fabric.png";
@@ -49,6 +47,7 @@ import FabricModalIcon from "Assets/images/icons/fabric-modal-icon-purple.png";
 import DesignerVendorModalIcon from "Assets/images/icons/sewing-modal-icon-purple.png";
 
 const Header = () => {
+  const {logOut} = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const useQuery = () => {
@@ -62,7 +61,7 @@ const Header = () => {
   const headerSearch = query.get("search");
   const headerType = query.get("type");
 
-  const [cookies, setCookie, removeCookie] = useCookies([
+  const [cookies] = useCookies([
     "currentUser",
     "userDetails",
     "userRole",
@@ -77,9 +76,7 @@ const Header = () => {
     "selectedCurrencyCode",
     "cartItemCount",
     "favoriteItemCount",
-    "over_18",
   ]);
-  const dispatch = useDispatch();
 
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [userBellOpen, setUserBellOpen] = useState(false);
@@ -96,7 +93,7 @@ const Header = () => {
   const [favorites, setFavorites] = useState([]);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
 
-  const [userType, setUserType] = useState("user");
+
   const userRef = useRef(null);
   const bellRef = useRef(null);
   const wishlistRef = useRef(null);
@@ -123,8 +120,6 @@ const Header = () => {
   const isLoggedIn = cookies.isLoggedIn;
   const tempCart = cookies.tempCart;
   const tempFavorites = cookies.tempFavorites;
-  const currencyConversions = cookies.currencyConversions ?? "";
-  const selectedCurrency = cookies.selectedCurrency ?? "";
   const getNotifications = async () => {
     return await axios.get(
       import.meta.env.VITE_REACT_APP_API_ENDPOINT +
@@ -149,11 +144,7 @@ const Header = () => {
     );
   };
 
-  const getCurrencyConversions = async (e) => {
-    return await axios.get(
-      "https://api.fastforex.io/fetch-multi?from=USD&to=AFN,ALL,DZD,USD,EUR,AOA,XCD,ARS,AMD,AWG,AUD,EUR,AZN,BSD,BHD,BDT,BBD,EUR,BZD,XOF,BMD,BTN,BOB,BAM,BWP,BRL,BND,BGN,XOF,BIF,KHR,XAF,CAD,CVE,KYD,XAF,XAF,CLP,CNY,COP,KMF,XAF,HRK,CUP,EUR,CZK,DKK,DJF,XCD,DOP,USD,EGP,USD,XAF,ERN,EUR,SZL,ETB,FJD,EUR,EUR,XAF,GMD,GEL,EUR,GHS,EUR,XCD,GTQ,GNF,XOF,GYD,HTG,HNL,HUF,ISK,INR,IDR,IRR,IQD,EUR,ILS,EUR,XOF,JMD,JPY,JOD,KZT,KES,AUD,KPW,KRW,KWD,KGS,LAK,EUR,LBP,LSL,LRD,LYD,MOP,MGA,MWK,MYR,MVR,MRU,MUR,MXN,MDL,MNT,MAD,MZN,MMK,NAD,AUD,NPR,EUR,XPF,NZD,XOF,NGN,KPW,NOK,OMR,PKR,PAB,PGK,PYG,PEN,PHP,PLN,EUR,QAR,RON,RUB,RWF,XCD,WST,SAR,XOF,RSD,SCR,SLL,SGD,SOS,ZAR,KRW,EUR,LKR,SDG,SRD,SZL,SEK,CHF,SYP,TWD,TJS,TZS,THB,XOF,TOP,TTD,TND,TRY,TMT,UGX,UAH,AED,GBP,USD,UYU,UZS,VUV,VND,YER,ZMW&api_key=9920f5c7b2-af7c7a72bd-slk430"
-    );
-  };
+ 
 
   useEffect(() => {
     if (
@@ -166,37 +157,7 @@ const Header = () => {
   }, [activeTab]);
 
   // removeCookies
-  const removeCookies = () => {
-    const allCookies = Object.keys(cookies);
 
-    // Loop through each cookie name and remove it
-    allCookies.forEach((cookieName) => {
-      removeCookie(cookieName, { path: "/" }); // Ensure the path matches the one used when setting cookies
-    });
-    // removeCookie("token", { path: "/" });
-    // removeCookie("userDetails", { path: "/" });
-    // removeCookie("currencyConversions", { path: "/" });
-    // removeCookie("userCurrency", { path: "/" });
-    // removeCookie("userCurrencyCode", { path: "/" });
-
-    // removeCookie("isWelcome", { path: "/" });
-    // removeCookie("currentUser", { path: "/" });
-    // removeCookie("currentUserDesigner", { path: "/" });
-    // removeCookie("currentUserSeller", { path: "/" });
-    // removeCookie("isLoggedIn", { path: "/" });
-    // removeCookie("userRole", { path: "/" });
-    // removeCookie("selectedCartItems", { path: "/" });
-    // removeCookie("tempCart", { path: "/" });
-    // removeCookie("tempFavorites", { path: "/" });
-    // removeCookie("cartItemCount", { path: "/" });
-    // removeCookie("selectedCountry", { path: "/" });
-    // removeCookie("selectedCountryCode", { path: "/" });
-    // removeCookie("selectedLanguage", { path: "/" });
-    // removeCookie("selectedCurrency", { path: "/" });
-    // removeCookie("selectedCurrencyCode", { path: "/" });
-    // removeCookie("cookieCheckoutDesigner", { path: "/" });
-    // removeCookie("over_18", { path: "/" });
-  };
 
   // Close the dropdown when clicking outside of it
   const handleClickOutside = (event) => {
@@ -238,16 +199,7 @@ const Header = () => {
     setUserWishlistOpen(!userWishlistOpen);
   };
 
-  const logOut = async () => {
-    removeCookies();
-    await localforage.clear();
-    localStorage.clear();
-    persistor.purge();
-    // navigate("/login");
 
-    dispatch({ type: "RESET_STATE" });
-    toast.success("Logged out successfully");
-  };
 
   function toggleUnderConstruction(message) {
     setUnderConstructionShow(!underConstructionShow);
@@ -462,7 +414,7 @@ const Header = () => {
         setFavoritesCount(totalFavoritesCount);
       }
     }
-  }, [cookies.cartItemCount, cookies.favoriteItemCount]);
+  }, [cookies.cartItemCount]);
 
   const currentPath = location.pathname + location.search;
   // console.log('currentPath', currentPath);
@@ -695,26 +647,26 @@ const Header = () => {
                         </a>
                         <a
                           className="nav-link cursor-pointer text-decoration-none pb-0"
-                          href={`/${userType}/profile`}
+                          href={`/user/profile`}
                         >
                           My Profile
                         </a>
                         <a
                           className="nav-link cursor-pointer text-decoration-none pb-0"
-                          href={`/${userType}/profile?tab=all&tab_group=orders`}
+                          href={`/user/profile?tab=all&tab_group=orders`}
                         >
                           My Orders
                         </a>
                         <a
                           className="nav-link cursor-pointer text-decoration-none pb-0"
-                          href={`/${userType}/profile?tab=fabrics_wishlist&tab_group=wishlist`}
+                          href={`/user/profile?tab=fabrics_wishlist&tab_group=wishlist`}
                         >
                           My Wishlist
                         </a>
                         {userDetails?.is_designer == 1 ? (
                           <a
                             className="nav-link cursor-pointer text-decoration-none pb-0"
-                            href={`/${userType}/profile?tab=designs&tab_group=designs`}
+                            href={`/user/profile?tab=designs&tab_group=designs`}
                           >
                             My Designs
                           </a>
@@ -722,20 +674,20 @@ const Header = () => {
                         {is_seller ? (
                           <a
                             className="nav-link cursor-pointer text-decoration-none pb-0"
-                            href={`/${userType}/profile?tab=fabrics&tab_group=fabrics`}
+                            href={`/user/profile?tab=fabrics&tab_group=fabrics`}
                           >
                             My Fabrics
                           </a>
                         ) : null}
                         <a
                           className="nav-link cursor-pointer text-decoration-none pb-0"
-                          href={`/${userType}/profile?tab=upcoming&tab_group=appointments`}
+                          href={`/user/profile?tab=upcoming&tab_group=appointments`}
                         >
                           My Appointments
                         </a>
                         <a
                           className="nav-link cursor-pointer text-decoration-none border-bottom pb-3 mb-2"
-                          href={`/${userType}/profile?tab=messages&tab_group=messages`}
+                          href={`/user/profile?tab=messages&tab_group=messages`}
                         >
                           My Messages
                         </a>
@@ -974,7 +926,7 @@ const Header = () => {
                               <Row className="mb-3">
                                 <Col lg="3">
                                   <Link
-                                    to={`/${userType}/profile`}
+                                    to={`/user/profile`}
                                     className="mb-3 text-decoration-none"
                                   >
                                     {userImage ? (
@@ -1007,7 +959,7 @@ const Header = () => {
                                     Hi,&nbsp;{user.first_name}!
                                   </div>
                                   <Link
-                                    to={`/${userType}/profile`}
+                                    to={`/user/profile`}
                                     className="mb-3 text-decoration-none"
                                   >
                                     <div>

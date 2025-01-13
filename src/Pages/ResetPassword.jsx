@@ -34,7 +34,7 @@ const ResetPassword = () => {
         import.meta.env.VITE_REACT_APP_API_ENDPOINT +
           "auth/password/reset/verify",
         {
-          code: "72226",
+          code: token,
           password,
           password_confirmation: confirmPassword,
         }
