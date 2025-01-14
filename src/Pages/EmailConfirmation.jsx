@@ -29,7 +29,6 @@ const EmailConfirmation = () => {
         }
       )
       .then((response) => {
-        console.log("res is", response);
         const success = response.data.success;
         if (success) {
           toast.success(response.data.message);
@@ -58,14 +57,13 @@ const EmailConfirmation = () => {
           `auth/email/verify?token=${token}`
       );
       axios.header = "Accept: application/json";
-      console.log("respons eis", response);
       const success = response.data.success;
       if (success) {
         toast.success(response.data.message);
       }
       setTimeout(() => {
         navigate("/login");
-      }, 3000);
+      }, 10000);
     } catch (error) {
       console.log("errror", error);
       const errors = error.response.data.errors;

@@ -27,7 +27,6 @@ import { FaArrowRight } from "react-icons/fa";
 import DesignerModalIcon from "Assets/images/icons/designer-modal-icon-purple.png";
 import FabricModalIcon from "Assets/images/icons/fabric-modal-icon-purple.png";
 import DesignerVendorModalIcon from "Assets/images/icons/sewing-modal-icon-purple.png";
-
 const Home = () => {
   const navigate = useNavigate();
   const [userModalShow, setUserModalShow] = useState(false);
@@ -260,9 +259,9 @@ const Home = () => {
                 </h3>
                 <p className="modal-subtitle text-center mb-5">
                   Welcome to our fashion marketplace! Please select one of the
-                  options below to explore our offerings. Whether you're looking
+                  options below to explore our offerings. Whether you&apos;re looking
                   for talented designers, unique patterns, or quality fabrics,
-                  you're in the right place
+                  you&apos;re in the right place
                 </p>
                 <Row>
                   <Col lg="4">

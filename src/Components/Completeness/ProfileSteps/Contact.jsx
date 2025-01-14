@@ -112,11 +112,11 @@ const ContactStep = ({ reload }) => {
     if (user) {
       setProfileFormData({
         ...user.business_profile,
-        secondary_email_address: user.business_profile.secondary_email,
-        phone_number: user?.phone?.country_code + user?.phone.number,
+        secondary_email_address: user?.business_profile?.secondary_email,
+        phone_number: user?.phone?.country_code + user?.phone?.number,
         phone: {
           country_code: user?.phone?.country_code,
-          number: user?.phone.number,
+          number: user?.phone?.number,
         },
       });
     }

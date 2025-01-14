@@ -4,7 +4,7 @@ import { FaCheck } from "react-icons/fa";
 import { useCookies } from "react-cookie";
 import { useSelector } from "react-redux";
 
-const ProfileProgress = ({ reloadCount }) => {
+const ProfileProgress = ({ reloadCount, reload }) => {
   const currentStoreUser = useSelector((state) => state.user.user);
 
   const [cookies, setCookie] = useCookies([
@@ -31,11 +31,23 @@ const ProfileProgress = ({ reloadCount }) => {
     setSocialDone(cookies.socialDone ?? "No");
     setBodyMeasurementDone(cookies.measurementDone ?? "No");
   }, [reloadCount]);
-
+  const handleToggle = (e) => {
+    setCookie("aboutDone", "No", { path: "/" });
+    setCookie("addressDone", "No", { path: "/" });
+    setCookie("contactDone", "No", { path: "/" });
+    setCookie("socialDone", "No", { path: "/" });
+    setCookie("measurementDone", "No", { path: "/" });
+    reload();
+  };
   return (
     <>
       <div className="wizard-cont">
-        <div className="w-100 step-container">
+        <div
+          className="w-100 step-container"
+          onClick={() => {
+            handleToggle("aboutDone");
+          }}
+        >
           {aboutDone != "Yes" ? (
             <>
               <div className="d-flex align-items-center active">
@@ -47,7 +59,7 @@ const ProfileProgress = ({ reloadCount }) => {
             </>
           ) : aboutDone == "Yes" ? (
             <>
-              <div className="d-flex align-items-center check">
+              <div className="d-flex tw-cursor-pointer align-items-center check">
                 <div className="progress-circle progress-circle-check">
                   <FaCheck color="#ffffff" />
                 </div>
@@ -65,7 +77,17 @@ const ProfileProgress = ({ reloadCount }) => {
             </>
           )}
         </div>
-        <div className="w-100 step-container">
+        <div
+          className="w-100 step-container tw-cursor-pointer"
+          onClick={() => {
+            setCookie("aboutDone", "Yes", { path: "/" });
+            setCookie("addressDone", "No", { path: "/" });
+            setCookie("contactDone", "No", { path: "/" });
+            setCookie("socialDone", "No", { path: "/" });
+            setCookie("measurementDone", "No", { path: "/" });
+            reload();
+          }}
+        >
           {aboutDone == "Yes" && addressDone != "Yes" ? (
             <>
               <div className="d-flex align-items-center active">
@@ -95,7 +117,17 @@ const ProfileProgress = ({ reloadCount }) => {
             </>
           )}
         </div>
-        <div className="w-100 step-container">
+        <div
+          className="w-100 step-container tw-cursor-pointer"
+          onClick={() => {
+            setCookie("aboutDone", "Yes", { path: "/" });
+            setCookie("addressDone", "Yes", { path: "/" });
+            setCookie("contactDone", "No", { path: "/" });
+            setCookie("socialDone", "No", { path: "/" });
+            setCookie("measurementDone", "No", { path: "/" });
+            reload();
+          }}
+        >
           {aboutDone == "Yes" &&
           addressDone == "Yes" &&
           contactDone != "Yes" ? (
@@ -130,7 +162,17 @@ const ProfileProgress = ({ reloadCount }) => {
           )}
         </div>
         {currentStoreUser.type !== "customer" && (
-          <div className="w-100 step-container">
+          <div
+            className="w-100 step-container tw-cursor-pointer"
+            onClick={() => {
+              setCookie("aboutDone", "Yes", { path: "/" });
+              setCookie("addressDone", "Yes", { path: "/" });
+              setCookie("contactDone", "Yes", { path: "/" });
+              setCookie("socialDone", "No", { path: "/" });
+              setCookie("measurementDone", "No", { path: "/" });
+              reload();
+            }}
+          >
             {aboutDone == "Yes" &&
             addressDone == "Yes" &&
             contactDone == "Yes" &&
@@ -168,7 +210,17 @@ const ProfileProgress = ({ reloadCount }) => {
           </div>
         )}
 
-        <div className="w-100 step-container">
+        <div
+          className="w-100 step-container tw-cursor-pointer"
+          onClick={() => {
+            setCookie("aboutDone", "Yes", { path: "/" });
+            setCookie("addressDone", "Yes", { path: "/" });
+            setCookie("contactDone", "Yes", { path: "/" });
+            setCookie("socialDone", "Yes", { path: "/" });
+            setCookie("measurementDone", "No", { path: "/" });
+            reload();
+          }}
+        >
           {aboutDone == "Yes" &&
           addressDone == "Yes" &&
           contactDone == "Yes" &&
@@ -225,7 +277,18 @@ const ProfileProgress = ({ reloadCount }) => {
             </>
           )}
 
-          {currentStoreUser.type !== "customer" && (
+       
+
+          {contactDone == "Yes" ? (
+            <>
+              <div className="progress-line line-active"></div>
+            </>
+          ) : (
+            <>
+              <div className="progress-line"></div>
+            </>
+          )}
+             {currentStoreUser.type !== "customer" && (
             <>
               {socialDone == "Yes" ? (
                 <>
@@ -236,16 +299,6 @@ const ProfileProgress = ({ reloadCount }) => {
                   <div className="progress-line"></div>
                 </>
               )}
-            </>
-          )}
-
-          {contactDone == "Yes" ? (
-            <>
-              <div className="progress-line line-active"></div>
-            </>
-          ) : (
-            <>
-              <div className="progress-line"></div>
             </>
           )}
         </div>

@@ -90,15 +90,18 @@ const ProfileCompleteness = () => {
         <LoadingPage />
       ) : (
         <section id="profile" className="pt-30 pb-5 px-5">
-           <div>
-                    <GoBack fallBack="/user/profile" />
-                  </div>
+          <div>
+            <GoBack fallBack="/user/profile" />
+          </div>
           <Container>
             <Row className="">
               <Col md="3" className={`flex-grow-1 flex-shrink-0`}>
                 <Card className="h-100">
                   <Card.Body>
-                    <ProfileProgress reloadCount={reloadCount} />
+                    <ProfileProgress
+                      reloadCount={reloadCount}
+                      reload={() => setReloadCount(reloadCount + 1)}
+                    />
                   </Card.Body>
                 </Card>
               </Col>
