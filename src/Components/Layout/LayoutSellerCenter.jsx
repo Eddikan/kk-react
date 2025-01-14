@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import Header from '../Shared/Header'
-import HeaderSeller from "Components/Shared/HeaderSeller";
+
 import Footer from '../Shared/Footer'
 import toast, { Toaster } from 'react-hot-toast';
 import Tawkto from "Components/Chat/TawkTo";
@@ -21,7 +21,7 @@ const LayoutSellerCenter = ({ children }) => {
             />
             <div style={{ minHeight: '100vh' }}>
                 <div id="navigation">
-                    <HeaderSeller />
+                    <Header />
                 </div>
                 <div id="main">
                     {children}
