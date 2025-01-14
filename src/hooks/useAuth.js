@@ -188,9 +188,7 @@ const useAuth = ({ blockPage }={}) => {
       // give enough time for  rtk query
       if (redirect && redirect != "" && redirect != null) {
         navigate(redirect);
-      } else {
-        navigate("/");
-      }
+      } 
       if (user?.first_name) {
         navigate("/");
       } else {

@@ -186,7 +186,7 @@ const Designs = (props) => {
     };
 
  
-    if (error) return <p>There has been an error getting the desigs.</p>;
+    if (error) return <p className='tw-text-center'>There has been an error getting the designs.</p>;
 
     return (
         <>

@@ -1956,7 +1956,7 @@ const BodyMeasurement = ({ userData }) => {
         </>
       ) : (
         <p className="text-center mb-3 mt-3">
-          Please update your gender <Link to="/user/profile/edit">here</Link>{" "}
+          Please update your gender <Link to="/user/complete-profile">here</Link>{" "}
           before filling up your measurements
         </p>
       )}

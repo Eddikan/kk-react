@@ -102,6 +102,21 @@ const useProfile = () => {
     useUpdateUserAvatarMutation();
   const [updateUserSettings, { isLoading: isSettingsUpdating }] =
     useUpdateUserSettingsMutation();
+  const [isUpdatingDelayed, setIsUpdatingDelayed] = useState(false);
+  useEffect(() => {
+    if (isSettingsUpdating) {
+      // Update immediately when true
+      setIsUpdatingDelayed(true);
+    } else {
+      // Delay update when false
+      const timer = setTimeout(() => {
+        setIsUpdatingDelayed(false);
+      }, 500);
+
+      return () => clearTimeout(timer); // Cleanup timer if `isSettingsUpdating` changes before 0.5 seconds
+    }
+  }, [isSettingsUpdating]);
+
 
   const [updatePassword, { isLoading: isUpdatingPassword }] =
     useUpdatePasswordMutation();
@@ -838,7 +853,7 @@ const useProfile = () => {
     setUpdatePasswordModalShow,
     setViewFrontCapture,
     isImageUpdating,
-    isSettingsUpdating,
+    isUpdatingDelayed,
   };
 };
 
