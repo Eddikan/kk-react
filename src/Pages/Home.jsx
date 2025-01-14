@@ -24,9 +24,6 @@ import JoinKoutureBG from "Assets/images/join-kouture.png";
 import DesignersMarquee from "Components/Grids/DesignersMarquee";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { FaArrowRight } from "react-icons/fa";
-import DesignerModalIcon from "Assets/images/icons/designer-modal-icon-purple.png";
-import FabricModalIcon from "Assets/images/icons/fabric-modal-icon-purple.png";
-import DesignerVendorModalIcon from "Assets/images/icons/sewing-modal-icon-purple.png";
 const Home = () => {
   const navigate = useNavigate();
   const [userModalShow, setUserModalShow] = useState(false);
@@ -37,7 +34,6 @@ const Home = () => {
     "userRole",
   ]);
   const [fabricsModalShow, setFabricsModalShow] = useState(false);
-  const [setupShopShow, setSetupShopShow] = useState(false);
   const [signupModalShow, setSignupModalShow] = useState(false);
   const [signupType, setSignupType] = useState("");
   const currentUser = cookies.currentUser;
@@ -46,10 +42,6 @@ const Home = () => {
   };
   const handleShowFabrics = () => {
     setFabricsModalShow(true);
-  };
-
-  const toggleSetupShopShow = () => {
-    setSetupShopShow(!setupShopShow);
   };
 
   const showSignupModal = (e) => {
@@ -77,39 +69,32 @@ const Home = () => {
                   </p>
                 </div>
                 <div className="my-5">
-                  {
-                    currentUser ? null : (
-                      <>
-                        <Button
-                          className="explore-button btn me-3 text-white bg-black bg-gray-hover px-3"
-                          style={{ width: "250px", height: "50px" }}
-                          variant="secondary"
-                          onClick={() => handleShowUser()}
-                        >
-                          <IoIosSearch size={25} /> Explore Marketplace
-                        </Button>
-                        <Button
-                          className="custom-hover-btn me-3 px-3"
-                          style={{ width: "250px" }}
-                          onClick={() => toggleSetupShopShow()}
-                        >
-                          {" "}
-                          <img
-                            src={ShopIcon}
-                            className="mx-1"
-                            height="29px"
-                            alt="shop-icon"
-                          ></img>{" "}
-                          Create Shop{" "}
-                        </Button>
-                      </>
-                    )
-                    // <>
-                    //   <Button className='btn-outline me-3 text-white border-gold border-white-hover bg-gold bg-transparent-hover text-white-hover px-5' variant='secondary' onClick={() => handleShowUser()}>I'm Just Browsing</Button>
-                    //   <Button className='btn-outline me-3 text-white border-white border-gold-hover bg-gold-hover text-white-hover px-5' variant='secondary' onClick={() => showSignupModal('designer')} >I'm a Designer</Button>
-                    //   <Button className='btn-outline me-3 text-white border-white border-gold-hover bg-gold-hover text-white-hover px-5' variant='secondary' onClick={() => showSignupModal('seller')} >I'm a Fabric Vendor</Button>
-                    // </>
-                  }
+                  {currentUser ? null : (
+                    <>
+                      <Button
+                        className="explore-button btn me-3 text-white bg-black bg-gray-hover px-3"
+                        style={{ width: "250px", height: "50px" }}
+                        variant="secondary"
+                        onClick={() => handleShowUser()}
+                      >
+                        <IoIosSearch size={25} /> Explore Marketplace
+                      </Button>
+                      <Button
+                        className="custom-hover-btn me-3 px-3"
+                        style={{ width: "250px" }}
+                        onClick={() => navigate("/user/shop/setup")}
+                      >
+                        {" "}
+                        <img
+                          src={ShopIcon}
+                          className="mx-1"
+                          height="29px"
+                          alt="shop-icon"
+                        ></img>{" "}
+                        Create Shop{" "}
+                      </Button>
+                    </>
+                  )}
                 </div>
               </Col>
               <Col lg="6" className="text-end">
@@ -123,15 +108,7 @@ const Home = () => {
           </Container>
         </section>
       )}
-      {/* <section id="designers" className="pt-5 pb-3">
-        <Container>
-          <Row>
-            <Col lg="12">
-              <Designers />
-            </Col>
-          </Row>
-        </Container>
-      </section> */}
+
       <section id="toprateddesigners" className="mb-5 mt-xl-4 px-5">
         <Container>
           <Row>
@@ -139,9 +116,7 @@ const Home = () => {
               <h2 className="fw-bold fs-35 lh-45 mb-30">
                 Our Top Rated Designers
               </h2>
-              <DesignersMarquee
-                onSignup={showSignupModal}
-              />
+              <DesignersMarquee onSignup={showSignupModal} />
               {currentUser ? (
                 <Col lg={12} className="text-center mt-50">
                   <Link to="/designers">
@@ -207,7 +182,7 @@ const Home = () => {
                 </p>
                 <p
                   className="join-section-get-started-btn cursor-pointer fs-20"
-                  onClick={() => toggleSetupShopShow()}
+                  onClick={() => handleShowUser()}
                 >
                   Get Started Now{" "}
                   <FaArrowRightLong className="get-started-icon ms-2" />
@@ -258,9 +233,9 @@ const Home = () => {
                 </h3>
                 <p className="modal-subtitle text-center mb-5">
                   Welcome to our fashion marketplace! Please select one of the
-                  options below to explore our offerings. Whether you&apos;re looking
-                  for talented designers, unique patterns, or quality fabrics,
-                  you&apos;re in the right place
+                  options below to explore our offerings. Whether you&apos;re
+                  looking for talented designers, unique patterns, or quality
+                  fabrics, you&apos;re in the right place
                 </p>
                 <Row>
                   <Col lg="4">
@@ -476,109 +451,6 @@ const Home = () => {
             <Row className="h-100">
               <Col lg="12">
                 <Signup type={signupType} />
-              </Col>
-            </Row>
-          </Container>
-        </Modal.Body>
-      </Modal>
-
-      {/* Setup Shop  */}
-      <Modal
-        show={setupShopShow}
-        backdrop="static"
-        centered
-        size="lg"
-        fullscreen={false}
-        onHide={() => setSetupShopShow(false)}
-      >
-        <Modal.Body className="pt-5 pb-4">
-          <button
-            type="button"
-            className="btn-close no-header-close"
-            onClick={() => setSetupShopShow(false)}
-            aria-label="Close"
-          ></button>
-          <Container className="narrow-850 h-100">
-            <Row className=" align-items-center h-100">
-              <Col lg="12">
-                {/* <h3 className="text-center fw-600 mb-5">I am looking for...</h3> */}
-                <h3 className="shop-modal-intro text-center fw-bold mt-5 mb-2">
-                  Join as a Designer, Fabric Vendor or both
-                </h3>
-                <p className="modal-subtitle text-center mb-50">
-                  To get started, please select one of the options:
-                </p>
-                <Row>
-                  <Col lg="4" className="mb-90">
-                    {/* onClick={() => showSignupModal('user_designer')} */}
-                    <Card
-                      onClick={() => navigate("/sign-up?type=designer")}
-                      className="shop-modal-card cursor-pointer bg-white"
-                    >
-                      <Card.Body className="shop-modal-card-body">
-                        <img
-                          src={DesignerModalIcon}
-                          alt="Designers"
-                          className="shop-card-icon"
-                        />
-                        <div className="user-box shop-modal-card-content text-center justify-content-center">
-                          <div className="text-start w-100">
-                            <p className="mb-0 fs-12">I am a</p>
-                            <h3 className="shop-modal-title fs-30 fw-600 lh-35 mt-2">
-                              Designer
-                            </h3>
-                          </div>
-                        </div>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                  <Col lg="4" className="mb-90">
-                    {/* onClick={() => handleShowFabrics()} */}
-                    <Card
-                      onClick={() => navigate("/sign-up?type=seller")}
-                      className="shop-modal-card cursor-pointer bg-white"
-                    >
-                      <Card.Body className="shop-modal-card-body">
-                        <img
-                          src={FabricModalIcon}
-                          alt="Fabrics"
-                          className="shop-card-icon"
-                        />
-                        <div className="user-box shop-modal-card-content text-center justify-content-center">
-                          <div className="text-start w-100">
-                            <p className="mb-0 fs-12">I am a</p>
-                            <h3 className="shop-modal-title fs-30 fw-600 lh-35 mt-2">
-                              Fabric Vendor
-                            </h3>
-                          </div>
-                        </div>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                  <Col lg="4" className="mb-90">
-                    {/* onClick={() => handleShowDesigns()} */}
-                    <Card
-                      onClick={() => navigate("/sign-up?type=designer_seller")}
-                      className="shop-modal-card cursor-pointer bg-white"
-                    >
-                      <Card.Body className="shop-modal-card-body">
-                        <img
-                          src={DesignerVendorModalIcon}
-                          alt="Designs"
-                          className="shop-card-icon"
-                        />
-                        <div className="user-box shop-modal-card-content text-center justify-content-center">
-                          <div className="text-start w-100">
-                            <p className="mb-0 fs-12">I am both a</p>
-                            <h3 className="shop-modal-title fs-30 fw-600 lh-35 mt-2">
-                              Designer & <br /> Fabric Vendor
-                            </h3>
-                          </div>
-                        </div>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                </Row>
               </Col>
             </Row>
           </Container>
