@@ -140,7 +140,6 @@ const Home = () => {
                 Our Top Rated Designers
               </h2>
               <DesignersMarquee
-                currentUser={currentUser}
                 onSignup={showSignupModal}
               />
               {currentUser ? (

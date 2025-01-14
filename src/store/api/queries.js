@@ -35,12 +35,23 @@ export const queryService = api.injectEndpoints({
         }
       },
     }),
-    resend2FA: builder.query({
-      query: (email, type) => ({
-        url: `auth/2fa/resend?email=${email}&type=${type}`,
-      }),
+
+    getDesigners: builder.query({
+      query: ({  search = "", country = "" }) =>
+        `designers?search=${search}&country=${country}`,
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          console.log("designer is query", data.data.data);
+          dispatch({ type: "designers/setDesigners", payload: data.data.data });
+        } catch (error) {
+          console.log("error", error);
+          toast.error("Failed to fetch user details. Please try again.");
+        }
+      },
     }),
   }),
 });
 
-export const { useGetProfileQuery, useGetUserByIdQuery,useResend2FAQuery } = queryService;
+export const { useGetProfileQuery, useGetUserByIdQuery, useGetDesignersQuery } =
+  queryService;
