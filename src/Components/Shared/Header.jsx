@@ -55,7 +55,7 @@ const Header = () => {
   };
   let query = useQuery();
   const currenStoreUser = useSelector((state) => state.user.user);
-  const currentUser = useSelector((state) => state.user.user.email);
+  const currentUser = useSelector((state) => state.user?.user?.email);
   const is_seller = currenStoreUser.type == "seller" ? true : false;
   const is_designer = currenStoreUser.type == "designer" ? true : false;
   const headerSearch = query.get("search");
@@ -430,7 +430,7 @@ const Header = () => {
                 <a
                   className="banner-item px-3"
                   href="javascript:void(0)"
-                  onClick={() => setSetupShopShow(!setupShopShow)}
+                  // onClick={() => setSetupShopShow(!setupShopShow)}
                 >
                   Set Up Shop
                 </a>
@@ -829,45 +829,35 @@ const Header = () => {
                         </div>
                       )}
                     </div>
-                    {userRole !== "Admin" && (
+                    {user?.shop?.is_complete ? (
                       <>
-                        {user.shop_completed != 1 ? (
+                        {(is_seller || is_designer) && (
                           <>
-                            {(is_seller || is_designer) && (
-                              <>
-                                <a href={`/user/shop/setup`}>
-                                  <button
-                                    type="button"
-                                    className="btn-shop btn"
-                                  >
-                                    <BsShopWindow size={23} />{" "}
-                                    <span className="ms-2">Shop Manager</span>
-                                  </button>
-                                </a>
-                              </>
-                            )}
+                            <a
+                              href={`${
+                                is_designer == 1
+                                  ? "/user/center/calendar"
+                                  : "/user/center/products"
+                              }`}
+                            >
+                              <button type="button" className="btn-shop btn">
+                                <BsShopWindow size={23} />{" "}
+                                <span className="ms-2">Shop Manager</span>
+                              </button>
+                            </a>
                           </>
-                        ) : (
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        {(is_seller || is_designer) && (
                           <>
-                            {(is_seller || is_designer) && (
-                              <>
-                                <a
-                                  href={`${
-                                    is_designer == 1
-                                      ? "/user/center/calendar"
-                                      : "/user/center/products"
-                                  }`}
-                                >
-                                  <button
-                                    type="button"
-                                    className="btn-shop btn"
-                                  >
-                                    <BsShopWindow size={23} />{" "}
-                                    <span className="ms-2">Shop Manager</span>
-                                  </button>
-                                </a>
-                              </>
-                            )}
+                            <a href={`/user/shop/setup`}>
+                              <button type="button" className="btn-shop btn">
+                                <BsShopWindow size={23} />{" "}
+                                <span className="ms-2">Set up Shop</span>
+                              </button>
+                            </a>
                           </>
                         )}
                       </>

@@ -59,7 +59,7 @@ const ProfileCompleteness = () => {
     "socialDone",
     "measurementDone",
   ]);
-  const currentUser = useSelector((state) => state.user.user.email);
+  const currentUser = useSelector((state) => state?.user?.user?.email);
   const currentStoreUser = useSelector((state) => state.user.user);
 
   const token = cookies.token;

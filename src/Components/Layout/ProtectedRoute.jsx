@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const ProtectedRoute = ({ children }) => {
-  const isLoggedIn = useSelector((state) => state.user.user.email);
+  const isLoggedIn = useSelector((state) => state?.user?.user?.email);
   if (!isLoggedIn) {
     // toast.error("You need to login to access this page");
     return (

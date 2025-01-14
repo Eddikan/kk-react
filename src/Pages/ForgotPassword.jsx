@@ -23,7 +23,7 @@ const ForgotPassword = () => {
   );
   const [submitLoading, setSubmitLoading] = useState(false);
 
-  const currentUser = useSelector((state) => state.user.user.email);
+  const currentUser = useSelector((state) => state.user?.user?.email);
 
   const postForgotPassword = async (data) => {
     return await axios.post(
