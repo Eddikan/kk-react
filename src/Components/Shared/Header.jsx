@@ -56,8 +56,8 @@ const Header = () => {
   let query = useQuery();
   const currenStoreUser = useSelector((state) => state.user.user);
   const currentUser = useSelector((state) => state.user?.user?.email);
-  const is_seller = currenStoreUser.type == "seller" ? true : false;
-  const is_designer = currenStoreUser.type == "designer" ? true : false;
+  const is_seller = currenStoreUser?.type == "seller" ? true : false;
+  const is_designer = currenStoreUser?.type == "designer" ? true : false;
   const headerSearch = query.get("search");
   const headerType = query.get("type");
 
@@ -116,7 +116,7 @@ const Header = () => {
   const token = cookies.token;
   const userDetails = cookies.userDetails;
   const userRole = cookies.userRole;
-  const isLoggedIn = cookies.isLoggedIn;
+  const isLoggedIn = currentUser;
   const tempCart = cookies.tempCart;
   const tempFavorites = cookies.tempFavorites;
   const getNotifications = async () => {

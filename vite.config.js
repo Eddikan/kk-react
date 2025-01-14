@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig,loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import legacy from "@vitejs/plugin-legacy";
 import { VitePWA } from "vite-plugin-pwa";
@@ -9,7 +9,11 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 
-export default defineConfig({
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, __dirname); // Load environment variables with the correct path
+  console.log('VITE_PWA_ENABLED:', env.VITE_PWA_ENABLED);
+
+  return {
   plugins: [
     react(),
     legacy({
@@ -41,6 +45,9 @@ export default defineConfig({
         theme_color: "#000000",
         background_color: "#ffffff",
       },
+      devOptions: {
+        enabled: env.VITE_PWA_ENABLED === "true", // Correct use of environment variable
+         },
       workbox: {
         runtimeCaching: [
           {
@@ -70,4 +77,5 @@ export default defineConfig({
       services: path.resolve(__dirname, "./src/services"),
     },
   },
+}
 });
