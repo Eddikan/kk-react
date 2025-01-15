@@ -4,6 +4,8 @@ import localforage from "localforage";
 import { combineReducers } from "redux";
 import authReducer from "./slices/authSlice";
 import userReducer from "./slices/userSlice";
+import miscReducer from "./slices/miscSlice";
+
 import designerReducer from "./slices/designersSlice";
 import { designersApi } from "./api/designersApi";
 import { fabricsApi } from "./api/GetFabricsData";
@@ -49,6 +51,7 @@ const rootReducer = (state, action) => {
     auth: authReducer,
     user: userReducer,
     designers: designerReducer,
+    misc: miscReducer,
     [designersApi.reducerPath]: designersApi.reducer,
     [fabricsApi.reducerPath]: fabricsApi.reducer,
     [wishlistApi.reducerPath]: wishlistApi.reducer,

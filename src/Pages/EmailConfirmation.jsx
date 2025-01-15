@@ -63,7 +63,7 @@ const EmailConfirmation = () => {
       }
       setTimeout(() => {
         navigate("/login");
-      }, 7000);
+      }, 3000);
     } catch (error) {
       console.log("errror", error);
       const errors = error.response.data.errors;

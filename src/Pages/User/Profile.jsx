@@ -1,12 +1,5 @@
 import Layout from "Components/Layout/Layout";
-import {
-  Container,
-  Row,
-  Col,
-  Button,
-  Modal,
-  Card,
-} from "react-bootstrap";
+import { Container, Row, Col, Button, Modal, Card } from "react-bootstrap";
 import "Assets/styles/User/Profile/style.css";
 import UserPlaceholder from "Assets/images/user.png";
 import Loading from "Assets/images/loading.gif";
@@ -15,7 +8,7 @@ import AdminPortfolio from "Components/Shared/Admin/AdminPortfolioGrid";
 import AdminFabrics from "Components/Shared/Admin/AdminFabricsGrid";
 import LoadingPage from "Components/Shared/LoadingPage";
 import { GoPencil } from "react-icons/go";
-import { IoStorefrontOutline, } from "react-icons/io5";
+import { IoStorefrontOutline } from "react-icons/io5";
 import MyCalendar from "Components/Shared/MyCalendar";
 import BodyMeasurement from "Components/Shared/BodyMeasurement";
 import { MdVerified } from "react-icons/md";
@@ -51,19 +44,18 @@ const Profile = () => {
     activeTabGroup,
 
     currentUser,
-  
+
     hiddenFileInputImg,
     navigate,
-  
+
     toggleverificationIDShow,
-   
+
     handleClickImg,
     toggleSetupShopShow,
     handleChangeImg,
 
     setActiveTabGroup,
     setActiveTab,
-   
   } = useProfile();
   return (
     <Layout>
@@ -169,7 +161,9 @@ const Profile = () => {
                         user?.type == "designer_and_seller" ? (
                           <Button
                             id="profile-setup-shop"
-                            onClick={toggleSetupShopShow}
+                            onClick={() => {
+                              navigate("/user/shop/setup");
+                            }}
                             className="bg-white bg-white-hover text-black-hover border-gold-hover text-black"
                             type="button"
                           >
@@ -854,7 +848,6 @@ const Profile = () => {
         </section>
       )}
 
-     
       {/* Setup Shop  */}
       <Modal
         show={setupShopShow}
@@ -959,7 +952,6 @@ const Profile = () => {
           </Container>
         </Modal.Body>
       </Modal>
-    
     </Layout>
   );
 };

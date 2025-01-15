@@ -37,7 +37,7 @@ export const queryService = api.injectEndpoints({
     }),
 
     getDesigners: builder.query({
-      query: ({  search = "", country = "" }) =>
+      query: ({ search = "", country = "" }) =>
         `designers?search=${search}&country=${country}`,
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
@@ -50,8 +50,27 @@ export const queryService = api.injectEndpoints({
         }
       },
     }),
+    getTimeZones: builder.query({
+      query: () => `/timezones`,
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          console.log("timezones is query", data);
+          if (data.success) {
+            dispatch({ type: "misc/setTimeZones", payload: data.data });
+          }
+        } catch (error) {
+          console.log("error", error);
+          toast.error("Failed to fetch user details. Please try again.");
+        }
+      },
+    }),
   }),
 });
 
-export const { useGetProfileQuery, useGetUserByIdQuery, useGetDesignersQuery } =
-  queryService;
+export const {
+  useGetProfileQuery,
+  useGetUserByIdQuery,
+  useGetDesignersQuery,
+  useGetTimeZonesQuery,
+} = queryService;

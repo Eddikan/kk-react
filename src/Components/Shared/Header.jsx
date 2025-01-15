@@ -427,13 +427,13 @@ const Header = () => {
           <Row>
             <Col lg="6">
               <div className="banner-menu d-flex justify-content-start">
-                <a
+                <Link
                   className="banner-item px-3"
-                  href="javascript:void(0)"
+                  to="/user/shop/setup"
                   // onClick={() => setSetupShopShow(!setupShopShow)}
                 >
                   Set Up Shop
-                </a>
+                </Link>
                 <p className="mb-0 text-white">|</p>
                 <a
                   className="banner-item px-3"
@@ -852,12 +852,12 @@ const Header = () => {
                       <>
                         {(is_seller || is_designer) && (
                           <>
-                            <a href={`/user/shop/setup`}>
+                            <Link to={`/user/shop/setup`}>
                               <button type="button" className="btn-shop btn">
                                 <BsShopWindow size={23} />{" "}
                                 <span className="ms-2">Set up Shop</span>
                               </button>
-                            </a>
+                            </Link>
                           </>
                         )}
                       </>
