@@ -1,278 +1,342 @@
-import React, { useEffect, useState } from 'react';
-import Layout from 'Components/Layout/Layout';
-import { Container, Row, Col, Button, Card } from 'react-bootstrap';
-import { useCookies } from 'react-cookie';
-import toast from 'react-hot-toast';
-import ImageDragAndDrop from 'Components/Shared/ImageDragAndDrop';
-import Form from 'react-bootstrap/Form';
-import FormControl from 'react-bootstrap/FormControl';
-import { HiOutlineArrowLongRight } from "react-icons/hi2";
+import { useEffect, useState } from "react";
+import { Row, Col, Button, Card } from "react-bootstrap";
+import toast from "react-hot-toast";
+import ImageDragAndDrop from "Components/Shared/ImageDragAndDrop";
+import Form from "react-bootstrap/Form";
+import FormControl from "react-bootstrap/FormControl";
 import { TagsInput } from "react-tag-input-component";
-import axios from 'axios';
+import { useCreateDesignMutation } from "store/api/mutations";
 
 const initialPortfolioData = Object.freeze({
-    image_urls: [],
-    name: '',
-    description: '',
-    season: '',
-    categories: '',
-    collection_type: 'Regular',
+  name: "",
+  description: "",
+  collection_type: "Regular",
 });
 
 const NewPortfolioShopManager = (props) => {
-    const size = props.size;
-    const withDraft = props.withDraft;
+  const [createDesign, { isLoading: isCreating }] = useCreateDesignMutation();
 
-    const [portfolioData, setPortfolioData] = useState(initialPortfolioData);
-    const [portfolioLoading, setPortfolioLoading] = useState(false);
-    const [portfolioDraftLoading, setPortfolioDraftLoading] = useState(false);
-    const [reloadCount, setReloadCount] = useState(0);
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
-    const [colors, setColors] = useState([]);
-    const [tags, setTags] = useState([]);
-    const [materials, setMaterials] = useState([]);
-    const [categories, setCategories] = useState([])
+  const size = props.size;
+  const [portfolioData, setPortfolioData] = useState(initialPortfolioData);
+  const [colors, setColors] = useState([]);
+  const [seasons, setSeasons] = useState([]);
 
-    const currentUser = cookies.currentUser;
-    const current_user_id = cookies.currentUser;
-    const token = cookies.token;
+  const [tags, setTags] = useState([]);
+  const [genders, setGenders] = useState([]);
 
-    const reloadPage = (e) => {
-        props.onReloadPage(e);
-    };
-
-    const formSuccess = (e) => {
-        props.onSuccess(e);
-    }
-
-    const handleCancel = () => {
-        props.onCancel(true);
-    }
-
-    const savePortfolioItems = (e) => {
-        props.onSave(e);
-    }
-
-    const handleChange = (e) => {
-        setPortfolioData({
-            ...portfolioData,
-            [e.target.name]: e.target.value,
-        })
-    };
-
-    const handleImagesChange = (images) => {
-        // Use the images as needed in the parent component (e.g., for uploading)
-        setPortfolioData({
-            ...portfolioData,
-            image_urls: images,
-        });
-    };
-
-    useEffect(() => {
-        setPortfolioData({
-            ...portfolioData,
-            user_id: currentUser,
-        });
-    }, [reloadCount]);
-
-
-    async function PortfolioSubmit(e) {
-        e.preventDefault();
-
-        if (portfolioData.image_urls == ''
-        ) {
-            toast.error('Please upload atleast one photo!');
-        } 
-        else if (portfolioData.name == '' ||
-                portfolioData.description == '' ||
-                categories.length == 0 ||
-                portfolioData.season == ''
-        ) {
-            toast.error('Kindly complete the fields marked as required!');
-        } else {
-
-        if (portfolioData.image_urls) {
-            setPortfolioLoading(true);
-            axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio_item?current_user_id=' + current_user_id + '&token=' + token, {...portfolioData, colors: colors, tags: tags, materials: materials, status: 'Active' }).then((response) => {
-                const success = response.data.status;
-                if(success == 'Success') {
-                    toast.success('Design added successfully!');
-                    setPortfolioLoading(false);
-                    props.onCancel(true);
-                    props.onSuccess(true)
-                } else {
-                    toast.error('An error occured. Please try again or contact the administrator.');
-                    setPortfolioLoading(false);
-                }
-            }).catch(() => {
-                toast.error('An error occured. Please try again or contact the administrator.');
-                setPortfolioLoading(false);
-            });
-        } else {
-            toast.error('Please upload design images!');
-    }
-}
-    };
-
-    return (
-            <Row>
-                <Col lg='12'>
-                    <Card className='mb-3'>
-                        <Card.Body className='bg-lgray'>
-                            <ImageDragAndDrop type="portfolio" onImagesChange={handleImagesChange} size={size} />
-                        </Card.Body>
-                    </Card>
-                </Col>
-                <Col lg='12'>
-                    <Card>
-                        <Card.Body className='bg-lgray'>
-                            <Form.Group className='mb-4 mt-2'>
-                                <Form.Label>Name<span className='text-danger'>*</span></Form.Label>
-                                <FormControl 
-                                type='text' 
-                                name='name' 
-                                value={portfolioData.name} 
-                                className='mr-sm-2' 
-                                onChange={handleChange} 
-                                required 
-                                />
-                            </Form.Group>
-
-                            <Form.Group className='my-4'>
-                                <Form.Label>Description <span className='text-danger'>*</span></Form.Label>
-                                <FormControl as="textarea"
-                                    name="description"
-                                    rows={3} // You can adjust the number of rows as needed
-                                    value={portfolioData.description}
-                                    placeholder=''
-                                    onChange={handleChange}
-                                    required
-                                    />
-                            </Form.Group>
-
-                            <Row>
-                                <Col lg="6">
-                                <Form.Group className='my-4'>
-                                <Form.Label>Categories<span className='text-danger'>*</span></Form.Label>
-                                <TagsInput
-                                    value={categories}
-                                    onChange={setCategories}
-                                    name="categories"
-                                    className="form-control"
-                                    onBlur={(e) => {
-                                        const value = e.target.value;
-                                        if (!categories.includes(value) && value !== "") {
-                                            setCategories([...categories, value]);
-                                            e.target.value = "";
-                                        }
-                                    }}
-                                />
-                            </Form.Group>
-                                </Col>
-
-                                <Col lg="6">
-
-                                <Form.Group className='my-4'>
-                                <Form.Label>Season<span className='text-danger'>*</span></Form.Label>
-                                <FormControl type='text' name='season' value={portfolioData.season} className='mr-sm-2' onChange={handleChange} required placeholder='' />
-                            </Form.Group>
-                                </Col>
-
-                                <Col lg="6">
-                                <Form.Group className='my-4'>
-                                <Form.Label>Colors</Form.Label>
-                                <TagsInput
-                                    value={colors}
-                                    onChange={setColors}
-                                    name="colors"
-                                    className="form-control"
-                                    onBlur={(e) => {
-                                        const value = e.target.value;
-                                        if (!colors.includes(value) && value !== "") {
-                                            setColors([...colors, value]);
-                                            e.target.value = "";
-                                        }
-                                    }}
-                                />
-                            </Form.Group>
-                                </Col>
-
-                                <Col lg="6">
-                                <Form.Group className='my-4'>
-                                <Form.Label>Materials</Form.Label>
-                                <TagsInput
-                                    value={materials}
-                                    onChange={setMaterials}
-                                    name="materials"
-                                    className="form-control"
-                                    onBlur={(e) => {
-                                        const value = e.target.value;
-                                        if (!materials.includes(value) && value !== "") {
-                                            setMaterials([...materials, value]);
-                                            e.target.value = "";
-                                        }
-                                    }}
-                                />
-                            </Form.Group>
-                                </Col>
-                            </Row>
-                            
-                            <Form.Group className='my-4'>
-                                <Form.Label>Tags</Form.Label>
-                                <TagsInput
-                                    value={tags}
-                                    onChange={setTags}
-                                    name="tags"
-                                    className="form-control"
-                                    onBlur={(e) => {
-                                        const value = e.target.value;
-                                        if (!tags.includes(value) && value !== "") {
-                                            setTags([...tags, value]);
-                                            e.target.value = "";
-                                        }
-                                    }}
-                                />
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Label>Collections</Form.Label>
-                                <Row className="mt-1">
-                                    <Form.Group as={Col} lg={3}>
-                                        <Form.Check
-                                            className="cursor-pointer"
-                                            type="radio"
-                                            label="Regular"
-                                            name="collection_type"
-                                            value="Regular"
-                                            checked={portfolioData.collection_type === 'Regular'}
-                                            onChange={handleChange}
-                                        />
-                                    </Form.Group>
-                                    <Form.Group as={Col} lg={2}>
-                                        <Form.Check
-                                            className="cursor-pointer"
-                                            type="radio"
-                                            label="Limited"
-                                            name="collection_type"
-                                            value="Limited"
-                                            checked={portfolioData.collection_type === 'Limited'}
-                                            onChange={handleChange}
-                                        />
-                                    </Form.Group>
-                                </Row>
-                            </Form.Group>
-                        </Card.Body>
-                    </Card>
-                </Col>
-                <Col lg="12" className="text-right mt-4">
-                    <Button className='btn-back me-3' type="button" onClick={handleCancel}>Cancel</Button>
-                    {portfolioLoading ?
-                        <Button className='btn-save btn' type="button">{size == "small" ? "Uploading..." : "Saving..." }</Button>
-                        :
-                        <Button className='btn-save btn' type="button" onClick={PortfolioSubmit}>{size == "small" ? "Upload" : "Save" }</Button>
-                    }
-                </Col>
-            </Row>
+  const [materials, setMaterials] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const handleGenderChange = (e) => {
+    const value = e.target.value;
+    setGenders((prevState) =>
+      prevState.includes(value)
+        ? prevState.filter((g) => g !== value)
+        : [...prevState, value]
     );
+  };
+  const handleCancel = () => {
+    props.onCancel(true);
+  };
+
+  const handleChange = (e) => {
+    setPortfolioData({
+      ...portfolioData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const convertToFormData = (data) => {
+    const formData = new FormData();
+
+    Object.keys(data).forEach((key) => {
+      if (Array.isArray(data[key])) {
+        // Append each item with an index (e.g., image[0], image[1])
+        data[key].forEach((item, index) => {
+          formData.append(`${key}[${index}]`, item);
+        });
+      } else {
+        // Append single values directly
+        formData.append(key, data[key]);
+      }
+    });
+
+    return formData;
+  };
+  async function PortfolioSubmit(e) {
+    e.preventDefault();
+
+    if (!images.length) {
+      toast.error("Please upload atleast one photo!");
+      return;
+    } else if (
+      portfolioData.name == "" ||
+      portfolioData.description == "" ||
+      categories.length == 0
+    ) {
+      toast.error("Kindly complete the fields marked as required!");
+      return;
+    } else {
+      const payload = {
+        ...portfolioData,
+        colors: colors,
+        tags: tags,
+        categories,
+        genders,
+        materials: materials,
+        seasons,
+        images,
+        status: "Active",
+      };
+
+      console.log("payload", { ...payload });
+      // Convert JSON object to FormData
+      const formData = convertToFormData(payload);
+      for (let pair of formData.entries()) {
+        console.log(pair[0] + ": " + pair[1]);
+      }
+      const res = await createDesign(formData).unwrap();
+      if (res.success) {
+        toast.success(res.message);
+        props.onCancel(true);
+        props.onSuccess(true);
+      }
+    }
+  }
+  const [images, setImages] = useState([]);
+  useEffect(() => {
+    console.log("images", images);
+  }, [images]);
+  return (
+    <Row>
+      <Col lg="12">
+        <Card className="mb-3">
+          <Card.Body className="bg-lgray">
+            <ImageDragAndDrop
+              type="portfolio"
+              setImages={setImages}
+              size={size}
+            />
+          </Card.Body>
+        </Card>
+      </Col>
+      <Col lg="12">
+        <Card>
+          <Card.Body className="bg-lgray">
+            <Form.Group className="mb-4 mt-2">
+              <Form.Label>
+                Name<span className="text-danger">*</span>
+              </Form.Label>
+              <FormControl
+                type="text"
+                name="name"
+                value={portfolioData.name}
+                className="mr-sm-2"
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
+
+            <Form.Group className="my-4">
+              <Form.Label>
+                Description <span className="text-danger">*</span>
+              </Form.Label>
+              <FormControl
+                as="textarea"
+                name="description"
+                rows={3} // You can adjust the number of rows as needed
+                value={portfolioData.description}
+                placeholder=""
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
+
+            <Row>
+              <Col lg="6">
+                <Form.Group className="my-4">
+                  <Form.Label>
+                    Categories<span className="text-danger">*</span>
+                  </Form.Label>
+                  <TagsInput
+                    value={categories}
+                    onChange={setCategories}
+                    name="categories"
+                    className="form-control"
+                    onBlur={(e) => {
+                      const value = e.target.value;
+                      if (!categories.includes(value) && value !== "") {
+                        setCategories([...categories, value]);
+                        e.target.value = "";
+                      }
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+
+              <Col lg="6">
+                <Form.Group className="my-4">
+                  <Form.Label>
+                    Season<span className="text-danger">*</span>
+                  </Form.Label>
+                  <TagsInput
+                    value={seasons}
+                    onChange={setSeasons}
+                    name="seasons"
+                    className="form-control"
+                    onBlur={(e) => {
+                      const value = e.target.value;
+                      if (!seasons.includes(value) && value !== "") {
+                        setSeasons([...seasons, value]);
+                        e.target.value = "";
+                      }
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+
+              <Col lg="6">
+                <Form.Group className="my-4">
+                  <Form.Label>Colors</Form.Label>
+                  <TagsInput
+                    value={colors}
+                    onChange={setColors}
+                    name="colors"
+                    className="form-control"
+                    onBlur={(e) => {
+                      const value = e.target.value;
+                      if (!colors.includes(value) && value !== "") {
+                        setColors([...colors, value]);
+                        e.target.value = "";
+                      }
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+
+              <Col lg="6">
+                <Form.Group className="my-4">
+                  <Form.Label>Materials</Form.Label>
+                  <TagsInput
+                    value={materials}
+                    onChange={setMaterials}
+                    name="materials"
+                    className="form-control"
+                    onBlur={(e) => {
+                      const value = e.target.value;
+                      if (!materials.includes(value) && value !== "") {
+                        setMaterials([...materials, value]);
+                        e.target.value = "";
+                      }
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+
+            <Form.Group className="my-4">
+              <Form.Label>Tags</Form.Label>
+              <TagsInput
+                value={tags}
+                onChange={setTags}
+                name="tags"
+                className="form-control"
+                onBlur={(e) => {
+                  const value = e.target.value;
+                  if (!tags.includes(value) && value !== "") {
+                    setTags([...tags, value]);
+                    e.target.value = "";
+                  }
+                }}
+              />
+            </Form.Group>
+            <Form.Group className="my-4">
+              <Form.Label>Gender</Form.Label>
+              <Row className="mt-1">
+                <Form.Group as={Col} lg={4}>
+                  <Form.Check
+                    className="cursor-pointer"
+                    type="checkbox"
+                    label="Male"
+                    name="genders"
+                    value="Male"
+                    checked={genders.includes("Male")}
+                    onChange={handleGenderChange}
+                  />
+                </Form.Group>
+                <Form.Group as={Col} lg={4}>
+                  <Form.Check
+                    className="cursor-pointer"
+                    type="checkbox"
+                    label="Female"
+                    name="genders"
+                    value="Female"
+                    checked={genders.includes("Female")}
+                    onChange={handleGenderChange}
+                  />
+                </Form.Group>
+                <Form.Group as={Col} lg={4}>
+                  <Form.Check
+                    className="cursor-pointer"
+                    type="checkbox"
+                    label="Other"
+                    name="genders"
+                    value="Other"
+                    checked={genders.includes("Other")}
+                    onChange={handleGenderChange}
+                  />
+                </Form.Group>
+              </Row>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Collections</Form.Label>
+              <Row className="mt-1">
+                <Form.Group as={Col} lg={3}>
+                  <Form.Check
+                    className="cursor-pointer"
+                    type="radio"
+                    label="Regular"
+                    name="collection_type"
+                    value="Regular"
+                    checked={portfolioData.collection_type === "Regular"}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+                <Form.Group as={Col} lg={2}>
+                  <Form.Check
+                    className="cursor-pointer"
+                    type="radio"
+                    label="Limited"
+                    name="collection_type"
+                    value="Limited"
+                    checked={portfolioData.collection_type === "Limited"}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+              </Row>
+            </Form.Group>
+          </Card.Body>
+        </Card>
+      </Col>
+      <Col lg="12" className="text-right mt-4">
+        <Button className="btn-back me-3" type="button" onClick={handleCancel}>
+          Cancel
+        </Button>
+        {isCreating ? (
+          <Button className="btn-save btn" type="button">
+            {size == "small" ? "Uploading..." : "Saving..."}
+          </Button>
+        ) : (
+          <Button
+            className="btn-save btn"
+            type="button"
+            onClick={PortfolioSubmit}
+          >
+            {size == "small" ? "Upload" : "Save"}
+          </Button>
+        )}
+      </Col>
+    </Row>
+  );
 };
 
 export default NewPortfolioShopManager;

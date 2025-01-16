@@ -23,7 +23,6 @@ const NewPortfolio = (props) => {
     const withDraft = props.withDraft;
 
     // Category Search
-    const [categorySearchTerm, setCategorySearchTerm] = useState('');
     const [categoryIds, setCategoryIds] = useState([]);
     const [reloadCategoryCount, setReloadCategoryCount] = useState(1);
 
@@ -98,25 +97,7 @@ const NewPortfolio = (props) => {
         });
     };
 
-    async function addCategory(e) {
-        e.preventDefault();
-        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'portfolio-item-categories?current_user_id=' + current_user_id + '&token=' + token, { name: categorySearchTerm, user_id: currentUser }).then((response) => {
-            const success = response.data.status;
-            if(success == 'Success') {
-                const category = response.data.data;
-                getCategories(category.id);
-                setCategorySearchTerm('');
-            } else {
-                toast.error('An error occured. Please try again or contact the administrator.');
-                setPortfolioDraftLoading(false);
-                formSuccess(false);
-            }
-        }).catch(() => {
-            toast.error('An error occured. Please try again or contact the administrator.');
-            setPortfolioDraftLoading(false);
-            formSuccess(false);
-        });
-    };
+  
 
     async function PortfolioSubmit(e) {
         e.preventDefault();
@@ -185,9 +166,7 @@ const NewPortfolio = (props) => {
         }
     };
 
-    const handleRemoveCategory = (categoryId) => {
-        setCategoryIds(categoryIds.filter(id => id !== categoryId));
-    };
+ 
 
     const handleGenderChange = (e) => {
         const value = e.target.value;
@@ -234,7 +213,7 @@ const NewPortfolio = (props) => {
                                     {categories && categories.length > 0 ?
                                         <>          
                                             {categories.map(({ name, id }) => (
-                                                <Form.Group as={Col} lg={6} className="d-flex mt-1">
+                                                <Form.Group as={Col} lg={6} className="d-flex mt-1" key={id}>
                                                     <Form.Check
                                                         className="cursor-pointer me-2"
                                                         type="checkbox"

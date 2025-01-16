@@ -65,9 +65,13 @@ export const mutationService = api.injectEndpoints({
         body: payload,
       }),
     }),
-
-
-    
+    createDesign: builder.mutation({
+      query: (payload) => ({
+        url: `user/designs/create`,
+        method: "POST",
+        body: payload,
+      }),
+    }),
   }),
 });
 
@@ -81,4 +85,5 @@ export const {
   useRegenerate2FAMutation,
   useTwoFALoginMutation,
   useUpdateUserAvailabilityMutation,
+  useCreateDesignMutation
 } = mutationService;
