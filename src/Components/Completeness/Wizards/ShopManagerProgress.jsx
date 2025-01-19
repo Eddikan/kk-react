@@ -70,7 +70,7 @@ const ProfileProgress = ({ progress }) => {
                     }
                 </div>
 
-                <div className='w-100 step-container'>
+                {/* <div className='w-100 step-container'>
                     {progress == 3 ?
                         <>
                             <div className='d-flex align-items-center active'>
@@ -102,18 +102,10 @@ const ProfileProgress = ({ progress }) => {
                             </div>
                         </>
                     }
-                </div>
+                </div> */}
                 
                 <div className='progress-lines'>
-                    {progress == 2 || progress == 3 ?
-                        <>
-                            <div className='progress-line line-active'></div>
-                        </>
-                    :
-                        <>
-                            <div className='progress-line'></div>
-                        </>
-                    }
+                   
                     {progress == 3 ?
                         <>
                             <div className='progress-line line-active'></div>
