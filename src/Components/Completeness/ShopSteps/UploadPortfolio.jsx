@@ -9,12 +9,12 @@ import NewPortfolioShopManager from "Components/Forms/Portolio/NewPortfolioShopM
 import GetUserPortfolioData from "Utils/GetUserPortfolioData";
 import Loading from "Components/Shared/Loading";
 import PlaceholderImage from "Assets/images/placeholders/image.png";
-
+import { useSelector } from "react-redux";
+import { selectMyDesigners } from "store/slices/designersSlice";
 const UploadPortfolio = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
   const [reloadCount, setReloadCount] = useState(0);
   const [uploadFileShow, setUploadFileShow] = useState(false);
   const [portfolio, setPortfolio] = useState([]);
-  const [portfolioLoading, setPortfolioLoading] = useState(false);
   const [portfolioItems, setPortfolioItems] = useState([]);
   const [portfolioDesigner, setPortfolioDesigner] = useState([]);
   const tagsInputRef = useRef(null);
@@ -28,27 +28,8 @@ const UploadPortfolio = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
   ]);
 
   const currentUser = cookies.currentUser;
+  const myDesigns = useSelector(selectMyDesigners);
 
-  const fetchData = async (e) => {
-    try {
-      const portfolioData = await GetUserPortfolioData(e);
-      if (portfolioData) {
-        setPortfolio(portfolioData);
-        setPortfolioDesigner(portfolioData.user);
-      } else {
-        toast.error(
-          "An error occured. Please try again or contact the administrator."
-        );
-      }
-      // Update state or perform other logic with userData
-    } catch (error) {
-      console.log("error", error);
-      toast.error(
-        "An error occured. Please try again or contact the administrator."
-      );
-      // Handle the error, if needed
-    }
-  };
 
   const savePortfolioItems = (e) => {
     if (portfolioItems && portfolioItems.length > 0) {
@@ -78,11 +59,6 @@ const UploadPortfolio = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
   };
 
   useEffect(() => {
-    fetchData(currentUser);
-
-    // if (user){
-    //     setPortfolioItems(user.portfolio_items);
-    // }
 
     const handleDocumentClick = (event) => {
       // Check if the click is outside the TagsInput component
@@ -113,7 +89,7 @@ const UploadPortfolio = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
         <Col lg="12">
           <Card className="mb-4 border-white">
             <CardBody className="p-0 pt-3 pb-3">
-              {portfolioLoading ? (
+              {!myDesigns.length ? (
                 <>
                   <p className="text-center mb-3 mt-3">
                     <Loading className="bg-white loading-height" />
@@ -121,16 +97,13 @@ const UploadPortfolio = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
                 </>
               ) : (
                 <>
-                  {portfolio && portfolio.length > 0 ? (
+                  {myDesigns && myDesigns.length > 0 ? (
                     <>
                       <Row className="portfolio-row">
-                        {portfolio.map((object, index) => {
+                        {myDesigns.map((object, index) => {
                           let portfolioImage = PlaceholderImage;
-                          if (object.image_urls?.[0]?.image_url) {
-                            portfolioImage =
-                              import.meta.env.VITE_REACT_APP_STORAGE_URL +
-                              "portfolio/" +
-                              object.image_urls[0].image_url;
+                          if (object.media?.[0]?.url) {
+                            portfolioImage = object.media?.[0]?.url;
                           }
                           return (
                             <Col
@@ -164,7 +137,7 @@ const UploadPortfolio = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
                                   </a>
                                 </div>
                               </div>
-                        
+
                               <div className="margin-img ellipsis-portfolio">
                                 <span className="text-black text-decoration-none portfolio-name-img">
                                   {object.name ?? "-"}

@@ -29,7 +29,7 @@ const TimezoneDropdown = ({ setSelectedTimezone, selectedTimezone }) => {
         Select a Timezone
       </label>
       <div className="tw-relative tw-w-full tw-max-w-sm">
-        {isTimeZonesLoading ? (
+        {isTimeZonesLoading && !storeTimeZones ? (
           <Spinner />
         ) : (
           <select

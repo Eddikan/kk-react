@@ -13,7 +13,6 @@ import GoBack from 'Components/Shared/GoBack';
 import axios from "axios";
 import toast from 'react-hot-toast';
 import LayoutSellerCenter from 'Components/Layout/LayoutSellerCenter';
-import { useParams } from 'react-router-dom';
 
 
 const initialBusinessHours = {
@@ -21,9 +20,7 @@ const initialBusinessHours = {
     end: ''
 };
 
-const initialAppointments = {
-    title: '',
-};
+
 
 const Calendar = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
@@ -52,11 +49,9 @@ const Calendar = (props) => {
     const [thursdayHoursCopyFormData, setThursdayHoursCopyFormData] = useState([]);
     const [fridayHoursCopyFormData, setFridayHoursCopyFormData] = useState([]);
     const [saturdayHoursCopyFormData, setSaturdayHoursCopyFormData] = useState([]);
-    const [appointmentFormData, setAppointmentFormData] = useState(initialAppointments);
     const [businessHoursFormData, setBusinessHoursFormData] = useState([initialBusinessHours]);
     const [calendarAppointment, setCalendarAppointment] = useState([]);
     const [times, setTimes] = useState([]);
-    const [availability, setAvailability] = useState([]);
     const [currentTimezone, setCurrentTimezone] = useState(null);
     const [noAvailableHours, setNoAvailableHors] = useState(false);
 
@@ -80,13 +75,6 @@ const Calendar = (props) => {
         return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/availability/' + designerId);
     };
 
-    const handleChangeAppointment = (e) => {
-        const { name, value } = e.target;
-        setAppointmentFormData({
-            ...appointmentFormData,
-            [name]: value,
-        });
-    }
 
     const handleChangeTimeSunday = (e, index) => {
         const { name, value } = e.target;
@@ -302,26 +290,12 @@ const Calendar = (props) => {
                 }
             })
             .catch((error) => {
+                console.log(error);
                 toast.error('There has been an error getting the schedules, please try again!');
             });
 
     }
 
-    const handleAppointments = () => {
-        setTimes(prevtimes => [
-            ...prevtimes,
-            initialAppointments
-        ]);
-    }
-
-    const handleRemoveAppointment = (index) => {
-        setTimes((prevtimes) => {
-            const updatedTimes = [...prevtimes];
-            updatedTimes.splice(index, 1);
-
-            return updatedTimes;
-        });
-    }
 
     //* This will add the fields opens at and closes at *//
     const handleAddSundayHours = () => {
@@ -766,6 +740,7 @@ const Calendar = (props) => {
                 }
             })
             .catch((error) => {
+                console.log(error);
                 toast.error('There has been an error getting the appointment, please try again!');
             });
 

@@ -50,8 +50,12 @@ import {
   useGetDesignersFiltersQuery,
 } from "store/api/queries";
 const Header = () => {
-  useGetDesignFiltersQuery();
-  useGetDesignersFiltersQuery();
+  const { refetch: refetchDesignFilters }= useGetDesignFiltersQuery();
+  const { refetch: refetchDesignersFilters }= useGetDesignersFiltersQuery();
+  useEffect(()=>{
+    refetchDesignFilters()
+    refetchDesignersFilters()
+  },[])
   const { logOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();

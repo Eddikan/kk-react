@@ -3,14 +3,10 @@ import { Link } from "react-router-dom";
 import { IoIosCheckmarkCircle } from "react-icons/io";
 import { FiUser } from "react-icons/fi";
 import { FaArrowRightLong } from "react-icons/fa6";
-import { useCookies } from "react-cookie";
 import { useSelector } from "react-redux";
 
 const ThankYouProgress = () => {
-  const [cookies, setCookie, removeCookie] = useCookies([
-    "currentUser",
-    "userDetails",
-  ]);
+
   const userDetails = useSelector((state) => state.user.user);
   const is_seller = userDetails.type == "seller" ? true : false;
   const is_designer = userDetails.type == "designer" ? true : false;

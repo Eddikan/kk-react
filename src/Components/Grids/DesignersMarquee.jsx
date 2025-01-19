@@ -1,7 +1,6 @@
 import "react-multi-carousel/lib/styles.css";
 import Loading from "Components/Shared/Loading";
 import Marquee from "react-fast-marquee";
-import { useCookies } from "react-cookie";
 import { selectDesigners } from "store/slices/designersSlice";
 import { useGetDesignersQuery } from "store/api/queries";
 import { useSelector } from "react-redux";
@@ -45,14 +44,13 @@ const ColorGenerator = ({ name, lastName = "" }) => {
   );
 };
 
-const DesignersMarquee = (props) => {
+const DesignersMarquee = () => {
   const { isLoading: isDesignerLoading, error } = useGetDesignersQuery({
     search: "", 
     country: "", 
   });
   const designers = useSelector(selectDesigners);
   console.log("here component");
-  const [cookies] = useCookies(["currentUser", "token"]);
 
   const toggleGetUser = (e) => {
     // window.location.href = "/designer-profile?user_id=" + e;
@@ -77,10 +75,10 @@ const DesignersMarquee = (props) => {
                     // const userWishlist =
                     //   wishlist_user_ids.includes(currentUser);
                     return (
-                      <>
+                      <div key={index}>
                         {designer?.avatar_secure_url &&
                         designer?.avatar_secure_url != "" ? (
-                          <div key={index} className="marquee-item">
+                          <div  className="marquee-item">
                             <div
                               onClick={() => toggleGetUser(designer.user.id)}
                               className="designer-marquee cursor-pointer"
@@ -99,7 +97,7 @@ const DesignersMarquee = (props) => {
                             lastName={designer?.last_name}
                           />
                         )}
-                      </>
+                      </div>
                     );
                   })}
                 </Marquee>

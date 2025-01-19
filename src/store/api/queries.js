@@ -92,6 +92,26 @@ export const queryService = api.injectEndpoints({
         }
       },
     }),
+    getMyDesigns: builder.query({
+      query: () => `user/designs`,
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+
+          if (data.success) {
+            dispatch({
+              type: "designers/setMyDesigns",
+              payload: data.data,
+            });
+          }
+        } catch (error) {
+          console.log("error", error);
+        }
+      },
+    }),
+
+    
+    
   }),
 });
 
@@ -101,5 +121,6 @@ export const {
   useGetDesignersQuery,
   useGetTimeZonesQuery,
   useGetDesignFiltersQuery,
-  useGetDesignersFiltersQuery
+  useGetDesignersFiltersQuery,
+  useGetMyDesignsQuery
 } = queryService;

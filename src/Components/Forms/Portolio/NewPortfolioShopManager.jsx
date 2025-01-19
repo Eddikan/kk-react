@@ -6,7 +6,11 @@ import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/FormControl";
 import { TagsInput } from "react-tag-input-component";
 import { useCreateDesignMutation } from "store/api/mutations";
-
+import { selectDesignFilters } from "store/slices/designersSlice";
+import { useSelector } from "react-redux";
+import { useGetProfileQuery, useGetMyDesignsQuery } from "store/api/queries";
+import { useGetDesignFiltersQuery } from "store/api/queries";
+import AutocompleteTags from "Components/Forms/TagsWithAutocomplete";
 const initialPortfolioData = Object.freeze({
   name: "",
   description: "",
@@ -14,21 +18,37 @@ const initialPortfolioData = Object.freeze({
 });
 
 const NewPortfolioShopManager = (props) => {
+  const { refetch: refetchUser } = useGetProfileQuery();
+  const { refetch: refetchMyDesigns } = useGetMyDesignsQuery();
+
+  const { refetch: refetchDesignFilters } = useGetDesignFiltersQuery();
+  const refetchCalls = () => {
+    refetchUser();
+    refetchMyDesigns();
+    refetchDesignFilters();
+  };
+  useEffect(() => {
+    refetchCalls();
+  }, []);
+  const designFilters = useSelector(selectDesignFilters);
+  console.log("filters", designFilters);
+  const [categoryIds, setCategoryIds] = useState([]);
+
   const [createDesign, { isLoading: isCreating }] = useCreateDesignMutation();
 
   const size = props.size;
   const [portfolioData, setPortfolioData] = useState(initialPortfolioData);
   const [colors, setColors] = useState([]);
+
   const [seasons, setSeasons] = useState([]);
 
   const [tags, setTags] = useState([]);
   const [genders, setGenders] = useState([]);
 
   const [materials, setMaterials] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const handleGenderChange = (e) => {
-    const value = e.target.value;
-    setGenders((prevState) =>
+  const handleCheckBoxChange = (e, setFunction) => {
+    const value = e;
+    setFunction((prevState) =>
       prevState.includes(value)
         ? prevState.filter((g) => g !== value)
         : [...prevState, value]
@@ -71,7 +91,7 @@ const NewPortfolioShopManager = (props) => {
     } else if (
       portfolioData.name == "" ||
       portfolioData.description == "" ||
-      categories.length == 0
+      categoryIds.length == 0
     ) {
       toast.error("Kindly complete the fields marked as required!");
       return;
@@ -80,7 +100,7 @@ const NewPortfolioShopManager = (props) => {
         ...portfolioData,
         colors: colors,
         tags: tags,
-        categories,
+        categories: categoryIds,
         genders,
         materials: materials,
         seasons,
@@ -96,6 +116,7 @@ const NewPortfolioShopManager = (props) => {
       }
       const res = await createDesign(formData).unwrap();
       if (res.success) {
+        refetchCalls();
         toast.success(res.message);
         props.onCancel(true);
         props.onSuccess(true);
@@ -152,63 +173,102 @@ const NewPortfolioShopManager = (props) => {
             </Form.Group>
 
             <Row>
-              <Col lg="6">
+              <Col lg="12">
                 <Form.Group className="my-4">
-                  <Form.Label>
-                    Categories<span className="text-danger">*</span>
-                  </Form.Label>
-                  <TagsInput
-                    value={categories}
-                    onChange={setCategories}
-                    name="categories"
-                    className="form-control"
-                    onBlur={(e) => {
-                      const value = e.target.value;
-                      if (!categories.includes(value) && value !== "") {
-                        setCategories([...categories, value]);
-                        e.target.value = "";
-                      }
-                    }}
-                  />
+                  <Form.Label>Categories</Form.Label>
+                  <Row className="position-relative">
+                    {designFilters?.categories &&
+                    designFilters?.categories?.length > 0 ? (
+                      <>
+                        {designFilters?.categories?.map(({ name, id }) => (
+                          <Form.Group
+                            as={Col}
+                            lg={3}
+                            className="d-flex mt-1"
+                            key={id}
+                          >
+                            <Form.Check
+                              className="cursor-pointer me-2"
+                              type="checkbox"
+                              checked={categoryIds.includes(id)}
+                              onChange={() =>
+                                handleCheckBoxChange(id, setCategoryIds)
+                              }
+                            />
+                            <span>{name}</span>
+                          </Form.Group>
+                        ))}
+                      </>
+                    ) : null}
+                  </Row>
+                  {/* <TagsInput
+                                    value={categories}
+                                    onChange={setCategories}
+                                    name="categories"
+                                    className="form-control"
+                                    onBlur={(e) => {
+                                        const value = e.target.value;
+                                        if (!categories.includes(value) && value !== "") {
+                                            setCategories([...categories, value]);
+                                            e.target.value = "";
+                                        }
+                                    }}
+                                /> */}
+                </Form.Group>
+              </Col>
+
+              <Col lg="12">
+                <Form.Group className="my-4">
+                  <Form.Label>Season</Form.Label>
+                  <Row className="position-relative">
+                    {designFilters?.seasons &&
+                    designFilters?.seasons?.length > 0 ? (
+                      <>
+                        {designFilters?.seasons?.map((name) => (
+                          <Form.Group
+                            as={Col}
+                            lg={3}
+                            className="d-flex mt-1"
+                            key={name}
+                          >
+                            <Form.Check
+                              className="cursor-pointer me-2"
+                              type="checkbox"
+                              checked={seasons.includes(name)}
+                              onChange={() =>
+                                handleCheckBoxChange(name, setSeasons)
+                              }
+                            />
+                            <span>{name}</span>
+                          </Form.Group>
+                        ))}
+                      </>
+                    ) : null}
+                  </Row>
+                  {/* <TagsInput
+                                    value={categories}
+                                    onChange={setCategories}
+                                    name="categories"
+                                    className="form-control"
+                                    onBlur={(e) => {
+                                        const value = e.target.value;
+                                        if (!categories.includes(value) && value !== "") {
+                                            setCategories([...categories, value]);
+                                            e.target.value = "";
+                                        }
+                                    }}
+                                /> */}
                 </Form.Group>
               </Col>
 
               <Col lg="6">
-                <Form.Group className="my-4">
-                  <Form.Label>
-                    Season<span className="text-danger">*</span>
-                  </Form.Label>
-                  <TagsInput
-                    value={seasons}
-                    onChange={setSeasons}
-                    name="seasons"
-                    className="form-control"
-                    onBlur={(e) => {
-                      const value = e.target.value;
-                      if (!seasons.includes(value) && value !== "") {
-                        setSeasons([...seasons, value]);
-                        e.target.value = "";
-                      }
-                    }}
-                  />
-                </Form.Group>
-              </Col>
-
-              <Col lg="6">
-                <Form.Group className="my-4">
+                <Form.Group className="my-4 relative">
                   <Form.Label>Colors</Form.Label>
-                  <TagsInput
+                  <AutocompleteTags
                     value={colors}
                     onChange={setColors}
                     name="colors"
-                    className="form-control"
-                    onBlur={(e) => {
-                      const value = e.target.value;
-                      if (!colors.includes(value) && value !== "") {
-                        setColors([...colors, value]);
-                        e.target.value = "";
-                      }
-                    }}
+                    suggestions={designFilters?.colors}
                   />
                 </Form.Group>
               </Col>
@@ -216,18 +276,11 @@ const NewPortfolioShopManager = (props) => {
               <Col lg="6">
                 <Form.Group className="my-4">
                   <Form.Label>Materials</Form.Label>
-                  <TagsInput
+                  <AutocompleteTags
                     value={materials}
                     onChange={setMaterials}
                     name="materials"
-                    className="form-control"
-                    onBlur={(e) => {
-                      const value = e.target.value;
-                      if (!materials.includes(value) && value !== "") {
-                        setMaterials([...materials, value]);
-                        e.target.value = "";
-                      }
-                    }}
+                    suggestions={designFilters?.materials}
                   />
                 </Form.Group>
               </Col>
@@ -235,58 +288,42 @@ const NewPortfolioShopManager = (props) => {
 
             <Form.Group className="my-4">
               <Form.Label>Tags</Form.Label>
-              <TagsInput
+              <AutocompleteTags
                 value={tags}
                 onChange={setTags}
                 name="tags"
-                className="form-control"
-                onBlur={(e) => {
-                  const value = e.target.value;
-                  if (!tags.includes(value) && value !== "") {
-                    setTags([...tags, value]);
-                    e.target.value = "";
-                  }
-                }}
+                suggestions={designFilters?.tags}
               />
             </Form.Group>
             <Form.Group className="my-4">
               <Form.Label>Gender</Form.Label>
-              <Row className="mt-1">
-                <Form.Group as={Col} lg={4}>
-                  <Form.Check
-                    className="cursor-pointer"
-                    type="checkbox"
-                    label="Male"
-                    name="genders"
-                    value="Male"
-                    checked={genders.includes("Male")}
-                    onChange={handleGenderChange}
-                  />
-                </Form.Group>
-                <Form.Group as={Col} lg={4}>
-                  <Form.Check
-                    className="cursor-pointer"
-                    type="checkbox"
-                    label="Female"
-                    name="genders"
-                    value="Female"
-                    checked={genders.includes("Female")}
-                    onChange={handleGenderChange}
-                  />
-                </Form.Group>
-                <Form.Group as={Col} lg={4}>
-                  <Form.Check
-                    className="cursor-pointer"
-                    type="checkbox"
-                    label="Other"
-                    name="genders"
-                    value="Other"
-                    checked={genders.includes("Other")}
-                    onChange={handleGenderChange}
-                  />
-                </Form.Group>
+              <Row className="position-relative">
+                {designFilters?.genders &&
+                designFilters?.genders?.length > 0 ? (
+                  <>
+                    {designFilters?.genders?.map((name) => (
+                      <Form.Group
+                        as={Col}
+                        lg={3}
+                        className="d-flex mt-1"
+                        key={name}
+                      >
+                        <Form.Check
+                          className="cursor-pointer me-2"
+                          type="checkbox"
+                          checked={genders.includes(name)}
+                          onChange={() =>
+                            handleCheckBoxChange(name, setGenders)
+                          }
+                        />
+                        <span>{name}</span>
+                      </Form.Group>
+                    ))}
+                  </>
+                ) : null}
               </Row>
             </Form.Group>
+
             <Form.Group>
               <Form.Label>Collections</Form.Label>
               <Row className="mt-1">

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Container, Row, Col, Card } from "react-bootstrap";
 import "Assets/styles/DesignerCalendar/style.css";
 import "Assets/styles/Cart/style.css";
@@ -13,8 +13,13 @@ import ThankYouProgress from "Components/Completeness/ShopSteps/Thankyou";
 import SellerShopManager from "Components/Completeness/Wizards/SellerShopManager";
 import SellerDesignerShopManager from "Components/Completeness/Wizards/SellerDesignerShopManager";
 import { useSelector } from "react-redux";
+import { useGetMyDesignsQuery } from "store/api/queries";
 
 const ShopAvailability = () => {
+  const { refetch: refetchMyDesigns } = useGetMyDesignsQuery();
+  useEffect(() => {
+    refetchMyDesigns();
+  }, []);
   const userDetails = useSelector((state) => state.user.user);
   const is_seller = userDetails.type == "seller" ? true : false;
   const is_designer = userDetails.type == "designer" ? true : false;
@@ -73,14 +78,7 @@ const ShopAvailability = () => {
                                 ) : (
                                   <>
                                     {step === 3 ? (
-                                      <MeasurementGuide
-                                        onStepPlusThree={() =>
-                                          setStep(step + 1)
-                                        }
-                                        onStepMinusThree={() =>
-                                          setStep(step - 1)
-                                        }
-                                      />
+                                      <ThankYouProgress />
                                     ) : (
                                       <ThankYouProgress />
                                     )}
