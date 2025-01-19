@@ -31,7 +31,6 @@ export const queryService = api.injectEndpoints({
           dispatch({ type: "users/setUser", payload: data });
         } catch (error) {
           console.log("error", error);
-          toast.error("Failed to fetch user details. Please try again.");
         }
       },
     }),
@@ -42,26 +41,54 @@ export const queryService = api.injectEndpoints({
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log("designer is query", data.data.data);
           dispatch({ type: "designers/setDesigners", payload: data.data.data });
         } catch (error) {
           console.log("error", error);
-          toast.error("Failed to fetch user details. Please try again.");
         }
       },
     }),
     getTimeZones: builder.query({
-      query: () => `/timezones`,
+      query: () => `timezones`,
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log("timezones is query", data);
           if (data.success) {
             dispatch({ type: "misc/setTimeZones", payload: data.data });
           }
         } catch (error) {
           console.log("error", error);
-          toast.error("Failed to fetch user details. Please try again.");
+        }
+      },
+    }),
+    getDesignFilters: builder.query({
+      query: () => `designs/filters`,
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          if (data.success) {
+            dispatch({
+              type: "designers/setDesignFilters",
+              payload: data.data,
+            });
+          }
+        } catch (error) {
+          console.log("error", error);
+        }
+      },
+    }),
+    getDesignersFilters: builder.query({
+      query: () => `designers/filters`,
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          if (data.success) {
+            dispatch({
+              type: "designers/setDesignersFilters",
+              payload: data.data,
+            });
+          }
+        } catch (error) {
+          console.log("error", error);
         }
       },
     }),
@@ -73,4 +100,6 @@ export const {
   useGetUserByIdQuery,
   useGetDesignersQuery,
   useGetTimeZonesQuery,
+  useGetDesignFiltersQuery,
+  useGetDesignersFiltersQuery
 } = queryService;

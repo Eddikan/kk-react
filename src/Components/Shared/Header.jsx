@@ -45,8 +45,13 @@ import BellIcon from "Assets/images/icons/bell.png";
 import DesignerModalIcon from "Assets/images/icons/designer-modal-icon-purple.png";
 import FabricModalIcon from "Assets/images/icons/fabric-modal-icon-purple.png";
 import DesignerVendorModalIcon from "Assets/images/icons/sewing-modal-icon-purple.png";
-
+import {
+  useGetDesignFiltersQuery,
+  useGetDesignersFiltersQuery,
+} from "store/api/queries";
 const Header = () => {
+  useGetDesignFiltersQuery();
+  useGetDesignersFiltersQuery();
   const { logOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
