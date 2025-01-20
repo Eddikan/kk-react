@@ -2,6 +2,7 @@ import api from "./api";
 import toast from "react-hot-toast";
 import { setNotifications } from "../slices/notificationsSlice";
 import { setWishlistItems } from "../slices/wishlistSlice";
+import { setDesigns } from "../slices/designsSlice";
 
 export const queryService = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -147,6 +148,18 @@ export const queryService = api.injectEndpoints({
         }
       },
     }),
+    getDesigns: builder.query({
+      query: ({ page = 1, per_page = 100 }) =>
+        `designs?page=${page}&per_page=${per_page}`,
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(setDesigns(data.data));
+        } catch (error) {
+          console.log("error", error);
+        }
+      },
+    }),
   }),
 });
 
@@ -161,4 +174,5 @@ export const {
   useGetMyNotificationsQuery,
   useGetCartItemsQuery,
   useGetWishlistItemsQuery,
+  useGetDesignsQuery,
 } = queryService;
