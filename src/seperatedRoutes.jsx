@@ -1,7 +1,6 @@
 import { lazy } from "react";
 import Home from "./Pages/Home";
 import About from "./Pages/About";
-import AdminCustomerSatisfaction from "./Pages/Admin/AdminCustomerSatisfaction";
 
 const LogIn = lazy(() => import("./Pages/LogIn"));
 const TwoFactorAuthentication = lazy(() =>
@@ -64,55 +63,57 @@ const VendorFeedBackSurvey = lazy(() =>
 );
 
 // Admin
-const AdminOrders = lazy(() => import("./Pages/Admin/Orders"));
-const AdminOrderDetails = lazy(() => import("./Pages/Admin/OrderDetails"));
-const AdminViewSurvey = lazy(() => import("./Pages/Admin/AdminViewSurvey"));
-const AdminFabrics = lazy(() => import("./Pages/Admin/AdminFabrics"));
-const AdminDesigns = lazy(() => import("./Pages/Admin/AdminDesigns"));
-const AdminDesigners = lazy(() => import("./Pages/Admin/AdminDesigners"));
-const AdminSellers = lazy(() => import("./Pages/Admin/AdminSeller"));
-const AdminAppointments = lazy(() => import("./Pages/Admin/AdminAppointments"));
-const AdminEditUser = lazy(() => import("./Pages/Admin/AdminEditUser"));
-const AdminEditDesigner = lazy(() => import("./Pages/Admin/AdminEditDesigner"));
-const AdminEditSeller = lazy(() => import("./Pages/Admin/AdminEditSeller"));
-const AdminEditDesign = lazy(() => import("./Pages/Admin/AdminEditDesign"));
-const AdminEditProduct = lazy(() => import("./Pages/Admin/AdminEditProduct"));
-const AdminUsers = lazy(() => import("./Pages/Admin/AdminUsers"));
-const AdminPostPurchase = lazy(() => import("./Pages/Admin/AdminPostPurchase"));
-const AdminViewFabric = lazy(() => import("./Pages/Admin/AdminViewFabric"));
-const AdminViewPortFolio = lazy(() =>
-  import("./Pages/Admin/AdminViewPortFolio")
-);
-const AdminVendorSurvey = lazy(() => import("./Pages/Admin/AdminVendorSurvey"));
-// const AdminViewProfile = lazy(() => import("./Pages/Admin/AdminViewProfile"));
+// import AdminCustomerSatisfaction from "./Pages/Admin/AdminCustomerSatisfaction";
 
-const AdminViewSellerProfile = lazy(() =>
-  import("./Pages/Admin/AdminViewSellerProfile")
-);
+// const AdminOrders = lazy(() => import("./Pages/Admin/Orders"));
+// const AdminOrderDetails = lazy(() => import("./Pages/Admin/OrderDetails"));
+// const AdminViewSurvey = lazy(() => import("./Pages/Admin/AdminViewSurvey"));
+// const AdminFabrics = lazy(() => import("./Pages/Admin/AdminFabrics"));
+// const AdminDesigns = lazy(() => import("./Pages/Admin/AdminDesigns"));
+// const AdminDesigners = lazy(() => import("./Pages/Admin/AdminDesigners"));
+// const AdminSellers = lazy(() => import("./Pages/Admin/AdminSeller"));
+// const AdminAppointments = lazy(() => import("./Pages/Admin/AdminAppointments"));
+// const AdminEditUser = lazy(() => import("./Pages/Admin/AdminEditUser"));
+// const AdminEditDesigner = lazy(() => import("./Pages/Admin/AdminEditDesigner"));
+// const AdminEditSeller = lazy(() => import("./Pages/Admin/AdminEditSeller"));
+// const AdminEditDesign = lazy(() => import("./Pages/Admin/AdminEditDesign"));
+// const AdminEditProduct = lazy(() => import("./Pages/Admin/AdminEditProduct"));
+// const AdminUsers = lazy(() => import("./Pages/Admin/AdminUsers"));
+// const AdminPostPurchase = lazy(() => import("./Pages/Admin/AdminPostPurchase"));
+// const AdminViewFabric = lazy(() => import("./Pages/Admin/AdminViewFabric"));
+// const AdminViewPortFolio = lazy(() =>
+//   import("./Pages/Admin/AdminViewPortFolio")
+// );
+// const AdminVendorSurvey = lazy(() => import("./Pages/Admin/AdminVendorSurvey"));
+// // const AdminViewProfile = lazy(() => import("./Pages/Admin/AdminViewProfile"));
 
-const AdminViewUserProfile = lazy(() =>
-  import("./Pages/Admin/AdminViewUserProfile")
-);
+// const AdminViewSellerProfile = lazy(() =>
+//   import("./Pages/Admin/AdminViewSellerProfile")
+// );
 
-const AdminViewPostPurchase = lazy(() =>
-  import("./Pages/Admin/AdminViewPostPurchase")
-);
+// const AdminViewUserProfile = lazy(() =>
+//   import("./Pages/Admin/AdminViewUserProfile")
+// );
 
-const AdminGeneralSurvey = lazy(() =>
-  import("./Pages/Admin/AdminGeneralSurvey")
-);
+// const AdminViewPostPurchase = lazy(() =>
+//   import("./Pages/Admin/AdminViewPostPurchase")
+// );
 
-const AdminViewGeneralSurvey = lazy(() =>
-  import("./Pages/Admin/AdminViewGeneralSurvey")
-);
+// const AdminGeneralSurvey = lazy(() =>
+//   import("./Pages/Admin/AdminGeneralSurvey")
+// );
 
-const AdminViewVendorSurvey = lazy(() =>
-  import("./Pages/Admin/AdminViewVendorSurvey")
-);
+// const AdminViewGeneralSurvey = lazy(() =>
+//   import("./Pages/Admin/AdminViewGeneralSurvey")
+// );
 
-const AdminViewCustomerSurvey = lazy(() =>
-  import("./Pages/Admin/AdminViewCustomerSurvey")
-);
+// const AdminViewVendorSurvey = lazy(() =>
+//   import("./Pages/Admin/AdminViewVendorSurvey")
+// );
+
+// const AdminViewCustomerSurvey = lazy(() =>
+//   import("./Pages/Admin/AdminViewCustomerSurvey")
+// );
 
 // User
 const UserProfile = lazy(() => import("./Pages/User/Profile"));
@@ -145,7 +146,6 @@ const DesignerWishlist = lazy(() => import("./Pages/DesignerWishlist"));
 
 // Portfolio
 const UserPortfolio = lazy(() => import("./Pages/User/Portfolio"));
-const AddNewPortfolio = lazy(() => import("./Pages/User/AddNewPortfolio"));
 const EditPortfolio = lazy(() => import("./Pages/User/EditPortfolio"));
 const ViewPortfolio = lazy(() => import("./Pages/Portfolio/ViewPortfolio"));
 
@@ -367,14 +367,7 @@ export const unAuthenticatedRoutes = [
     path: "/appointments/:c",
     element: <Appointments />,
   },
-  {
-    path: "/admin/orders",
-    element: <AdminOrders />,
-  },
-  {
-    path: "/admin/order/:orderId/details",
-    element: <AdminOrderDetails />,
-  },
+
   {
     path: "/user/center/orders",
     element: <UserOrders />,
@@ -439,10 +432,7 @@ export const unAuthenticatedRoutes = [
     path: "/view/order/:orderId/survey/:surveyId",
     element: <ViewSurvey />,
   },
-  {
-    path: "/admin/view/order/:orderId/survey/:surveyId",
-    element: <AdminViewSurvey />,
-  },
+
   {
     path: "/measurement-guide-format",
     element: <MeasurementGuideFormat />,
@@ -478,34 +468,20 @@ export const authenticatedRoutes = [
     path: "/:user/profile/edit",
     element: <EditUserProfile />,
   },
-  {
-    path: "/admin/edit/user/:userId",
-    element: <AdminEditUser />,
-  },
-  {
-    path: "/admin/edit/designer/:designerId",
-    element: <AdminEditDesigner />,
-  },
-  {
-    path: "/admin/edit/seller/:sellerId",
-    element: <AdminEditSeller />,
-  },
+ 
   {
     path: "/user/center/guide",
     element: <UserMeasurementGuide />,
   },
-  {
-    path: "/user/center/design/add",
-    element: <AddNewPortfolio />,
-  },
+
   {
     path: "/portfolio/:portfolioId",
     element: <ViewPortfolio />,
   },
-  {
-    path: "/admin/portfolio/:portfolioId",
-    element: <AdminViewPortFolio />,
-  },
+  // {
+  //   path: "/admin/portfolio/:portfolioId",
+  //   element: <AdminViewPortFolio />,
+  // },
   // Shop Manager
   {
     path: "/user/center/design/:portfolioId/edit",
@@ -532,82 +508,106 @@ export const authenticatedRoutes = [
   },
   // {/* Admin */}
 
-  {
-    path: "/admin/portfolio/:portfolioId/edit",
-    element: <AdminEditDesign />,
-  },
-  {
-    path: "/admin/fabric/:productId",
-    element: <AdminViewFabric />,
-  },
-  {
-    path: "/admin/product/:productId/edit",
-    element: <AdminEditProduct />,
-  },
+  // {
+  //   path: "/admin/orders",
+  //   element: <AdminOrders />,
+  // },
+  // {
+  //   path: "/admin/order/:orderId/details",
+  //   element: <AdminOrderDetails />,
+  // },
+  // {
+  //   path: "/admin/view/order/:orderId/survey/:surveyId",
+  //   element: <AdminViewSurvey />,
+  // },
+  // {
+  //   path: "/admin/edit/user/:userId",
+  //   element: <AdminEditUser />,
+  // },
+  // {
+  //   path: "/admin/edit/designer/:designerId",
+  //   element: <AdminEditDesigner />,
+  // },
+  // {
+  //   path: "/admin/edit/seller/:sellerId",
+  //   element: <AdminEditSeller />,
+  // },
+  // {
+  //   path: "/admin/portfolio/:portfolioId/edit",
+  //   element: <AdminEditDesign />,
+  // },
+  // {
+  //   path: "/admin/fabric/:productId",
+  //   element: <AdminViewFabric />,
+  // },
+  // {
+  //   path: "/admin/product/:productId/edit",
+  //   element: <AdminEditProduct />,
+  // },
 
-  {
-    path: "/admin/users",
-    element: <AdminUsers />,
-  },
-  {
-    path: "/admin/designers",
-    element: <AdminDesigners />,
-  },
-  {
-    path: "/admin/sellers",
-    element: <AdminSellers />,
-  },
-  {
-    path: "/admin/fabrics",
-    element: <AdminFabrics />,
-  },
-  {
-    path: "/admin/designs",
-    element: <AdminDesigns />,
-  },
-  {
-    path: "/admin/appointments",
-    element: <AdminAppointments />,
-  },
-  {
-    path: "/admin/profile/user/:userId",
-    element: <AdminViewUserProfile />,
-  },
-  {
-    path: "/admin/profile/seller/:sellerId",
-    element: <AdminViewSellerProfile />,
-  },
-  {
-    path: "/admin/post-purchase-survey",
-    element: <AdminPostPurchase />,
-  },
-  {
-    path: "/admin/general-feedback-survey",
-    element: <AdminGeneralSurvey />,
-  },
-  {
-    path: "/admin/vendor-feedback-survey",
-    element: <AdminVendorSurvey />,
-  },
-  {
-    path: "/admin/customer-satisfaction-survey",
-    element: <AdminCustomerSatisfaction />,
-  },
-  {
-    path: "/admin/view/customer-satisfaction-survey/:surveyId",
-    element: <AdminViewCustomerSurvey />,
-  },
-  {
-    path: "/admin/view/post-purchase-survey/:surveyId",
-    element: <AdminViewPostPurchase />,
-  },
-  {
-    path: "/admin/view/vendor-feedback-survey/:surveyId",
-    element: <AdminViewVendorSurvey />,
-  },
-  {
-    path: "/admin/view/general-feedback-survey/:surveyId",
-    element: <AdminViewGeneralSurvey />,
-  },
+  // {
+  //   path: "/admin/users",
+  //   element: <AdminUsers />,
+  // },
+  // {
+  //   path: "/admin/designers",
+  //   element: <AdminDesigners />,
+  // },
+  // {
+  //   path: "/admin/sellers",
+  //   element: <AdminSellers />,
+  // },
+  // {
+  //   path: "/admin/fabrics",
+  //   element: <AdminFabrics />,
+  // },
+  // {
+  //   path: "/admin/designs",
+  //   element: <AdminDesigns />,
+  // },
+  // {
+  //   path: "/admin/appointments",
+  //   element: <AdminAppointments />,
+  // },
+  // {
+  //   path: "/admin/profile/user/:userId",
+  //   element: <AdminViewUserProfile />,
+  // },
+  // {
+  //   path: "/admin/profile/seller/:sellerId",
+  //   element: <AdminViewSellerProfile />,
+  // },
+  // {
+  //   path: "/admin/post-purchase-survey",
+  //   element: <AdminPostPurchase />,
+  // },
+  // {
+  //   path: "/admin/general-feedback-survey",
+  //   element: <AdminGeneralSurvey />,
+  // },
+  // {
+  //   path: "/admin/vendor-feedback-survey",
+  //   element: <AdminVendorSurvey />,
+  // },
+  // {
+  //   path: "/admin/customer-satisfaction-survey",
+  //   element: <AdminCustomerSatisfaction />,
+  // },
+  // {
+  //   path: "/admin/view/customer-satisfaction-survey/:surveyId",
+  //   element: <AdminViewCustomerSurvey />,
+  // },
+  // {
+  //   path: "/admin/view/post-purchase-survey/:surveyId",
+  //   element: <AdminViewPostPurchase />,
+  // },
+  // {
+  //   path: "/admin/view/vendor-feedback-survey/:surveyId",
+  //   element: <AdminViewVendorSurvey />,
+  // },
+  // {
+  //   path: "/admin/view/general-feedback-survey/:surveyId",
+  //   element: <AdminViewGeneralSurvey />,
+  // },
 ];
 

@@ -167,7 +167,7 @@ const Footer = () => {
           <section className="bg-white text-gray pt-3 border-top">
             <Row>
               <Col lg="12" className="d-flex px-5 justify-content-start">
-                <p className="fs-13">© 2024 Kouture Konect</p>
+                <p className="fs-13">© 2025 Kouture Konect</p>
               </Col>
             </Row>
           </section>

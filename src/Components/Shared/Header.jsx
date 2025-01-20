@@ -32,9 +32,7 @@ import NewAppointment from "Assets/images/new-appointment-icon.png";
 import UserPlaceholder from "Assets/images/user.png";
 import TextLogo from "Assets/images/logos/kouture-text-logo.png";
 import "Assets/styles/Headers/style.css";
-import toast from "react-hot-toast";
 import useAuth from "hooks/useAuth";
-import GetUserWishlistsData from "Utils/GetUserWishlistsData";
 import DesignIcon from "Assets/images/user-box/dress.png";
 import FabricIcon from "Assets/images/user-box/fabric.png";
 import DesignerIcon from "Assets/images/user-box/edit-tools.png";
@@ -150,9 +148,6 @@ const Header = () => {
 
   const userDetails = cookies.userDetails;
   const userRole = cookies.userRole;
-  const tempCart = cookies.tempCart;
-  const tempFavorites = cookies.tempFavorites;
-
   useEffect(() => {
     if (
       activeTab !== "Designers" &&

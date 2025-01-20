@@ -50,7 +50,7 @@ const Designs = () => {
               <>
                 <Row className="designs-row">
                   {/* <img src={object.url} className='designs-img'/> */}
-                  {storeDesigns.data.map((design, index) => {
+                  {storeDesigns.data.slice(0,8).map((design, index) => {
                     return (
                       <DesignCard
                         currentUser={currentUser}

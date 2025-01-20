@@ -1,9 +1,11 @@
 import "react-multi-carousel/lib/styles.css";
 import Loading from "Components/Shared/Loading";
+import { useNavigate } from "react-router-dom";
 import Marquee from "react-fast-marquee";
 import { selectDesigners } from "store/slices/designersSlice";
 import { useGetDesignersQuery } from "store/api/queries";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 const generateRandomColor = () => {
   const hue = Math.floor(Math.random() * 360); // Random hue
@@ -46,15 +48,23 @@ const ColorGenerator = ({ name, lastName = "" }) => {
 };
 
 const DesignersMarquee = () => {
-  const { isLoading: isDesignerLoading, error } = useGetDesignersQuery({
-    search: "", 
-    country: "", 
+  const navigate = useNavigate();
+
+  const {
+    isLoading: isDesignerLoading,
+    error,
+    refetch,
+  } = useGetDesignersQuery({
+    search: "",
+    country: "",
   });
   const designers = useSelector(selectDesigners);
   console.log("here component");
-
+  useEffect(() => {
+    refetch();
+  }, []);
   const toggleGetUser = (e) => {
-    // window.location.href = "/designer-profile?user_id=" + e;
+    navigate(`/designer-profile?user_id=${e}`);
   };
 
   if (error) return <p>There has been an error getting the designers.</p>;
@@ -76,12 +86,14 @@ const DesignersMarquee = () => {
                     // const userWishlist =
                     //   wishlist_user_ids.includes(currentUser);
                     return (
-                      <div key={index}>
+                      <div key={index}
+                      onClick={() => toggleGetUser(designer.id)}
+                      className="cursor-pointer"
+                      >
                         {designer?.avatar_secure_url &&
                         designer?.avatar_secure_url != "" ? (
-                          <div  className="marquee-item">
+                          <div className="marquee-item">
                             <div
-                              onClick={() => toggleGetUser(designer.user.id)}
                               className="designer-marquee cursor-pointer"
                               style={{
                                 backgroundImage: `url(${designer?.avatar_secure_url})`,

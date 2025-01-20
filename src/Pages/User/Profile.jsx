@@ -155,23 +155,25 @@ const Profile = () => {
                           )}
                         </div>
                       </Col>
-                      <Col lg="3" className="text-right">
-                        {user?.type == "designer" ||
-                        user?.type == "seller" ||
-                        user?.type == "designer_and_seller" ? (
-                          <Button
-                            id="profile-setup-shop"
-                            onClick={() => {
-                              navigate("/user/shop/setup");
-                            }}
-                            className="bg-white bg-white-hover text-black-hover border-gold-hover text-black"
-                            type="button"
-                          >
-                            <IoStorefrontOutline size="20px" />
-                            <span className="ms-1">Set Up Shop</span>
-                          </Button>
-                        ) : null}
-                      </Col>
+                      {!user?.shop?.is_complete && (
+                        <Col lg="3" className="text-right">
+                          {user?.type == "designer" ||
+                          user?.type == "seller" ||
+                          user?.type == "designer_and_seller" ? (
+                            <Button
+                              id="profile-setup-shop"
+                              onClick={() => {
+                                navigate("/user/shop/setup");
+                              }}
+                              className="bg-white bg-white-hover text-black-hover border-gold-hover text-black"
+                              type="button"
+                            >
+                              <IoStorefrontOutline size="20px" />
+                              <span className="ms-1">Set Up Shop</span>
+                            </Button>
+                          ) : null}
+                        </Col>
+                      )}
                     </Row>
 
                     {user?.profile_completeness?.score < 100 ? (
@@ -450,7 +452,7 @@ const Profile = () => {
                     </p>
                   </div>
 
-                  {(user?.type == "designer" ||
+                  {/* {(user?.type == "designer" ||
                     user?.type == "designer_and_seller") && (
                     <p
                       className={`profile-side-dropdown fw-600 mb-12 fs-16 ${
@@ -477,7 +479,7 @@ const Profile = () => {
                     >
                       My Fabrics
                     </p>
-                  )}
+                  )} */}
                   <p
                     className="profile-side-dropdown fw-600 fs-16 mb-12 position-relative"
                     onClick={function () {
@@ -551,7 +553,7 @@ const Profile = () => {
                       Completed
                     </p>
                   </div>
-                  <p
+                  {/* <p
                     className={`profile-side-dropdown fw-600 fs-16 mb-12 ${
                       activeTab == "messages" ? "text-gold" : ""
                     } `}
@@ -561,7 +563,7 @@ const Profile = () => {
                     }}
                   >
                     My Messages
-                  </p>
+                  </p> */}
                 </div>
               </Col>
               <Col lg="10" className="pt-4">

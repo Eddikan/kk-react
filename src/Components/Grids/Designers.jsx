@@ -108,7 +108,7 @@ const Designers = (props) => {
                                         var wishlist_user_ids = designer.wishlist_user_ids ?? [];
                                         const userWishlist = wishlist_user_ids.includes(currentUser);
                                         return (
-                                            <Col lg={3}>
+                                            <Col lg={3} key={index}>
                                                 <div key={index} className="mb-4 position-relative designer-box-details">
                                                     {designer.livestream ?
                                                         <>

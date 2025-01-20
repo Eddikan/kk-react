@@ -24,19 +24,18 @@ import JoinKoutureBG from "Assets/images/join-kouture.png";
 import DesignersMarquee from "Components/Grids/DesignersMarquee";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { FaArrowRight } from "react-icons/fa";
+import { useSelector } from "react-redux";
+
 const Home = () => {
   const navigate = useNavigate();
   const [userModalShow, setUserModalShow] = useState(false);
-  const [cookies] = useCookies([
-    "currentUser",
-    "isLoggedIn",
-    "userDetails",
-    "userRole",
-  ]);
+
   const [fabricsModalShow, setFabricsModalShow] = useState(false);
   const [signupModalShow, setSignupModalShow] = useState(false);
   const [signupType, setSignupType] = useState("");
-  const currentUser = cookies.currentUser;
+  const currenStoreUser = useSelector((state) => state.user.user);
+  const currentUser = useSelector((state) => state.user?.user?.email);
+ 
   const handleShowUser = () => {
     setUserModalShow(true);
   };
@@ -79,20 +78,25 @@ const Home = () => {
                       >
                         <IoIosSearch size={25} /> Explore Marketplace
                       </Button>
-                      <Button
-                        className="custom-hover-btn me-3 px-3"
-                        style={{ width: "250px" }}
-                        onClick={() => navigate("/user/shop/setup")}
-                      >
-                        {" "}
-                        <img
-                          src={ShopIcon}
-                          className="mx-1"
-                          height="29px"
-                          alt="shop-icon"
-                        ></img>{" "}
-                        Create Shop{" "}
-                      </Button>
+                      {
+                        !currenStoreUser?.shop?.is_complete &&(
+                          <Button
+                          className="custom-hover-btn me-3 px-3"
+                          style={{ width: "250px" }}
+                          onClick={() => navigate("/user/shop/setup")}
+                        >
+                          {" "}
+                          <img
+                            src={ShopIcon}
+                            className="mx-1"
+                            height="29px"
+                            alt="shop-icon"
+                          ></img>{" "}
+                          Create Shop{" "}
+                        </Button>
+                        )
+                      }
+                    
                     </>
                   )}
                 </div>
