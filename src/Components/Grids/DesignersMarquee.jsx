@@ -34,6 +34,7 @@ const ColorGenerator = ({ name, lastName = "" }) => {
         color: textColor,
         padding: "1rem",
         borderRadius: "0.5rem",
+        margin: "0.5rem",
       }}
       className="designer-marquee  tw-text-[50px] tw-border-black tw-flex tw-justify-center tw-items-center"
     >
