@@ -72,20 +72,21 @@ const Header = () => {
 
   const { refetch: refetchDesignFilters } = useGetDesignFiltersQuery();
   const { refetch: refetchDesignersFilters } = useGetDesignersFiltersQuery();
-  const myNotificationsQuery = isLoggedIn
-    ? useGetMyNotificationsQuery({
-        enabled: false,
-      })
-    : null;
+  const myNotificationsQuery = 
+     useGetMyNotificationsQuery(undefined, {
+      skip: !isLoggedIn,
+    })
 
-  const myProfile = isLoggedIn
-    ? useGetProfileQuery({
-        enabled: false,
-      })
-    : null;
-  const myCartQuery = isLoggedIn ? useGetCartItemsQuery() : null;
-  const myWishList = isLoggedIn ? useGetWishlistItemsQuery() : null;
-
+  const myProfile = 
+     useGetProfileQuery(undefined, {
+      skip: !isLoggedIn,
+    })
+  const myCartQuery =  useGetCartItemsQuery(undefined, {
+    skip: !isLoggedIn,
+  });
+  const myWishList =  useGetWishlistItemsQuery(undefined, {
+    skip: !isLoggedIn,
+  })
   useEffect(() => {
     refetchDesignFilters();
     refetchDesignersFilters();

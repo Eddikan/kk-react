@@ -74,6 +74,8 @@ function DesignCard({ design, currentUser }) {
     },
   };
   async function favoriteDesignUpdate(e) {
+    setInWishlist(!inWishlist);
+
     axios
       .post(
         import.meta.env.VITE_REACT_APP_API_ENDPOINT +
@@ -86,7 +88,6 @@ function DesignCard({ design, currentUser }) {
       .then((response) => {
         const success = response.data.status;
         if (success == "Success") {
-          setInWishlist(!inWishlist);
           const currentFavoriteCount = cookies.favoriteItemCount ?? 0;
           const latestFavoriteItemCount = parseInt(currentFavoriteCount) + 1;
           setCookie("favoriteItemCount", latestFavoriteItemCount, {
@@ -152,7 +153,7 @@ function DesignCard({ design, currentUser }) {
   } else {
     designImage = PlaceholderImage;
   }
-  const userWishlist = false;
+
 
   function togglePortfolioImage(
     portfolioId,
@@ -168,10 +169,8 @@ function DesignCard({ design, currentUser }) {
     tags,
     description,
     userId,
-    userWishlist
   ) {
     setPortfolioImage(true);
-    setInWishlist(userWishlist);
     setSingleDesign({
       id: id ?? 0,
       portfolioId: portfolioId ?? 0,
@@ -228,7 +227,6 @@ function DesignCard({ design, currentUser }) {
                     design.tags,
                     design.description,
                     design.user.id,
-                    userWishlist
                   );
                 }}
               ></div>
@@ -238,7 +236,7 @@ function DesignCard({ design, currentUser }) {
                 {currentUser ? (
                   <>
                     <div className="save-link">
-                      {userWishlist ? (
+                      {inWishlist ? (
                         <div className="kouture-tooltip">
                           <div
                             className="action-button bg-gold"
@@ -302,7 +300,7 @@ function DesignCard({ design, currentUser }) {
                                 user_id: currentUser,
                                 name: design.name,
                                 description: design.description,
-                                image_urls: design.image_urls[0],
+                                image_urls: design.media[0],
                                 designer_user_id: design.user.id,
                               });
                             }}
@@ -329,7 +327,7 @@ function DesignCard({ design, currentUser }) {
                                 user_id: currentUser,
                                 name: design.name,
                                 description: design.description,
-                                image_urls: design.image_urls[0],
+                                image_urls: design.media[0],
                                 designer_user_id: design.user.id,
                               });
                             }}
@@ -376,7 +374,6 @@ function DesignCard({ design, currentUser }) {
                   design.tags,
                   design.description,
                   design.user.id,
-                  userWishlist
                 );
               }}
             >
@@ -709,7 +706,7 @@ function DesignCard({ design, currentUser }) {
                       </div>
                     </div>
 
-                    <div
+                    {/* <div
                       className="text-center mb-4"
                       onClick={() => toggleUnderConstruction("Message")}
                     >
@@ -719,7 +716,7 @@ function DesignCard({ design, currentUser }) {
                       <div className="icon-name-color fs-12 mb-3 mt-2 fw-600">
                         Message
                       </div>
-                    </div>
+                    </div> */}
                   </>
                 )}
 

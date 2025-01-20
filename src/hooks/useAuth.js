@@ -186,7 +186,7 @@ const useAuth = ({ blockPage } = {}) => {
     if (response.proceed_to_login) {
       // toast.success("Please Update your profile");
       // give enough time for  rtk query
-      myProfile.refetch();
+      // myProfile.refetch();
 
       if (redirect && redirect != "" && redirect != null) {
         navigate(redirect);
@@ -211,14 +211,20 @@ const useAuth = ({ blockPage } = {}) => {
         import.meta.env.VITE_REACT_APP_API_ENDPOINT + "auth/login",
         loginFormData
       );
+      console.log('data is',data)
       if (data.success) {
         // handle 2FA
+
         toast.success(data.message);
-        loginLogic(data.data, redirect_to);
+        if (data.data) {
+          loginLogic(data.data, redirect_to);
+        } else {
+          throw new Error("Data is undefined");
+        }
       }
     } catch (error) {
       console.log("error", error);
-      const errors = error.response.data.errors;
+      const errors = error.response?.data?.errors || ["An error occurred"];
       errors.forEach((message) => {
         toast.error(message);
       });

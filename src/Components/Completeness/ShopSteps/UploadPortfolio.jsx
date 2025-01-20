@@ -1,22 +1,26 @@
 import { useEffect, useState, useRef } from "react";
 import { Row, Col, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import { GoPlus } from "react-icons/go";
 import { useCookies } from "react-cookie";
-import toast from "react-hot-toast";
 import { Card, CardBody, ModalHeader, ModalBody, Modal } from "reactstrap";
 import NewPortfolioShopManager from "Components/Forms/Portolio/NewPortfolioShopManager";
-import GetUserPortfolioData from "Utils/GetUserPortfolioData";
 import Loading from "Components/Shared/Loading";
 import PlaceholderImage from "Assets/images/placeholders/image.png";
 import { useSelector } from "react-redux";
 import { selectMyDesigners } from "store/slices/designersSlice";
-const UploadPortfolio = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
+const UploadPortfolio = ({
+  onStepPlusTwo,
+  onStepMinusTwo,
+  user,
+  shopManagerPage,
+}) => {
+  const navigate = useNavigate();
+
   const [reloadCount, setReloadCount] = useState(0);
   const [uploadFileShow, setUploadFileShow] = useState(false);
-  const [portfolio, setPortfolio] = useState([]);
   const [portfolioItems, setPortfolioItems] = useState([]);
-  const [portfolioDesigner, setPortfolioDesigner] = useState([]);
   const tagsInputRef = useRef(null);
 
   const [cookies, setCookie, removeCookie] = useCookies([
@@ -29,7 +33,6 @@ const UploadPortfolio = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
 
   const currentUser = cookies.currentUser;
   const myDesigns = useSelector(selectMyDesigners);
-
 
   const savePortfolioItems = (e) => {
     if (portfolioItems && portfolioItems.length > 0) {
@@ -59,7 +62,6 @@ const UploadPortfolio = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
   };
 
   useEffect(() => {
-
     const handleDocumentClick = (event) => {
       // Check if the click is outside the TagsInput component
       if (
@@ -111,6 +113,14 @@ const UploadPortfolio = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
                               className={`portfolio-grid mb-3`}
                               xs="4"
                               md="2"
+                              onClick={() => {
+                                if (shopManagerPage) {
+                                  console.log("here", shopManagerPage);
+                                  navigate(
+                                    `/user/center/design/${object.id}/edit`
+                                  );
+                                }
+                              }}
                             >
                               <div
                                 className={`portfolio-grid-div cursor-pointer w-100 ${
