@@ -10,10 +10,10 @@ import { useGetProfileQuery } from "store/api/queries";
 import localforage from "localforage";
 import { persistor } from "store"; //
 
-const useAuth = ({ blockPage }={}) => {
+const useAuth = ({ blockPage } = {}) => {
   const [isLoggedIn, setisLoggedIn] = useState(false); // Example: check if user is logged in
 
-  useGetProfileQuery(undefined, {
+  const myProfile = useGetProfileQuery(undefined, {
     skip: !isLoggedIn, // Skip the query if not logged in
   });
 
@@ -186,9 +186,11 @@ const useAuth = ({ blockPage }={}) => {
     if (response.proceed_to_login) {
       // toast.success("Please Update your profile");
       // give enough time for  rtk query
+      myProfile.refetch();
+
       if (redirect && redirect != "" && redirect != null) {
         navigate(redirect);
-      } 
+      }
       if (user?.first_name) {
         navigate("/");
       } else {

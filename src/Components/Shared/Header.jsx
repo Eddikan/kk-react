@@ -49,6 +49,7 @@ import {
   useGetDesignFiltersQuery,
   useGetDesignersFiltersQuery,
   useGetMyNotificationsQuery,
+  useGetProfileQuery,
   useGetCartItemsQuery,
   useGetWishlistItemsQuery,
 } from "store/api/queries";
@@ -76,6 +77,12 @@ const Header = () => {
         enabled: false,
       })
     : null;
+
+  const myProfile = isLoggedIn
+    ? useGetProfileQuery({
+        enabled: false,
+      })
+    : null;
   const myCartQuery = isLoggedIn ? useGetCartItemsQuery() : null;
   const myWishList = isLoggedIn ? useGetWishlistItemsQuery() : null;
 
@@ -83,6 +90,7 @@ const Header = () => {
     refetchDesignFilters();
     refetchDesignersFilters();
     if (isLoggedIn) {
+      myProfile.refetch();
       myNotificationsQuery.refetch();
       myCartQuery.refetch();
       myWishList.refetch();
@@ -117,7 +125,6 @@ const Header = () => {
     cookies.cartItemCount ?? 0
   );
   const [favoritesCount, setFavoritesCount] = useState(0);
-  const [favorites, setFavorites] = useState([]);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
 
   const userRef = useRef(null);
@@ -617,7 +624,7 @@ const Header = () => {
                           className="action-box-bell scroll-bar user-menu-bell"
                           id="style-2"
                         >
-                          {notifications.length > 0 ? (
+                          {notifications?.length > 0 ? (
                             <>
                               {notifications.map((notification, index) => {
                                 const options = {

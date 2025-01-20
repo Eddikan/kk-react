@@ -147,7 +147,7 @@ const Home = () => {
         <Container>
           <Row>
             <Col lg="12">
-              <Designs currentUser={currentUser} onSignup={showSignupModal} />
+              <Designs  onSignup={showSignupModal} />
             </Col>
           </Row>
         </Container>
