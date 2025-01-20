@@ -1,5 +1,7 @@
 import api from "./api";
 import toast from "react-hot-toast";
+import { setNotifications } from "../slices/notificationsSlice";
+import { setWishlistItems } from "../slices/wishlistSlice";
 
 export const queryService = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -109,9 +111,42 @@ export const queryService = api.injectEndpoints({
         }
       },
     }),
+    getMyNotifications: builder.query({
+      query: () => `user/notifications?per_page=100&page=1`,
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
 
-    
-    
+          if (data.success) {
+            dispatch(setNotifications(data.data));
+          }
+        } catch (error) {
+          console.log("error", error);
+        }
+      },
+    }),
+    getCartItems: builder.query({
+      query: () => `user/cart`,
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch({ type: "cart/setCartItems", payload: data.data });
+        } catch (error) {
+          console.log("error", error);
+        }
+      },
+    }),
+    getWishlistItems: builder.query({
+      query: () => `user/wishlists`,
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(setWishlistItems(data.data));
+        } catch (error) {
+          console.log("error", error);
+        }
+      },
+    }),
   }),
 });
 
@@ -122,5 +157,8 @@ export const {
   useGetTimeZonesQuery,
   useGetDesignFiltersQuery,
   useGetDesignersFiltersQuery,
-  useGetMyDesignsQuery
+  useGetMyDesignsQuery,
+  useGetMyNotificationsQuery,
+  useGetCartItemsQuery,
+  useGetWishlistItemsQuery,
 } = queryService;

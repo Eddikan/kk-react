@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Card, Modal } from "react-bootstrap";
@@ -32,7 +33,6 @@ import UserPlaceholder from "Assets/images/user.png";
 import TextLogo from "Assets/images/logos/kouture-text-logo.png";
 import "Assets/styles/Headers/style.css";
 import toast from "react-hot-toast";
-import axios from "axios";
 import useAuth from "hooks/useAuth";
 import GetUserWishlistsData from "Utils/GetUserWishlistsData";
 import DesignIcon from "Assets/images/user-box/dress.png";
@@ -48,14 +48,11 @@ import DesignerVendorModalIcon from "Assets/images/icons/sewing-modal-icon-purpl
 import {
   useGetDesignFiltersQuery,
   useGetDesignersFiltersQuery,
+  useGetMyNotificationsQuery,
+  useGetCartItemsQuery,
+  useGetWishlistItemsQuery,
 } from "store/api/queries";
 const Header = () => {
-  const { refetch: refetchDesignFilters }= useGetDesignFiltersQuery();
-  const { refetch: refetchDesignersFilters }= useGetDesignersFiltersQuery();
-  useEffect(()=>{
-    refetchDesignFilters()
-    refetchDesignersFilters()
-  },[])
   const { logOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -65,10 +62,32 @@ const Header = () => {
   let query = useQuery();
   const currenStoreUser = useSelector((state) => state.user.user);
   const currentUser = useSelector((state) => state.user?.user?.email);
+  const isLoggedIn = currentUser;
+
   const is_seller = currenStoreUser?.type == "seller" ? true : false;
   const is_designer = currenStoreUser?.type == "designer" ? true : false;
   const headerSearch = query.get("search");
   const headerType = query.get("type");
+
+  const { refetch: refetchDesignFilters } = useGetDesignFiltersQuery();
+  const { refetch: refetchDesignersFilters } = useGetDesignersFiltersQuery();
+  const myNotificationsQuery = isLoggedIn
+    ? useGetMyNotificationsQuery({
+        enabled: false,
+      })
+    : null;
+  const myCartQuery = isLoggedIn ? useGetCartItemsQuery() : null;
+  const myWishList = isLoggedIn ? useGetWishlistItemsQuery() : null;
+
+  useEffect(() => {
+    refetchDesignFilters();
+    refetchDesignersFilters();
+    if (isLoggedIn) {
+      myNotificationsQuery.refetch();
+      myCartQuery.refetch();
+      myWishList.refetch();
+    }
+  }, []);
 
   const [cookies] = useCookies([
     "currentUser",
@@ -94,7 +113,6 @@ const Header = () => {
   const [userImage, setUserImage] = useState("");
   const [user, setUser] = useState(currenStoreUser);
   const [notifications, setNotifications] = useState([]);
-  const [notificationsLoading, setNotificationsLoading] = useState(true);
   const [cartItemCount, setCartItemCount] = useState(
     cookies.cartItemCount ?? 0
   );
@@ -121,36 +139,11 @@ const Header = () => {
   //     "status": "Default",
   //     "type": "customer"
   // }
-  const current_user_id = cookies.currentUser;
-  const token = cookies.token;
+
   const userDetails = cookies.userDetails;
   const userRole = cookies.userRole;
-  const isLoggedIn = currentUser;
   const tempCart = cookies.tempCart;
   const tempFavorites = cookies.tempFavorites;
-  const getNotifications = async () => {
-    return await axios.get(
-      import.meta.env.VITE_REACT_APP_API_ENDPOINT +
-        "notification?user_id=" +
-        currentUser +
-        "?current_user_id=" +
-        current_user_id +
-        "&token=" +
-        token
-    );
-  };
-
-  const getUserCartItems = async () => {
-    return await axios.get(
-      import.meta.env.VITE_REACT_APP_API_ENDPOINT +
-        "user/" +
-        currentUser +
-        "/cart?current_user_id=" +
-        current_user_id +
-        "&token=" +
-        token
-    );
-  };
 
   useEffect(() => {
     if (
@@ -260,164 +253,6 @@ const Header = () => {
       document.removeEventListener("click", handleClickOutside);
     };
   }, [cookies]);
-
-  const fetchData = async (e) => {
-    try {
-      const favoritesData = await GetUserWishlistsData(e);
-      if (favoritesData) {
-        const filteredFavorites = favoritesData.portfolio_item_wishlists.filter(
-          (item) => item.portfolio_item.user_id !== currentUser
-        );
-
-        setFavorites(filteredFavorites);
-        setFavoritesCount(filteredFavorites.length);
-      } else {
-        toast.error(
-          "An error occured. Please try again or contact the administrator."
-        );
-        setFavoritesCount(0);
-      }
-    } catch (error) {
-      console.error("Error fetching favorites:", error);
-      toast.error(
-        "An error occured. Please try again or contact the administrator."
-      );
-      setFavoritesCount(0);
-    }
-  };
-
-  useEffect(() => {
-    if (currentUser) {
-      fetchData({ currentUser: currentUser, token: token });
-
-      getNotifications()
-        .then((response) => {
-          const selectednotifications = response.data.data;
-          if (selectednotifications) {
-            setNotifications(selectednotifications);
-            setNotificationsLoading(false);
-          } else {
-            toast.error(
-              "There has been an error getting the notifications, please try again!"
-            );
-            setNotificationsLoading(false);
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching notifications:", error);
-          toast.error(
-            "There has been an error getting the notifications, please try again!"
-          );
-          setNotificationsLoading(false);
-        });
-
-      getUserCartItems()
-        .then((response) => {
-          const selectedCartItems = response.data.data;
-          if (selectedCartItems) {
-            // const totalQuantity = getTotalQuantity(selectedCartItem);
-            const totalQuantity = selectedCartItems.length ?? 0;
-            setCartItemCount(totalQuantity);
-          } else {
-            toast.error(
-              "There has been an error getting the notifications, please try again!"
-            );
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching cart items:", error);
-          toast.error(
-            "There has been an error getting the notifications, please try again!"
-          );
-        });
-    } else {
-      if (tempCart) {
-        // const totalQuantity = getTotalQuantity(tempCart);
-        const totalQuantity = tempCart.length ?? 0;
-        setCartItemCount(totalQuantity);
-      }
-      if (tempFavorites) {
-        const totalFavoritesCount = tempFavorites.length;
-        setFavoritesCount(totalFavoritesCount);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      if (currentUser) {
-        getNotifications()
-          .then((response) => {
-            const selectednotifications = response.data.data;
-            if (selectednotifications) {
-              setNotifications(selectednotifications);
-              setNotificationsLoading(false);
-            } else {
-              toast.error(
-                "There has been an error getting the notifications, please try again!"
-              );
-              setNotificationsLoading(false);
-            }
-          })
-          .catch((error) => {
-            console.error("Error fetching notifications:", error);
-            toast.error(
-              "There has been an error getting the notifications, please try again!"
-            );
-            setNotificationsLoading(false);
-          });
-      } else {
-        if (tempCart) {
-          // const totalQuantity = getTotalQuantity(tempCart);
-          const totalQuantity = tempCart.length ?? 0;
-          setCartItemCount(totalQuantity);
-        }
-        if (tempFavorites) {
-          const totalFavoritesCount = tempFavorites.length;
-          setFavoritesCount(totalFavoritesCount);
-        }
-      }
-    }, 60000);
-
-    // Cleanup function to clear the interval
-    return () => clearInterval(intervalId);
-  }, []);
-
-  useEffect(() => {
-    if (currentUser) {
-      getUserCartItems()
-        .then((response) => {
-          const selectedCartItems = response.data.data;
-          if (selectedCartItems) {
-            // const totalQuantity = getTotalQuantity(selectedCartItem);
-            const totalQuantity = selectedCartItems.length ?? 0;
-            setCartItemCount(totalQuantity);
-          } else {
-            toast.error(
-              "There has been an error getting the notifications, please try again!"
-            );
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching cart items:", error);
-          toast.error(
-            "There has been an error getting the notifications, please try again!"
-          );
-        });
-
-      fetchData({ currentUser: currentUser, token: token });
-    } else {
-      if (tempCart) {
-        // const totalQuantity = getTotalQuantity(tempCart);
-        const totalQuantity = tempCart.length ?? 0;
-        setCartItemCount(totalQuantity);
-      }
-      if (tempFavorites) {
-        const totalFavoritesCount = tempFavorites.length;
-        setFavoritesCount(totalFavoritesCount);
-      }
-    }
-  }, [cookies.cartItemCount]);
 
   const currentPath = location.pathname + location.search;
   // console.log('currentPath', currentPath);

@@ -5,7 +5,9 @@ import { combineReducers } from "redux";
 import authReducer from "./slices/authSlice";
 import userReducer from "./slices/userSlice";
 import miscReducer from "./slices/miscSlice";
-
+import notificationsReducer from "./slices/notificationsSlice";
+import cartReducer from "./slices/cartSlice";
+import wishlistReducer from "./slices/wishlistSlice";
 import designerReducer from "./slices/designersSlice";
 import { designersApi } from "./api/designersApi";
 import { fabricsApi } from "./api/GetFabricsData";
@@ -52,6 +54,9 @@ const rootReducer = (state, action) => {
     user: userReducer,
     designers: designerReducer,
     misc: miscReducer,
+    notifications: notificationsReducer,
+    cart: cartReducer,
+    wishlist: wishlistReducer,
     [designersApi.reducerPath]: designersApi.reducer,
     [fabricsApi.reducerPath]: fabricsApi.reducer,
     [wishlistApi.reducerPath]: wishlistApi.reducer,
