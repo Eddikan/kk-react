@@ -31,7 +31,6 @@ const UploadPortfolio = ({
     "token",
   ]);
 
-  const currentUser = cookies.currentUser;
   const myDesigns = useSelector(selectMyDesigners);
 
   const savePortfolioItems = (e) => {
@@ -206,21 +205,24 @@ const UploadPortfolio = ({
           </Card>
         </Col>
       </Row>
-      <Row>
-        <Col lg="12" className="text-right">
-          <Button
-            className="btn-back me-3"
-            type="button"
-            onClick={() => onStepMinusTwo()}
-          >
-            Back
-          </Button>
+      {!shopManagerPage && (
+        <Row>
+          <Col lg="12" className="text-right">
+            <Button
+              className="btn-back me-3"
+              type="button"
+              onClick={() => onStepMinusTwo()}
+            >
+              Back
+            </Button>
 
-          <Button className="btn-save" type="button" onClick={toggleNextTab}>
-            Next
-          </Button>
-        </Col>
-      </Row>
+            <Button className="btn-save" type="button" onClick={toggleNextTab}>
+              Next
+            </Button>
+          </Col>
+        </Row>
+      )}
+
       {/* </Form> */}
 
       <Modal

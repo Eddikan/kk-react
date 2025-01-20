@@ -557,7 +557,7 @@ const Portfolio = () => {
                                 className="d-flex justify-content-left align-items-center"
                               >
                                 <h3 className="fs-30 fw-600 text-black mb-0">
-                                  Portfolio
+                                  Designs
                                 </h3>
                               </Col>
 
