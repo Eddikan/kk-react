@@ -3,7 +3,6 @@ import { Row, Col, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import { GoPlus } from "react-icons/go";
-import { useCookies } from "react-cookie";
 import { Card, CardBody, ModalHeader, ModalBody, Modal } from "reactstrap";
 import NewPortfolioShopManager from "Components/Forms/Portolio/NewPortfolioShopManager";
 import Loading from "Components/Shared/Loading";
@@ -22,14 +21,6 @@ const UploadPortfolio = ({
   const [uploadFileShow, setUploadFileShow] = useState(false);
   const [portfolioItems, setPortfolioItems] = useState([]);
   const tagsInputRef = useRef(null);
-
-  const [cookies, setCookie, removeCookie] = useCookies([
-    "currentUser",
-    "isLoggedIn",
-    "userDetails",
-    "userRole",
-    "token",
-  ]);
 
   const myDesigns = useSelector(selectMyDesigners);
 
@@ -90,7 +81,7 @@ const UploadPortfolio = ({
         <Col lg="12">
           <Card className="mb-4 border-white">
             <CardBody className="p-0 pt-3 pb-3">
-              {!myDesigns.length ? (
+              {false ? (
                 <>
                   <p className="text-center mb-3 mt-3">
                     <Loading className="bg-white loading-height" />
@@ -215,10 +206,15 @@ const UploadPortfolio = ({
             >
               Back
             </Button>
-
-            <Button className="btn-save" type="button" onClick={toggleNextTab}>
-              Next
-            </Button>
+            {!!myDesigns.length && (
+              <Button
+                className="btn-save"
+                type="button"
+                onClick={toggleNextTab}
+              >
+                Next
+              </Button>
+            )}
           </Col>
         </Row>
       )}

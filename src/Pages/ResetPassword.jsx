@@ -17,7 +17,7 @@ const ResetPassword = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [resetFormLoading, setResetFormLoading] = useState(false);
   const [searchParams] = useSearchParams();
-  const token = searchParams.get("token");
+  const token = searchParams.get("code");
   const handleChangePassword = (e) => {
     setPassword(e.target.value);
   };

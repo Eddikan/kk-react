@@ -111,9 +111,7 @@ const NewPortfolioShopManager = (props) => {
       console.log("payload", { ...payload });
       // Convert JSON object to FormData
       const formData = convertToFormData(payload);
-      for (let pair of formData.entries()) {
-        console.log(pair[0] + ": " + pair[1]);
-      }
+   
       const res = await createDesign(formData).unwrap();
       if (res.success) {
         refetchCalls();

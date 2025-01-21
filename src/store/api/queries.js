@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import { setNotifications } from "../slices/notificationsSlice";
 import { setWishlistItems } from "../slices/wishlistSlice";
 import { setDesigns } from "../slices/designsSlice";
+import { setCalendarData } from "../slices/calendarSlice";
 
 export const queryService = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -160,6 +161,17 @@ export const queryService = api.injectEndpoints({
         }
       },
     }),
+    getMyCalender: builder.query({
+      query: ({ year = 2024, month = '01' }) => `user/calender/${year}/${month}`,
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(setCalendarData(data.data));
+        } catch (error) {
+          console.log("error", error);
+        }
+      },
+    }),
   }),
 });
 
@@ -175,4 +187,5 @@ export const {
   useGetCartItemsQuery,
   useGetWishlistItemsQuery,
   useGetDesignsQuery,
+  useGetMyCalenderQuery,
 } = queryService;

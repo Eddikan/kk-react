@@ -43,6 +43,13 @@ const Sidebar = ({ currentTab, onChangeTab }) => {
               <>
                 <div
                   className="hover-sidebar cursor-pointer yellow-hover fs-14 mt-3"
+                  onClick={() => navigate("/user/center/portfolio")}
+                >
+                  <PiPantsLight size="22" className="me-2 mb-1" />
+                  Designs
+                </div>
+                <div
+                  className="hover-sidebar cursor-pointer yellow-hover fs-14 mt-3"
                   onClick={() => navigate("/user/center/calendar")}
                 >
                   <IoCalendarClearOutline size="20" className="me-2 mb-1" />
@@ -75,14 +82,6 @@ const Sidebar = ({ currentTab, onChangeTab }) => {
                                 <p className={currentTab == 'Delivered' ? 'active-class cursor-pointer fw-600 text-gold' : 'cursor-pointer'} onClick={() => onChangeTab('Delivered')}>Delivered</p>
                                 <p className={currentTab == 'Review' ? 'active-class cursor-pointer fw-600 text-gold' : 'cursor-pointer '} onClick={() => onChangeTab('Review')}>Review and Feedback</p>
                             </AccordionBody> */}
-
-                <div
-                  className="hover-sidebar cursor-pointer yellow-hover fs-14 mt-3"
-                  onClick={() => navigate("/user/center/portfolio")}
-                >
-                  <PiPantsLight size="22" className="me-2 mb-1" />
-                  Designs
-                </div>
               </>
             )}
             {userDetails.is_seller == 1 && (

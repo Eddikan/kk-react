@@ -33,7 +33,7 @@ function MyProfile({ user }) {
             </p>
           </>
 
-          {user?.type === "designer" && (
+          {/* {user?.type === "designer" && (
             <>
               <p className="areas-specialization mt-3 mb-3">
                 Areas of Specialization and Expertise
@@ -53,7 +53,7 @@ function MyProfile({ user }) {
                 ) : null}
               </div>
             </>
-          )}
+          )} */}
         </Col>
         <Col lg="6">
           <div className="profile-details address mb-4 pt-0">

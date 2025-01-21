@@ -21,7 +21,9 @@ export const fetchDesigners = createAsyncThunk(
     }
   }
 );
-
+export const selectDesignById = (state, designId) => {
+  return state.designers.myDesigns.find(design => design.id === designId);
+};
 const designersSlice = createSlice({
   name: "designers",
   initialState: {

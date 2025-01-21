@@ -40,7 +40,7 @@ const useProfile = () => {
   const [user, setUser] = useState(currentStoreUser);
 
   const [designer, setDesigner] = useState(initialDesignerData);
-  const [userLoading, setUserLoading] = useState(true);
+  const [userLoading, setUserLoading] = useState(false);
   const [reloadCount, setReloadCount] = useState(0);
   const [aboutShow, setAboutShow] = useState(true);
   const [portfolioShow, setPortfolioShow] = useState(false);
@@ -678,43 +678,9 @@ const useProfile = () => {
     }
   };
 
-  const fetchData = async (e) => {
-    try {
-      const userData = await GetUserData(e);
-      if (userData.id) {
-        setVerificationFormData(userData);
-        setSelected(userData.id_country);
-
-        setPrimaryFrontPhoto(userData.primary_id_front_img);
-        setPrimaryBackPhoto(userData.primary_id_back_img);
-
-        setFirstSecondaryFrontPhoto(userData.first_secondary_id_front_img);
-        setFirstSecondaryBackPhoto(userData.first_secondary_id_back_img);
-
-        setSecondSecondaryFrontPhoto(userData.second_secondary_id_front_img);
-        setSecondSecondaryBackPhoto(userData.second_secondary_id_back_img);
-
-        setCookie("userDetails", JSON.stringify(userData), { path: "/" });
-        if (userData.designer) {
-          setDesigner(userData.designer);
-        }
-        setUserLoading(false);
-      } else {
-        setUserLoading(false);
-        toast.error(
-          "An error occured. Please try again or contact the administrator."
-        );
-      }
-    } catch (error) {
-      setUserLoading(false);
-      toast.error(
-        "An error occured. Please try again or contact the administrator."
-      );
-    }
-  };
+ 
 
   useEffect(() => {
-    fetchData({ token: token, currentUser: currentUser });
 
     if (activeProfileTab && activeProfileTab != "") {
       if (activeProfileTab === "about") {
@@ -847,7 +813,6 @@ const useProfile = () => {
     handleTwoFAChange,
     updatePasswordSubmit,
     showTab,
-    fetchData,
     setSetupShopShow,
     setViewBackCapture,
     setUpdatePasswordModalShow,

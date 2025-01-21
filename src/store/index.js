@@ -10,6 +10,7 @@ import cartReducer from "./slices/cartSlice";
 import wishlistReducer from "./slices/wishlistSlice";
 import designerReducer from "./slices/designersSlice";
 import designsReducer from "./slices/designsSlice";
+import calendarReducer from "./slices/calendarSlice";
 import { designersApi } from "./api/designersApi";
 import { fabricsApi } from "./api/GetFabricsData";
 import { wishlistApi } from "./api/GetFabricsData";
@@ -59,6 +60,7 @@ const rootReducer = (state, action) => {
     notifications: notificationsReducer,
     cart: cartReducer,
     wishlist: wishlistReducer,
+    calendar: calendarReducer,
     [designersApi.reducerPath]: designersApi.reducer,
     [fabricsApi.reducerPath]: fabricsApi.reducer,
     [wishlistApi.reducerPath]: wishlistApi.reducer,
