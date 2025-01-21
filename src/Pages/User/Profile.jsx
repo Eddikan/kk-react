@@ -42,18 +42,12 @@ const Profile = () => {
     setupShopShow,
     activeTab,
     activeTabGroup,
-
     currentUser,
-
     hiddenFileInputImg,
     navigate,
-
     toggleverificationIDShow,
-
     handleClickImg,
-    toggleSetupShopShow,
     handleChangeImg,
-
     setActiveTabGroup,
     setActiveTab,
   } = useProfile();

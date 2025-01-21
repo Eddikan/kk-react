@@ -72,6 +72,19 @@ export const mutationService = api.injectEndpoints({
         body: payload,
       }),
     }),
+    deleteDesignerImage: builder.mutation({
+      query: (id) => ({
+        url: `user/designs/image/${id}`,
+        method: "DELETE",
+      }),
+    }),
+    deleteMyDesign: builder.mutation({
+      query: (id) => ({
+        url: `user/designs/${id}`,
+        method: "DELETE",
+      }),
+    }),
+    
   }),
 });
 
@@ -85,5 +98,7 @@ export const {
   useRegenerate2FAMutation,
   useTwoFALoginMutation,
   useUpdateUserAvailabilityMutation,
-  useCreateDesignMutation
+  useCreateDesignMutation,
+  useDeleteDesignerImageMutation,
+  useDeleteMyDesignMutation,
 } = mutationService;

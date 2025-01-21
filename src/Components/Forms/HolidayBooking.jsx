@@ -65,12 +65,13 @@ const HolidayBooking = ({ holidays, setHolidays }) => {
           >
             <div>
               {holiday.dates
-                .map((date) =>
-                  date.toLocaleDateString("en-US", {
+                .map((date) => {
+                  const parsedDate = new Date(date);
+                  return parsedDate.toLocaleDateString("en-US", {
                     month: "short",
                     day: "numeric",
-                  })
-                )
+                  });
+                })
                 .join(", ")}
               {holiday.name && <span>: {holiday.name}</span>}
             </div>

@@ -94,29 +94,7 @@ const Portfolio = () => {
     },
   };
 
-  const fetchData = async (e) => {
-    try {
-      const portfolioData = await GetUserPortfolioData(e);
-      if (portfolioData) {
-        setPortfolio(portfolioData);
-        setPortfolioLoading(false);
-      } else {
-        toast.error(
-          "An error occured. Please try again or contact the administrator."
-        );
-        setPortfolioLoading(false);
-      }
-      // Update state or perform other logic with userData
-    } catch (error) {
-      console.log(error);
-      toast.error(
-        "An error occured. Please try again or contact the administrator."
-      );
-      setPortfolioLoading(false);
-      // Handle the error, if needed
-    }
-  };
-
+ 
   const deleteConfirm = (e) => {
     setDeleteConfirmShow(true);
     setPortfolioId(e);
@@ -295,16 +273,14 @@ const Portfolio = () => {
       });
   }
 
-  useEffect(() => {
-    fetchData(currentUser);
-  }, [reloadCount]);
+
   const [step, setStep] = useState(1);
   const currentUser = useSelector((state) => state?.user?.user?.id);
   const storeUser = useSelector((state) => state?.user?.user);
 
   return (
     <LayoutSellerCenter>
-      {portfolioLoading ? (
+      {false ? (
         <LoadingPage />
       ) : (
         <>
