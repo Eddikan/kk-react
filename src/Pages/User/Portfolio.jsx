@@ -38,11 +38,19 @@ import LoadingPage from "Components/Shared/LoadingPage";
 import Sidebar from "Components/Shared/Sidebar";
 import GetUserPortfolioData from "Utils/GetUserPortfolioData";
 import LayoutSellerCenter from "Components/Layout/LayoutSellerCenter";
-
+import { useSelector } from "react-redux";
+import { selectMyDesigners } from "store/slices/designersSlice";
+import { useGetMyDesignsQuery } from "store/api/queries";
 const Portfolio = () => {
+  const { refetch: refetchMyDesigns } = useGetMyDesignsQuery();
+  useEffect(() => {
+    refetchMyDesigns();
+  }, []);
   const navigate = useNavigate();
   const [selectedItemIndex, setSelectedItemIndex] = useState("");
-  const [portfolio, setPortfolio] = useState([]);
+  // const [portfolio, setPortfolio] = useState([]);
+  // const portfolio = useSelector(selectMyDesigners);
+  const portfolio = []
   const [portfolioLoading, setPortfolioLoading] = useState(true);
   const [portfolioDraftLoading, setPortfolioDraftLoading] = useState(false);
   const [portfolioPublishLoading, setPortfolioPublishLoading] = useState(false);
@@ -64,13 +72,9 @@ const Portfolio = () => {
   const [copyEmbedLink, setCopyEmbedLink] = useState(false);
   const [copy, setCopy] = useState(false);
 
-  const [cookies, setCookie, removeCookie] = useCookies([
-    "currentUser",
-    "token",
-  ]);
+  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
 
   const token = cookies.token;
-  const currentUser = cookies.currentUser;
   let iframeLink = `<iframe src="https://kouture-konect.web.app/view-design/${singleDesign.portfolioId}" height="316" width="404" allowfullscreen lazyload frameborder="0" allow="clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
   const responsive = {
     desktop: {
@@ -135,7 +139,8 @@ const Portfolio = () => {
     setCopyEmbedLink(true);
   }
 
-  const handleActionClick = (index) => {
+  const handleActionClick = (e, index) => {
+    e.stopPropagation();
     setSelectedItemIndex((prevIndex) => (prevIndex === index ? null : index));
   };
 
@@ -175,12 +180,8 @@ const Portfolio = () => {
     });
 
     setDesignImages(image_urls);
-    if (image_urls?.[0]?.image_url) {
-      setActiveImage(
-        import.meta.env.VITE_REACT_APP_STORAGE_URL +
-          "portfolio/" +
-          image_urls[0].image_url
-      );
+    if (image_urls?.[0]?.url) {
+      setActiveImage(image_urls[0].url);
     } else {
       setActiveImage(PlaceholderImage);
     }
@@ -298,6 +299,8 @@ const Portfolio = () => {
     fetchData(currentUser);
   }, [reloadCount]);
   const [step, setStep] = useState(1);
+  const currentUser = useSelector((state) => state?.user?.user?.id);
+  const storeUser = useSelector((state) => state?.user?.user);
 
   return (
     <LayoutSellerCenter>
@@ -355,11 +358,7 @@ const Portfolio = () => {
                                 } ${object.status == "Draft" ? "draft" : ""}`}
                                 style={{
                                   backgroundImage:
-                                    "url(" +
-                                    import.meta.env.VITE_REACT_APP_STORAGE_URL +
-                                    "portfolio/" +
-                                    object.image_urls[0].image_url +
-                                    ")",
+                                    "url(" + object.media[0].url + ")",
                                 }}
                               >
                                 <div className="portfolio-overlay">
@@ -368,9 +367,11 @@ const Portfolio = () => {
                                       className="cursor-pointer action-menu"
                                       color="#ffffff"
                                       size="30px"
-                                      onClick={() => handleActionClick(index)}
+                                      onClick={(e) =>
+                                        handleActionClick(e, index)
+                                      }
                                     />
-                                    {selectedItemIndex === index && (
+                                    {true && (
                                       <div className="action-box">
                                         <Link
                                           className="text-decoration-none"
@@ -386,18 +387,18 @@ const Portfolio = () => {
                                           onClick={function () {
                                             togglePortfolioImage(
                                               object.id,
-                                              object.designer.id,
-                                              object.user.first_name,
-                                              object.user.last_name,
-                                              object.image_urls,
-                                              object.user.image,
-                                              object.user.address_line_1,
-                                              object.user.city,
-                                              object.user.province,
-                                              object.user.country,
+                                              currentUser,
+                                              storeUser.first_name,
+                                              storeUser.last_name,
+                                              object.media,
+                                              storeUser.avatar,
+                                              storeUser.address.address_line_1,
+                                              storeUser.address.city_name,
+                                              storeUser.address.state_name,
+                                              storeUser.address.country_name,
                                               object.tags,
                                               object.description,
-                                              object.user.id
+                                              object.user_id
                                             );
                                           }}
                                         >

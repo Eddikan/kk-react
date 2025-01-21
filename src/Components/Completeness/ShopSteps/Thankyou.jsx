@@ -29,7 +29,7 @@ const ThankYouProgress = () => {
             <a
               className="btn btn-primary"
               href={`${
-                is_designer ? "/user/center/calendar" : "/user/center/products"
+                is_designer ? "/user/center/portfolio" : "/user/center/products"
               }`}
             >
               View Shop
