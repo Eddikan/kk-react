@@ -4,6 +4,7 @@ import { setNotifications } from "../slices/notificationsSlice";
 import { setWishlistItems } from "../slices/wishlistSlice";
 import { setDesigns } from "../slices/designsSlice";
 import { setCalendarData } from "../slices/calendarSlice";
+import { setDesigners } from "../slices/designersSlice";
 
 export const queryService = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -40,12 +41,12 @@ export const queryService = api.injectEndpoints({
     }),
 
     getDesigners: builder.query({
-      query: ({ search = "", country = "" }) =>
-        `designers?search=${search}&country=${country}`,
+      query: ({ page = 1, per_page = 10, search = "", country = "", areas_of_specialization = "", categories = "" }) =>
+        `designers?page=${page}&per_page=${per_page}&search=${search}&country=${country}&areas_of_specialization=${areas_of_specialization}&categories=${categories}`,
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          dispatch({ type: "designers/setDesigners", payload: data.data.data });
+          dispatch(setDesigners(data.data));
         } catch (error) {
           console.log("error", error);
         }

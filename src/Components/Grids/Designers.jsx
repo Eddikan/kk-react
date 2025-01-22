@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Layout from 'Components/Layout/Layout';
 import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import MalePlaceholder from 'Assets/images/placeholders/male-placeholder.jpg';
@@ -9,91 +8,36 @@ import Pagination from 'Components/Pagination/Pagination';
 import { BsBroadcast } from "react-icons/bs";
 import 'react-multi-carousel/lib/styles.css';
 import { GoHeart } from 'react-icons/go';
-import { useCookies } from 'react-cookie';
-import axios from "axios";
 
 const Designers = (props) => {
     const navigate = useNavigate();
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
     const reloadCount = props.reloadCount;
     const currentUser = props.currentUser;
     const userRole = props.userRole;
     const [selectedItemIndex, setSelectedItemIndex] = useState('');
-    const [designers, setDesigners] = useState([]);
-    const [designersLoading, setDesignersLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageCount, setPageCount] = useState(1);
-    const [pageSize, setPageSize] = useState(1);
-    let PageSize = 10;
+    const [pageSize, setPageSize] = useState(10);
 
-    const current_user_id = cookies.currentUser;
-    const token = cookies.token;
-    
-    const getDesigners = async () => {
-        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer?current_user_id=' + current_user_id + '&token=' + token);
-    };
+
+
+
 
     const toggleGetUser = (e) => {
         window.location.href = "/designer-profile?user_id=" + e;
-    }
+    };
 
     const handleChangePage = (pageNumber) => {
-        axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer?page=' + pageNumber + '&current_user_id=' + current_user_id + '&token=' + token)
-            .then((response) => {
-                const data = response.data;
-                setCurrentPage(pageNumber);
-                const selectedDesigners = response.data.data;
-                if (selectedDesigners) {
-                    setDesigners(selectedDesigners);
-                    setCurrentPage(() => data.meta.current_page);
-                    setPageCount(() => data.meta.total);
-                    setPageSize(() => data.meta.per_page);
-                    setDesignersLoading(false);
-                } else {
-                    setDesignersLoading(false);
-                    toast.error('There has been an error getting the designers, please try again!');
-                }
-            }).catch(error => {
-                setDesignersLoading(false);
-                toast.error('There has been an error getting the designers, please try again!');
-            });
+        setCurrentPage(pageNumber);
     };
 
-    async function wishlistDesignerUpdate(e) {
-        axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/wishlist/update?current_user_id=' + current_user_id + '&token=' + token, e).then((response) => {
-            const success = response.data.status;
-            if (success == 'Success') {
-            } else {
-                toast.error('Something went wrong, please contact the administrator!');
-            }
-        }).catch((error) => {
-            toast.error('Something went wrong, please contact the administrator!');
-        });
-    };
+    const designers =  [];
 
-    useEffect(() => {
-        getDesigners()
-            .then((response) => {
-                setDesignersLoading(false);
-                const selectedDesigners = response.data.data;
-                if (selectedDesigners) {
-                    setDesigners(selectedDesigners);
-                    setPageCount(() => response.data.meta.total);
-                } else {
-                    toast.error('There has been an error getting the designers, please try again!');
-                    setDesignersLoading(false);
-                }
-            })
-            .catch((error) => {
-                toast.error('There has been an error getting the designers, please try again!');
-                setDesignersLoading(false);
-            });
-    },[reloadCount]);
 
     return (
         <>
             <div id="profile-designers">
-                {designersLoading ?
+                {false ?
                     <>
                         <p className='text-center mb-3 mt-3'>
                             Loading...
@@ -181,7 +125,7 @@ const Designers = (props) => {
                     className="mt-4 mb-0"
                     currentPage={currentPage}
                     totalCount={pageCount}
-                    pageSize={PageSize}
+                    pageSize={pageSize}
                     onPageChange={page => handleChangePage(page)}
                 />
             </div>
