@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect,useRef, useState } from "react";
 import Layout from "Components/Layout/Layout";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import {
@@ -47,6 +47,7 @@ const Designers = () => {
   const useQuery = () => {
     return new URLSearchParams(useLocation().search);
   };
+  const isFirstRender = useRef(true);
 
   let query = useQuery();
   const headerSearch = query.get("search");
@@ -106,16 +107,29 @@ const Designers = () => {
   useEffect(() => {
     console.log("getDesignersQuery", getDesignersQuery);
   }, [getDesignersQuery]);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
-    getDesignersQuery.refetch();
+    if (isRefreshing) {
+      getDesignersQuery.refetch().finally(() => {
+          setIsRefreshing(false);
+      });
+  }
   }, [
-    currentPage,
-    searchValue,
-    selectedCountryIso3,
-    specializationSearch,
-    selectedCategories,
+    isRefreshing,
+   
   ]);
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+  }
+    setIsRefreshing(true);
+}, [ currentPage,
+  searchValue,
+  selectedCountryIso3,
+  specializationSearch,
+  selectedCategories,]);
 
   const toggleGetUser = (e) => {
     navigate("/designer-profile?user_id=" + e);
@@ -516,7 +530,7 @@ const Designers = () => {
                 </Col>
                 <Col lg="9">
                   <div id="profile-designs" className="ps-2 pt-4">
-                    {getDesignersQuery.isFetching ? (
+                    {getDesignersQuery.isLoading || isRefreshing ? (
                       <>
                         <Card className="text-center">
                           <Card.Body>
