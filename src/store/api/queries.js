@@ -41,7 +41,14 @@ export const queryService = api.injectEndpoints({
     }),
 
     getDesigners: builder.query({
-      query: ({ page = 1, per_page = 10, search = "", country = "", areas_of_specialization = "", categories = "" }) =>
+      query: ({
+        page = 1,
+        per_page = 10,
+        search = "",
+        country = "",
+        areas_of_specialization = "",
+        categories = "",
+      }) =>
         `designers?page=${page}&per_page=${per_page}&search=${search}&country=${country}&areas_of_specialization=${areas_of_specialization}&categories=${categories}`,
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
@@ -163,7 +170,8 @@ export const queryService = api.injectEndpoints({
       },
     }),
     getMyCalender: builder.query({
-      query: ({ year = 2024, month = '01' }) => `user/calender/${year}/${month}`,
+      query: ({ year = 2024, month = "01" }) =>
+        `user/calender/${year}/${month}`,
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
@@ -172,6 +180,9 @@ export const queryService = api.injectEndpoints({
           console.log("error", error);
         }
       },
+    }),
+    getADesigner: builder.query({
+      query: (id) => `designer/${id}`,
     }),
   }),
 });
@@ -189,4 +200,5 @@ export const {
   useGetWishlistItemsQuery,
   useGetDesignsQuery,
   useGetMyCalenderQuery,
+  useGetADesignerQuery
 } = queryService;
