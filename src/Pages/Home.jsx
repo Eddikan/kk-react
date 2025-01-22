@@ -78,7 +78,7 @@ const Home = () => {
                       >
                         <IoIosSearch size={25} /> Explore Marketplace
                       </Button>
-                      {
+                      {/* {
                         !currenStoreUser?.shop?.is_complete &&(
                           <Button
                           className="custom-hover-btn me-3 px-3"
@@ -95,7 +95,7 @@ const Home = () => {
                           Create Shop{" "}
                         </Button>
                         )
-                      }
+                      } */}
                     
                     </>
                   )}

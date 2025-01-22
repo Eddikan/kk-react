@@ -1,694 +1,869 @@
-import { Calendar, momentLocalizer, Views, DateLocalizer } from 'react-big-calendar';
-import { Row, Col, Button, Modal, Card } from 'react-bootstrap';
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import { useNavigate, useParams, Link } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
+import {
+  Calendar,
+  momentLocalizer,
+  Views,
+  DateLocalizer,
+} from "react-big-calendar";
+import { Row, Col, Button, Modal, Card } from "react-bootstrap";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
+import { useNavigate, useParams, Link } from "react-router-dom";
+import { useCookies } from "react-cookie";
 import { MdOutlineCalendarMonth } from "react-icons/md";
 import { GoPlus } from "react-icons/go";
-import moment from 'moment';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
-import PropTypes from 'prop-types'
-import 'Assets/styles/DesignerCalendar/style.css';
+import moment from "moment";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import PropTypes from "prop-types";
+import "Assets/styles/DesignerCalendar/style.css";
 import axios from "axios";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 import { GiAlarmClock } from "react-icons/gi";
+import { useSelector } from "react-redux";
+import { useGetMyCalenderQuery } from "store/api/queries";
 
 const intitialConsultationData = {
-    consultation_date_time: '',
-    consultation_hour_start: '',
-    consultation_hour_end: '',
-    consultation_date: '',
-    email: '',
-    first_name: '',
-    last_name: '',
-    timezone: '',
-    consultation_details: '',
-}
-const initialBusinessHours = {
-    opens_at: '',
-    closes_at: '',
-    date: ''
+  consultation_date_time: "",
+  consultation_hour_start: "",
+  consultation_hour_end: "",
+  consultation_date: "",
+  email: "",
+  first_name: "",
+  last_name: "",
+  timezone: "",
+  consultation_details: "",
 };
 
 const initialAppointments = {
-    consultation_date_time: '',
-    consultation_hour_start: '',
-    consultation_hour_end: '',
-    consultation_date: '',
-    email: '',
-    first_name: '',
-    last_name: '',
-    timezone: '',
-    consultation_details: '',
+  consultation_date_time: "",
+  consultation_hour_start: "",
+  consultation_hour_end: "",
+  consultation_date: "",
+  email: "",
+  first_name: "",
+  last_name: "",
+  timezone: "",
+  consultation_details: "",
 };
 
-const localizer = momentLocalizer(moment)
+const localizer = momentLocalizer(moment);
 
-const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
+const MyCalendar = ({ designerId }) => {
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth() + 1;
 
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'token']);
-    const currentUserDetails = cookies.userDetails;
-    const currentUser = cookies.currentUser;
-    const current_user_id = cookies.currentUser;
-    const token = cookies.token;
-    const userDetails = cookies.userDetails;
-    const { designerIdParams } = useParams();
+  const calenderQuery = useGetMyCalenderQuery({ year, month });
+  const handleNavigate = (date) => {
+    setCurrentDate(date);
+  };
+  useEffect(() => {
+    calenderQuery.refetch();
+  }, [year, month, currentDate]);
 
-    const designer_id = designerId ?? designerIdParams;
+  const [cookies, setCookie, removeCookie] = useCookies([
+    "currentUser",
+    "isLoggedIn",
+    "userDetails",
+    "userRole",
+    "token",
+  ]);
+  const currentUserDetails = cookies.userDetails;
+  const current_user_id = cookies.currentUser;
+  const token = cookies.token;
+  const { designerIdParams } = useParams();
 
-    const [events, setEvents] = useState([]);
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [appointmentModalIsOpen, setAppointmentModalIsOpen] = useState(false);
-    const [selectedDate, setSelectedDate] = useState(null);
-    const [reloadCount, setReloadCount] = useState(0);
-    const [selectedTimeSlot, setSelectedTimeSlot] = useState();
-    const [formStatus, setFormStatus] = useState('standby');
-    const [appointmentFormData, setAppointmentFormData] = useState(initialAppointments);
-    const [times, setTimes] = useState([initialAppointments]);
-    const [consultationFormData, setConsultationFormData] = useState(intitialConsultationData);
-    const [currentTimezone, setCurrentTimezone] = useState(null);
-    const [selectedEvent, setSelectedEvent] = useState(null);
+  const designer_id = designerId ?? designerIdParams;
 
-    const [selectedHoursArray, setSelectedHoursArray] = useState([]);
-    const [startTime, setStartTime] = useState('');
-    const [endTime, setEndTime] = useState('');
-    const [scheduledAppointments, setScheduledAppointments] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [appointmentModalIsOpen, setAppointmentModalIsOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [reloadCount, setReloadCount] = useState(0);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState();
+  const [formStatus, setFormStatus] = useState("standby");
+  const [appointmentFormData, setAppointmentFormData] =
+    useState(initialAppointments);
+  const [times, setTimes] = useState([initialAppointments]);
+  const [consultationFormData, setConsultationFormData] = useState(
+    intitialConsultationData
+  );
+  const [currentTimezone, setCurrentTimezone] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
+  const [selectedHoursArray, setSelectedHoursArray] = useState([]);
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [scheduledAppointments, setScheduledAppointments] = useState([]);
 
-    const postSetAppointment = async (data) => {
-        return await axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/' + designer_id + '/set/appointment?current_user_id=' + current_user_id, data);
-    };
+  const postSetAppointment = async (data) => {
+    return await axios.post(
+      import.meta.env.VITE_REACT_APP_API_ENDPOINT +
+        "designer/" +
+        designer_id +
+        "/set/appointment?current_user_id=" +
+        current_user_id,
+      data
+    );
+  };
 
-    const getAvailabilities = async (e) => {
-        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/' + designer_id + '/availability?date=' + e + '?current_user_id=' + current_user_id + '&token' + token);
-    };
+  const getAvailabilities = async (e) => {
+    return await axios.get(
+      import.meta.env.VITE_REACT_APP_API_ENDPOINT +
+        "designer/" +
+        designer_id +
+        "/availability?date=" +
+        e +
+        "?current_user_id=" +
+        current_user_id +
+        "&token" +
+        token
+    );
+  };
 
-    const getDesignerAppointment = async () => {
-        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/' + designer_id + '/appointment?current_user_id=' + current_user_id + '&token=' + token);
-    };
+  const getDesignerAppointment = async () => {
+    return await axios.get(
+      import.meta.env.VITE_REACT_APP_API_ENDPOINT +
+        "designer/" +
+        designer_id +
+        "/appointment?current_user_id=" +
+        current_user_id +
+        "&token=" +
+        token
+    );
+  };
 
-    function convertTo12HourFormat(time24) {
-        const [hours, minutes] = time24.split(':');
-        let hours12 = parseInt(hours, 10);
-        const ampm = hours12 >= 12 ? 'PM' : 'AM';
-        hours12 = hours12 % 12 || 12;
-        return `${hours12}:${minutes} ${ampm}`;
+  function convertTo12HourFormat(time24) {
+    const [hours, minutes] = time24.split(":");
+    let hours12 = parseInt(hours, 10);
+    const ampm = hours12 >= 12 ? "PM" : "AM";
+    hours12 = hours12 % 12 || 12;
+    return `${hours12}:${minutes} ${ampm}`;
+  }
+
+  function convert12to24(time12) {
+    const [time, period] = time12.split(" ");
+
+    let [hours, minutes] = time.split(":");
+    hours = parseInt(hours, 10);
+
+    if (period === "PM" && hours !== 12) {
+      hours += 12;
+    } else if (period === "AM" && hours === 12) {
+      hours = 0;
     }
 
-    function convert12to24(time12) {
-        const [time, period] = time12.split(' ');
+    // Format the result in 24-hour format
+    const hours24 = hours.toString().padStart(2, "0");
+    const minutes24 = minutes.padStart(2, "0");
 
-        let [hours, minutes] = time.split(':');
-        hours = parseInt(hours, 10);
+    return `${hours24}:${minutes24}`;
+  }
 
-        if (period === 'PM' && hours !== 12) {
-            hours += 12;
-        } else if (period === 'AM' && hours === 12) {
-            hours = 0;
-        }
+  function convertArrayTo12HourFormat(hoursArray) {
+    return hoursArray.map((hour) => convertTo12HourFormat(hour));
+  }
 
-        // Format the result in 24-hour format
-        const hours24 = hours.toString().padStart(2, '0');
-        const minutes24 = minutes.padStart(2, '0');
+  const convertHoursToDatetime = (time, selectedDate) => {
+    const [hours, minutes, period] = time.split(/[: ]/);
 
-        return `${hours24}:${minutes24}`;
-    }
+    // Convert hours to 24-hour format
+    const hours24 =
+      period === "PM" ? parseInt(hours, 10) + 12 : parseInt(hours, 10);
 
-    function convertArrayTo12HourFormat(hoursArray) {
-        return hoursArray.map(hour => convertTo12HourFormat(hour));
-    }
+    const resultDatetime = new Date(selectedDate);
+    resultDatetime.setHours(hours24);
+    resultDatetime.setMinutes(parseInt(minutes, 10));
 
-    const convertHoursToDatetime = (time, selectedDate) => {
-        const [hours, minutes, period] = time.split(/[: ]/);
+    return resultDatetime.toISOString();
+  };
 
-        // Convert hours to 24-hour format
-        const hours24 = period === 'PM' ? parseInt(hours, 10) + 12 : parseInt(hours, 10);
+  const convertToIsoDatetime = (date) => {
+    const resultDatetime = new Date(date);
 
-        const resultDatetime = new Date(selectedDate);
-        resultDatetime.setHours(hours24);
-        resultDatetime.setMinutes(parseInt(minutes, 10));
+    return resultDatetime.toISOString();
+  };
 
-        return resultDatetime.toISOString();
+  const handleSelectEvent = useCallback((event) => {
+    const options = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+    };
+    const optionsDate = { year: "numeric", month: "long", day: "numeric" };
+    const optionsTimeEnd = { hour: "numeric", minute: "numeric" };
+    const optionsTimeStart = { hour: "numeric", minute: "numeric" };
+    const formattedDate = new Intl.DateTimeFormat("en-US", optionsDate).format(
+      event.start
+    );
+    const formattedTimeEnd = new Intl.DateTimeFormat(
+      "en-US",
+      optionsTimeEnd
+    ).format(event.end);
+    const formattedTimeStart = new Intl.DateTimeFormat(
+      "en-US",
+      optionsTimeStart
+    ).format(event.start);
+
+    setSelectedEvent({
+      ...selectedEvent,
+      title: event.title,
+      start: formattedTimeStart,
+      end: formattedTimeEnd,
+      date: formattedDate,
+      desc: event.desc,
+      status: event.status,
+    });
+    setAppointmentModalIsOpen(true);
+  }, []);
+
+  const { defaultDate, views } = useMemo(
+    () => ({
+      defaultDate: new Date(1970, 1, 1),
+      views: [Views.MONTH],
+    }),
+    []
+  );
+
+  const closeAppointmentModal = () => {
+    setAppointmentModalIsOpen(false);
+    setSelectedEvent(null);
+  };
+
+  // const handleChangeConsultation = (e) => {
+  //     var { name, value } = e.target;
+  //     setConsultationFormData({
+  //         ...consultationFormData,
+
+  //         email: currentUserDetails.email,
+  //         first_name: currentUserDetails.first_name,
+  //         last_name: currentUserDetails.last_name,
+  //         timezone: currentTimezone,
+  //         // consultation_date_time: convertToIsoDatetime(selectedDate),
+  //         consultation_date: convertToIsoDatetime(selectedDate),
+  //         consultation_details: 'Self added Appointment',
+  //         [name]: value,
+
+  //     });
+  // }
+  const handleChangeConsultation = (e) => {
+    let { name, value } = e.target;
+    const updatedFormData = {
+      ...consultationFormData,
+      email: currentUserDetails.email,
+      first_name: currentUserDetails.first_name,
+      last_name: currentUserDetails.last_name,
+      timezone: currentTimezone,
+      consultation_date: convertToIsoDatetime(selectedDate),
+      consultation_details: "Self added Appointment",
+      [name]: value,
     };
 
-    const convertToIsoDatetime = (date) => {
-        const resultDatetime = new Date(date);
-
-        return resultDatetime.toISOString();
-    };
-
-    const handleSelectEvent = useCallback((event) => {
-        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-        const optionsDate = { year: 'numeric', month: 'long', day: 'numeric' };
-        const optionsTimeEnd = { hour: 'numeric', minute: 'numeric' };
-        const optionsTimeStart = { hour: 'numeric', minute: 'numeric' };
-        const formattedDate = new Intl.DateTimeFormat('en-US', optionsDate).format(event.start);
-        const formattedTimeEnd = new Intl.DateTimeFormat('en-US', optionsTimeEnd).format(event.end);
-        const formattedTimeStart = new Intl.DateTimeFormat('en-US', optionsTimeStart).format(event.start);
-
-        setSelectedEvent({
-            ...selectedEvent,
-            title: event.title,
-            start: formattedTimeStart,
-            end: formattedTimeEnd,
-            date: formattedDate,
-            desc: event.desc,
-            status: event.status,
-        });
-        setAppointmentModalIsOpen(true);
-
-
-    }, []);
-
-    const { defaultDate, views } = useMemo(
-        () => ({
-            defaultDate: new Date(1970, 1, 1),
-            views: [Views.MONTH, Views.DAY, Views.WEEK],
-        }),
-        []
-    )
-
-    const closeAppointmentModal = () => {
-        setAppointmentModalIsOpen(false);
-        setSelectedEvent(null);
-    }
-
-    // const handleChangeConsultation = (e) => {
-    //     var { name, value } = e.target;
-    //     setConsultationFormData({
-    //         ...consultationFormData,
-
-    //         email: currentUserDetails.email,
-    //         first_name: currentUserDetails.first_name,
-    //         last_name: currentUserDetails.last_name,
-    //         timezone: currentTimezone,
-    //         // consultation_date_time: convertToIsoDatetime(selectedDate),
-    //         consultation_date: convertToIsoDatetime(selectedDate),
-    //         consultation_details: 'Self added Appointment',
-    //         [name]: value,
-
-    //     });
+    // Validation logic for time fields
+    // if (name === 'consultation_hour_start' && updatedFormData.consultation_hour_end) {
+    //     if (value >= updatedFormData.consultation_hour_end) {
+    //         toast.error("Start time must be before the end time.");
+    //         return;
+    //     }
+    // } else if (name === 'consultation_hour_end' && updatedFormData.consultation_hour_start) {
+    //     if (value <= updatedFormData.consultation_hour_start) {
+    //         toast.error("End time must be after the start time.");
+    //         return;
+    //     }
     // }
-    const handleChangeConsultation = (e) => {
-        let { name, value } = e.target;
-        const updatedFormData = {
-            ...consultationFormData,
-            email: currentUserDetails.email,
-            first_name: currentUserDetails.first_name,
-            last_name: currentUserDetails.last_name,
-            timezone: currentTimezone,
-            consultation_date: convertToIsoDatetime(selectedDate),
-            consultation_details: 'Self added Appointment',
-            [name]: value,
-        };
-    
-        // Validation logic for time fields
-        // if (name === 'consultation_hour_start' && updatedFormData.consultation_hour_end) {
-        //     if (value >= updatedFormData.consultation_hour_end) {
-        //         toast.error("Start time must be before the end time.");
-        //         return; 
-        //     }
-        // } else if (name === 'consultation_hour_end' && updatedFormData.consultation_hour_start) {
-        //     if (value <= updatedFormData.consultation_hour_start) {
-        //         toast.error("End time must be after the start time.");
-        //         return; 
-        //     }
-        // }
-    
-        // Update the state with validated data
-        setConsultationFormData(updatedFormData);
-    };
-    
 
-    const handleDateClick = ({ start }) => {
+    // Update the state with validated data
+    setConsultationFormData(updatedFormData);
+  };
 
-        if (moment(start).isBefore(moment(), 'day')) {
-            toast.error("You can't select a past date!");
-            return; 
-        }
-        
-        // const selectedTime = moment(start);
-        // if (selectedTime.isBefore(moment(), 'minute')) {
-        //     toast.error("You can't select a past time!");
-        //     return;
-        // }
-        
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  const handleDateClick = ({ start }) => {
+    setModalIsOpen(true);
 
-        const formattedDate = new Intl.DateTimeFormat('en-US', options).format(start);
-
-        getAvailabilities(formattedDate).then(response => {
-            const selectedHours = response.data.data?.available_hours;
-            const status = response.data.status;
-            if (status == "Fail") {
-                const errors = response.data.errors;
-                if (errors && errors.length > 0) {
-                    errors.map((error, index) => {
-                        toast.error(error);
-                        return null; // React requires a return value, so we return null here
-                    })
-                }
-            } else {
-                if (selectedHours) {
-                    let hoursArray = convertArrayTo12HourFormat(selectedHours);
-                    setSelectedHoursArray(hoursArray);
-                    if (hoursArray.length > 0) {
-                        if (hoursArray.length > 1) {
-                            setStartTime(hoursArray[0]);
-                            setEndTime(hoursArray[hoursArray.length - 1]);
-                        } else {
-                            setStartTime(hoursArray[0]);
-                        }
-                        setConsultationFormData({
-                            ...consultationFormData,
-
-                            email: currentUserDetails.email,
-                            first_name: currentUserDetails.first_name,
-                            last_name: currentUserDetails.last_name,
-                            timezone: currentTimezone,
-                            // consultation_date_time: convertToIsoDatetime(selectedDate),
-                            consultation_date: convertToIsoDatetime(selectedDate),
-                            consultation_details: 'Self added Appointment',
-                            consultation_hour_start: convert12to24(hoursArray[0]),
-                        });
-
-                    } else {
-                        setConsultationFormData({
-                            ...consultationFormData,
-
-                            email: currentUserDetails.email,
-                            first_name: currentUserDetails.first_name,
-                            last_name: currentUserDetails.last_name,
-                            timezone: currentTimezone,
-                            // consultation_date_time: convertToIsoDatetime(selectedDate),
-                            consultation_date: convertToIsoDatetime(selectedDate),
-                            consultation_details: 'Self added Appointment',
-                            consultation_hour_start: '',
-                        });
-                        setStartTime('');
-                        setEndTime('');
-                    }
-
-                } else {
-                    const errors = response.data.errors;
-                    if (errors && errors.length > 0) {
-                        errors.map((error, index) => {
-                            toast.error(error);
-                            return null; // React requires a return value, so we return null here
-                        });
-                    } else {
-                        toast.error('There has been an error getting the schedule, please try again!');
-                    }
-                }
-            }
-        }).catch(() => {
-            toast.error('There has been an error adding the appointment, please try again!');
-        });
-        setSelectedDate(start);
-        setModalIsOpen(true);
-    };
-
-    const handleModalClose = () => {
-        setModalIsOpen(false);
-        setSelectedDate(null);
-    };
-
-    const handleAppointments = () => {
-        setTimes(prevtimes => [
-            ...prevtimes,
-            initialAppointments
-        ]);
+    return;
+    if (moment(start).isBefore(moment(), "day")) {
+      toast.error("You can't select a past date!");
+      return;
     }
 
-    const handleRemoveAppointment = (index) => {
-        setTimes((prevtimes) => {
-            const updatedTimes = [...prevtimes];
-            updatedTimes.splice(index, 1);
+    // const selectedTime = moment(start);
+    // if (selectedTime.isBefore(moment(), 'minute')) {
+    //     toast.error("You can't select a past time!");
+    //     return;
+    // }
 
-            return updatedTimes;
-        });
-    }
-    const isOverlapping = (start1, end1, start2, end2) => {
-        return (start1 < end2) && (end1 > start2);
-    };
-    
-    const addAppointmentSubmit = (e) => {
-        e.preventDefault();
+    const options = { year: "numeric", month: "long", day: "numeric" };
 
-        const newStart = new Date(convertHoursToDatetime(consultationFormData.consultation_hour_start, consultationFormData.consultation_date));
-        const newEnd = new Date(convertHoursToDatetime(consultationFormData.consultation_hour_end, consultationFormData.consultation_date));
-         
-        // Validation for start time and end time
-        if (newStart >= newEnd) {
-            toast.error("Start time must be before the end time.");
-            return;
-        }
+    const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
+      start
+    );
 
-        // Get the current time for comparison
-        const currentTime = new Date();
-
-        // Check if the selected start time is in the past
-        if (newStart < currentTime) {
-            toast.error("You can't schedule an appointment in the past!");
-            return;
-        }
-
-        // Check if the selected end time is in the past
-        if (newEnd < currentTime) {
-            toast.error("You can't schedule an appointment that ends in the past!");
-            return;
-        }
-
-        // Convert available startTime and endTime to comparable Date objects
-        const availableStart = new Date(convertHoursToDatetime(startTime, consultationFormData.consultation_date));
-        const availableEnd = new Date(convertHoursToDatetime(endTime, consultationFormData.consultation_date));
-
-        // Check if the new appointment falls within the available time range
-        if (newStart < availableStart || newEnd > availableEnd) {
-            toast.error("Appointment time is outside of available hours. Please choose a valid time.");
-            return;
-        }
-        // Check for overlap with existing appointments
-        const hasOverlap = scheduledAppointments.some(appointment => {
-            const existingStart = new Date(appointment.start);
-            const existingEnd = new Date(appointment.end);
-            return isOverlapping(newStart, newEnd, existingStart, existingEnd);
-        });
-    
-        if (hasOverlap) {
-            toast.error('Time slot unavailable. Please choose another time.');
-            return;
-        }
-
-        setFormStatus('loading');
-        postSetAppointment({ ...consultationFormData })
-            .then(response => {
-                const status = response.data.status;
-                if (status === "Success") {
-                    setFormStatus('standby');
-                    setReloadCount(reloadCount + 1);
-                    setConsultationFormData(intitialConsultationData);
-                    toast.success('Appointment added successfully!');
-                    handleModalClose();
-                } else {
-                    if (status == "Fail") {
-                        const errors = response.data.errors;
-                        if (errors && errors.length > 0) {
-                            errors.map((error, index) => {
-                                toast.error(error);
-                                return null; // React requires a return value, so we return null here
-                            })
-                        }
-                        setFormStatus('standby');
-                    }
-                }
-            }).catch(() => {
-                toast.error('There has been an error adding the appointment, please try again!');
+    getAvailabilities(formattedDate)
+      .then((response) => {
+        const selectedHours = response.data.data?.available_hours;
+        const status = response.data.status;
+        if (status == "Fail") {
+          const errors = response.data.errors;
+          if (errors && errors.length > 0) {
+            errors.map((error, index) => {
+              toast.error(error);
+              return null; // React requires a return value, so we return null here
             });
+          }
+        } else {
+          if (selectedHours) {
+            let hoursArray = convertArrayTo12HourFormat(selectedHours);
+            setSelectedHoursArray(hoursArray);
+            if (hoursArray.length > 0) {
+              if (hoursArray.length > 1) {
+                setStartTime(hoursArray[0]);
+                setEndTime(hoursArray[hoursArray.length - 1]);
+              } else {
+                setStartTime(hoursArray[0]);
+              }
+              setConsultationFormData({
+                ...consultationFormData,
+
+                email: currentUserDetails.email,
+                first_name: currentUserDetails.first_name,
+                last_name: currentUserDetails.last_name,
+                timezone: currentTimezone,
+                // consultation_date_time: convertToIsoDatetime(selectedDate),
+                consultation_date: convertToIsoDatetime(selectedDate),
+                consultation_details: "Self added Appointment",
+                consultation_hour_start: convert12to24(hoursArray[0]),
+              });
+            } else {
+              setConsultationFormData({
+                ...consultationFormData,
+
+                email: currentUserDetails.email,
+                first_name: currentUserDetails.first_name,
+                last_name: currentUserDetails.last_name,
+                timezone: currentTimezone,
+                // consultation_date_time: convertToIsoDatetime(selectedDate),
+                consultation_date: convertToIsoDatetime(selectedDate),
+                consultation_details: "Self added Appointment",
+                consultation_hour_start: "",
+              });
+              setStartTime("");
+              setEndTime("");
+            }
+          } else {
+            const errors = response.data.errors;
+            if (errors && errors.length > 0) {
+              errors.map((error, index) => {
+                toast.error(error);
+                return null; // React requires a return value, so we return null here
+              });
+            } else {
+              toast.error(
+                "There has been an error getting the schedule, please try again!"
+              );
+            }
+          }
+        }
+      })
+      .catch(() => {
+        toast.error(
+          "There has been an error adding the appointment, please try again!"
+        );
+      });
+    setSelectedDate(start);
+  };
+
+  const handleModalClose = () => {
+    setModalIsOpen(false);
+    setSelectedDate(null);
+  };
+
+  const isOverlapping = (start1, end1, start2, end2) => {
+    return start1 < end2 && end1 > start2;
+  };
+
+  const addAppointmentSubmit = (e) => {
+    e.preventDefault();
+
+    const newStart = new Date(
+      convertHoursToDatetime(
+        consultationFormData.consultation_hour_start,
+        consultationFormData.consultation_date
+      )
+    );
+    const newEnd = new Date(
+      convertHoursToDatetime(
+        consultationFormData.consultation_hour_end,
+        consultationFormData.consultation_date
+      )
+    );
+
+    // Validation for start time and end time
+    if (newStart >= newEnd) {
+      toast.error("Start time must be before the end time.");
+      return;
     }
 
-    useEffect(() => {
-        const getTimezone = () => {
-            const timezone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
-            setCurrentTimezone(timezone);
-        };
+    // Get the current time for comparison
+    const currentTime = new Date();
 
-        getTimezone();
-    }, []);
-    useEffect(() => {
-        getDesignerAppointment().then((response) => {
-            const appointments = response.data?.data;
-            const status = response.data.status;
-            if (status == "Fail") {
-                const errors = response.data.errors;
-                if (errors && errors.length > 0) {
-                    errors.map((error, index) => {
-                        toast.error(error);
-                        return null; // React requires a return value, so we return null here
-                    })
-                }
-            } else {
-                if (appointments) {
-                    const apiEventDataArray = [];
-                    for (let i = 0; i < appointments.length; i++) {
-                        const appointment = appointments[i];
-                        // const appointmentDateTime = appointment.consultation_date_time;
-                        const appointmentDateTime = appointment.consultation_date;
-                        if (appointment.consultation_hour_start && appointment.consultation_hour_end) {
-                            const appointmentStartIso = convertHoursToDatetime(appointment.consultation_hour_start, appointmentDateTime);
-                            const appointmentEndIso = convertHoursToDatetime(appointment.consultation_hour_end, appointmentDateTime);
-                            const eventData = {
-                                id: appointment.id,
-                                title: appointment.title ? appointment.title : 'Appointment with ' + appointment.customer?.first_name + ' ' + appointment.customer?.last_name,
-                                start: new Date(appointmentStartIso),
-                                end: new Date(appointmentEndIso),
-                                desc: appointment.consultation_details,
-                                status: appointment.status,
-                            };
-                            apiEventDataArray.push(eventData);
-                        }
-                    }
-                    setEvents(apiEventDataArray);
-                    setScheduledAppointments(apiEventDataArray);
-                } else {
-                    const errors = response.data.errors;
-                    if (errors && errors.length > 0) {
-                        errors.forEach((error) => {
-                            toast.error(error);
-                        });
-                    } else {
-                        toast.error('There has been an error getting the appointments, please try again!');
-                    }
-                }
+    // Check if the selected start time is in the past
+    if (newStart < currentTime) {
+      toast.error("You can't schedule an appointment in the past!");
+      return;
+    }
+
+    // Check if the selected end time is in the past
+    if (newEnd < currentTime) {
+      toast.error("You can't schedule an appointment that ends in the past!");
+      return;
+    }
+
+    // Convert available startTime and endTime to comparable Date objects
+    const availableStart = new Date(
+      convertHoursToDatetime(startTime, consultationFormData.consultation_date)
+    );
+    const availableEnd = new Date(
+      convertHoursToDatetime(endTime, consultationFormData.consultation_date)
+    );
+
+    // Check if the new appointment falls within the available time range
+    if (newStart < availableStart || newEnd > availableEnd) {
+      toast.error(
+        "Appointment time is outside of available hours. Please choose a valid time."
+      );
+      return;
+    }
+    // Check for overlap with existing appointments
+    const hasOverlap = scheduledAppointments.some((appointment) => {
+      const existingStart = new Date(appointment.start);
+      const existingEnd = new Date(appointment.end);
+      return isOverlapping(newStart, newEnd, existingStart, existingEnd);
+    });
+
+    if (hasOverlap) {
+      toast.error("Time slot unavailable. Please choose another time.");
+      return;
+    }
+
+    setFormStatus("loading");
+    postSetAppointment({ ...consultationFormData })
+      .then((response) => {
+        const status = response.data.status;
+        if (status === "Success") {
+          setFormStatus("standby");
+          setReloadCount(reloadCount + 1);
+          setConsultationFormData(intitialConsultationData);
+          toast.success("Appointment added successfully!");
+          handleModalClose();
+        } else {
+          if (status == "Fail") {
+            const errors = response.data.errors;
+            if (errors && errors.length > 0) {
+              errors.map((error, index) => {
+                toast.error(error);
+                return null; // React requires a return value, so we return null here
+              });
             }
-        }).catch((error) => {
-            toast.error('There has been an error getting the appointments, please try again!');
-        });
+            setFormStatus("standby");
+          }
+        }
+      })
+      .catch(() => {
+        toast.error(
+          "There has been an error adding the appointment, please try again!"
+        );
+      });
+  };
 
-    }, [reloadCount]);
+  useEffect(() => {
+    const getTimezone = () => {
+      const timezone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
+      setCurrentTimezone(timezone);
+    };
 
-    return (
-        <>
-            <div>
-                <Calendar
-                    localizer={localizer}
-                    events={events}
-                    startAccessor="start"
-                    endAccessor="end"
-                    onSelectSlot={handleDateClick}
-                    selectable
-                    onSelectEvent={handleSelectEvent}
-                    views={views}
-                    eventPropGetter={(event) => {
-                        const className = event.status === "Cancelled" ? "event-cancelled" : "event-normal";
-                        return { className };
-                    }}
-                />
+    getTimezone();
+  }, []);
+  useEffect(() => {
+    return
+    getDesignerAppointment()
+      .then((response) => {
+        const appointments = response.data?.data;
+        const status = response.data.status;
+        if (status == "Fail") {
+          const errors = response.data.errors;
+          if (errors && errors.length > 0) {
+            errors.map((error, index) => {
+              toast.error(error);
+              return null; // React requires a return value, so we return null here
+            });
+          }
+        } else {
+          if (appointments) {
+            const apiEventDataArray = [];
+            for (let i = 0; i < appointments.length; i++) {
+              const appointment = appointments[i];
+              // const appointmentDateTime = appointment.consultation_date_time;
+              const appointmentDateTime = appointment.consultation_date;
+              if (
+                appointment.consultation_hour_start &&
+                appointment.consultation_hour_end
+              ) {
+                const appointmentStartIso = convertHoursToDatetime(
+                  appointment.consultation_hour_start,
+                  appointmentDateTime
+                );
+                const appointmentEndIso = convertHoursToDatetime(
+                  appointment.consultation_hour_end,
+                  appointmentDateTime
+                );
+                const eventData = {
+                  id: appointment.id,
+                  title: appointment.title
+                    ? appointment.title
+                    : "Appointment with " +
+                      appointment.customer?.first_name +
+                      " " +
+                      appointment.customer?.last_name,
+                  start: new Date(appointmentStartIso),
+                  end: new Date(appointmentEndIso),
+                  desc: appointment.consultation_details,
+                  status: appointment.status,
+                };
+                apiEventDataArray.push(eventData);
+              }
+            }
+            setEvents(apiEventDataArray);
+            setScheduledAppointments(apiEventDataArray);
+          } else {
+            const errors = response.data.errors;
+            if (errors && errors.length > 0) {
+              errors.forEach((error) => {
+                toast.error(error);
+              });
+            } else {
+              toast.error(
+                "There has been an error getting the appointments, please try again!"
+              );
+            }
+          }
+        }
+      })
+      .catch((error) => {
+        toast.error(
+          "There has been an error getting the appointments, please try again!"
+        );
+      });
+  }, [reloadCount]);
 
-                <Modal
-                    show={modalIsOpen}
-                    onHide={handleModalClose}
-                    contentLabel="Date Details"
-                    id={'set-self-appointment'}
-                    centered
+  const myCalender = useSelector((state) => state.calendar.calendarData);
+  console.log("my calender", myCalender.calender);
+  const dayPropGetter = (date) => {
+    const formattedDate = moment(date).format("YYYY-MM-DD");
+    const dayData = myCalender.calender?.find(
+      (day) => day.date === formattedDate
+    );
 
-                >
-                    <form onSubmit={addAppointmentSubmit}>
-                        <Modal.Header closeButton className='pb-0'>
-                            <Modal.Title><h5 className='modal-title text-left rufina-family fs-22'>Set Appointment</h5></Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body className='bottom-p'>
-                            {selectedDate && (
-                                <Card>
-                                    <Card.Body className='pt-1 pb-1'>
-                                        <Row className='p-3'>
-                                            <Col lg="12" className='mb-2 mt-0 text-left px-0'>
-                                                <span className='title-appointment'>Title</span>
-                                            </Col>
+    if (dayData?.is_holiday) {
+      return {
+        style: {
+          backgroundColor: "#FFDAB3",
+          color: "white",
+        },
+      };
+    }
 
-                                            <Col lg="12" className='px-0'>
-                                                <input
-                                                    type="text"
-                                                    name="title"
-                                                    className='form-control'
-                                                    value={consultationFormData.title}
-                                                    onChange={handleChangeConsultation}
-                                                    required
-                                                />
-                                            </Col>
+    if (dayData?.is_available) {
+      return {
+        style: {
+          backgroundColor: "#E1EACD",
+          color: "white",
+        },
+      };
+    }
 
-                                            <Col lg="12" className='px-0'>
-                                                <Row className={`align-items-center mt-3 ${startTime != "" || endTime != "" ? "mb-3" : ""}`}>
-                                                    {times.map((time, index) => {
-                                                        return (
-                                                            <>
-                                                                {times.length > 0 && (
-                                                                    <>
-                                                                        <Col md="6" className="pe-0">
-                                                                            <p className="hours-header mb-2 text-left">Starts at</p>
-                                                                            <div className='mb-3'>
-                                                                                <input
-                                                                                    type='time'
-                                                                                    name='consultation_hour_start'
-                                                                                    className='mr-sm-2 form-control-hours w-100'
-                                                                                    value={consultationFormData?.consultation_hour_start}
-                                                                                    onChange={e => handleChangeConsultation(e, index)}
-                                                                                    required
-                                                                                />
-                                                                            </div>
-                                                                        </Col>
+    return {};
+  };
+  return (
+    <>
+      <div>
+        <Calendar
+          localizer={localizer}
+          events={events}
+          startAccessor="start"
+          endAccessor="end"
+          onSelectSlot={handleDateClick}
+          selectable
+          onNavigate={handleNavigate}
+          dayPropGetter={dayPropGetter}
+          onSelectEvent={handleSelectEvent}
+          views={views}
+          eventPropGetter={(event) => {
+            const className =
+              event.status === "Cancelled" ? "event-cancelled" : "event-normal";
+            return { className };
+          }}
+        />
 
-                                                                        <Col md="6" className="pe-0 position-relative">
-                                                                            <p className="hours-header mb-2 text-left">Ends at</p>
+        <Modal
+          show={modalIsOpen}
+          onHide={handleModalClose}
+          contentLabel="Date Details"
+          id={"set-self-appointment"}
+          centered
+        >
+          <form onSubmit={addAppointmentSubmit}>
+            <Modal.Header closeButton className="pb-0">
+              <Modal.Title>
+                <h5 className="modal-title text-left rufina-family fs-22">
+                  View Appointments
+                </h5>
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body className="bottom-p">
+              <div className="tw-flex tw-justify-center">
+                No Appointments on this day
+              </div>
+              {/* {selectedDate && (
+                <Card>
+                  <Card.Body className="pt-1 pb-1">
+                    <Row className="p-3">
+                      <Col lg="12" className="mb-2 mt-0 text-left px-0">
+                        <span className="title-appointment">Title</span>
+                      </Col>
 
-                                                                            <div className='mb-3'>
-                                                                                <input
-                                                                                    type='time'
-                                                                                    name='consultation_hour_end'
-                                                                                    className='mr-sm-2 form-control-hours w-100'
-                                                                                    value={consultationFormData?.consultation_hour_end}
-                                                                                    onChange={e => handleChangeConsultation(e, index)}
-                                                                                    required
-                                                                                />
-                                                                            </div>
-                                                                        </Col>
-                                                                    </>
-                                                                )}
-                                                            </>
-                                                        );
-                                                    })}
-                                                    {/* <Col md="2" className="px-0">
-                                                    <GoPlus
-                                                        size={25}
-                                                        className="plus-btn mt-2"
-                                                        onClick={handleAppointments}
-                                                    />
-                                                </Col> */}
-                                                </Row>
-                                            </Col>
-                                            {startTime != "" || endTime != "" ?
-                                                <Col lg="12" className='mt-0 text-left px-0'>
-                                                    {startTime != "" || endTime != "" ?
-                                                        <>
-                                                            <span className='title-appointment'>Availability</span>
-                                                            {startTime == "" ?
-                                                                <>
-                                                                    <p className='mb-0'>{endTime}</p>
-                                                                </>
-                                                                : endTime == "" ?
-                                                                    <>
-                                                                        <p className='mb-0'>{startTime}</p>
-                                                                    </>
-                                                                    :
-                                                                    <>
-                                                                        <p className='mb-0'>{startTime} - {endTime}</p>
-                                                                    </>
-                                                            }
-                                                        </>
-                                                        :
-                                                        null
-                                                    }
-                                                </Col>
-                                                :
-                                                null
-                                            }
+                      <Col lg="12" className="px-0">
+                        <input
+                          type="text"
+                          name="title"
+                          className="form-control"
+                          value={consultationFormData.title}
+                          onChange={handleChangeConsultation}
+                          required
+                        />
+                      </Col>
 
-                                        </Row>
-                                    </Card.Body>
-                                </Card>
-                            )}
-                        </Modal.Body>
-                        <Modal.Footer className='border-none pt-0'>
-                            <div className='text-right'>
-                                {(!startTime || !endTime) &&(
-                                    <p className='text-danger text-right fs-12'>Store is not available on this date</p>
+                      <Col lg="12" className="px-0">
+                        <Row
+                          className={`align-items-center mt-3 ${
+                            startTime != "" || endTime != "" ? "mb-3" : ""
+                          }`}
+                        >
+                          {times.map((time, index) => {
+                            return (
+                              <>
+                                {times.length > 0 && (
+                                  <>
+                                    <Col md="6" className="pe-0">
+                                      <p className="hours-header mb-2 text-left">
+                                        Starts at
+                                      </p>
+                                      <div className="mb-3">
+                                        <input
+                                          type="time"
+                                          name="consultation_hour_start"
+                                          className="mr-sm-2 form-control-hours w-100"
+                                          value={
+                                            consultationFormData?.consultation_hour_start
+                                          }
+                                          onChange={(e) =>
+                                            handleChangeConsultation(e, index)
+                                          }
+                                          required
+                                        />
+                                      </div>
+                                    </Col>
+
+                                    <Col
+                                      md="6"
+                                      className="pe-0 position-relative"
+                                    >
+                                      <p className="hours-header mb-2 text-left">
+                                        Ends at
+                                      </p>
+
+                                      <div className="mb-3">
+                                        <input
+                                          type="time"
+                                          name="consultation_hour_end"
+                                          className="mr-sm-2 form-control-hours w-100"
+                                          value={
+                                            consultationFormData?.consultation_hour_end
+                                          }
+                                          onChange={(e) =>
+                                            handleChangeConsultation(e, index)
+                                          }
+                                          required
+                                        />
+                                      </div>
+                                    </Col>
+                                  </>
                                 )}
-                                <button className="btn btn-secondary border-black bg-white text-black me-3 btn-style" type="button" onClick={handleModalClose}>Cancel</button>
-                                {formStatus != "standby" ?
-                                    <button className="btn btn-primary btn-style" type="button">Saving...</button>
-                                    :
-                                    <button className="btn btn-primary btn-style" disabled={!startTime || !endTime} type="submit">Save</button>
-                                }
-                            </div>
-                        </Modal.Footer>
-                    </form>
-                </Modal>
-
-                <Modal
-                    show={appointmentModalIsOpen}
-                    onHide={closeAppointmentModal}
-                    centered
-
+                              </>
+                            );
+                          })}
+                        </Row>
+                      </Col>
+                      {startTime != "" || endTime != "" ? (
+                        <Col lg="12" className="mt-0 text-left px-0">
+                          {startTime != "" || endTime != "" ? (
+                            <>
+                              <span className="title-appointment">
+                                Availability
+                              </span>
+                              {startTime == "" ? (
+                                <>
+                                  <p className="mb-0">{endTime}</p>
+                                </>
+                              ) : endTime == "" ? (
+                                <>
+                                  <p className="mb-0">{startTime}</p>
+                                </>
+                              ) : (
+                                <>
+                                  <p className="mb-0">
+                                    {startTime} - {endTime}
+                                  </p>
+                                </>
+                              )}
+                            </>
+                          ) : null}
+                        </Col>
+                      ) : null}
+                    </Row>
+                  </Card.Body>
+                </Card>
+              )} */}
+            </Modal.Body>
+            <Modal.Footer className="border-none pt-0">
+              {/* <div className="text-right">
+                {(!startTime || !endTime) && (
+                  <p className="text-danger text-right fs-12">
+                    Store is not available on this date
+                  </p>
+                )}
+                <button
+                  className="btn btn-secondary border-black bg-white text-black me-3 btn-style"
+                  type="button"
+                  onClick={handleModalClose}
                 >
+                  Cancel
+                </button>
+                {formStatus != "standby" ? (
+                  <button className="btn btn-primary btn-style" type="button">
+                    Saving...
+                  </button>
+                ) : (
+                  <button
+                    className="btn btn-primary btn-style"
+                    disabled={!startTime || !endTime}
+                    type="submit"
+                  >
+                    Save
+                  </button>
+                )}
+              </div> */}
+            </Modal.Footer>
+          </form>
+        </Modal>
 
-                    <Modal.Header closeButton className='pb-0'>
-                        <Modal.Title><h5 className='modal-title text-left rufina-family fs-22'>Appointment Details</h5></Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body className='bottom-padding'>
-                        <Card>
-                            <Card.Body>
-                                {selectedEvent && (
-                                    <div>
-
-                                        {selectedEvent.title != "" &&
-                                            <>
-                                                <div>
-                                                    <h2 className="current-date fs-18 poppins-ft fw-600 mb-3">{selectedEvent.title}</h2>
-                                                </div>
-
-                                            </>
-                                        }
-
-                                        {selectedEvent.date != "" &&
-                                            <>
-                                                <div className="d-flex">
-                                                    <p className="fw-500 mb-2"><MdOutlineCalendarMonth size="20" className='icon-color mb-1' /></p>
-                                                    <p className="current-date ms-2 mb-0 text-black">{selectedEvent.date}</p>
-                                                </div>
-                                            </>
-                                        }
-                                        {selectedEvent.end != "" || selectedEvent.start != "" ?
-                                            <>
-                                                <div className="d-flex">
-                                                    <p className="fw-500 mb-2"><GiAlarmClock size="20" className='icon-color mb-1' /></p>
-                                                    <p className="current-date ms-2 mb-0 text-black">{selectedEvent.start}&nbsp;-&nbsp;{selectedEvent.end}</p>
-                                                </div>
-                                            </>
-                                            :
-                                            null
-                                        }
-                                        {selectedEvent.desc != "" &&
-                                            <>
-                                                <div>
-                                                    <p className="current-date fs-16 poppins-ft mb-0 fw-400 text-black">{selectedEvent.desc}</p>
-                                                </div>
-                                            </>
-                                        }
-                                        {selectedEvent.status != "" &&
-                                            <>
-                                                <div>
-                                                    <p className="current-date fs-16 poppins-ft mb-0 fw-400 text-black">Status: {selectedEvent.status}</p>
-                                                </div>
-                                            </>
-                                        }
-                                    </div>
-                                )}
-                            </Card.Body>
-                        </Card>
-                    </Modal.Body>
-                    <Modal.Footer className='border-none'>
-                        <div className='text-right'>
-                            <button className="btn btn-secondary border-black bg-white text-black btn-style" type="button" onClick={closeAppointmentModal} >Close</button>
+        <Modal
+          show={appointmentModalIsOpen}
+          onHide={closeAppointmentModal}
+          centered
+        >
+          <Modal.Header closeButton className="pb-0">
+            <Modal.Title>
+              <h5 className="modal-title text-left rufina-family fs-22">
+                Appointment Details
+              </h5>
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body className="bottom-padding">
+            <Card>
+              <Card.Body>
+                {selectedEvent && (
+                  <div>
+                    {selectedEvent.title != "" && (
+                      <>
+                        <div>
+                          <h2 className="current-date fs-18 poppins-ft fw-600 mb-3">
+                            {selectedEvent.title}
+                          </h2>
                         </div>
-                    </Modal.Footer>
+                      </>
+                    )}
 
-                </Modal >
-            </div >
-        </>
-    )
-}
+                    {selectedEvent.date != "" && (
+                      <>
+                        <div className="d-flex">
+                          <p className="fw-500 mb-2">
+                            <MdOutlineCalendarMonth
+                              size="20"
+                              className="icon-color mb-1"
+                            />
+                          </p>
+                          <p className="current-date ms-2 mb-0 text-black">
+                            {selectedEvent.date}
+                          </p>
+                        </div>
+                      </>
+                    )}
+                    {selectedEvent.end != "" || selectedEvent.start != "" ? (
+                      <>
+                        <div className="d-flex">
+                          <p className="fw-500 mb-2">
+                            <GiAlarmClock
+                              size="20"
+                              className="icon-color mb-1"
+                            />
+                          </p>
+                          <p className="current-date ms-2 mb-0 text-black">
+                            {selectedEvent.start}&nbsp;-&nbsp;
+                            {selectedEvent.end}
+                          </p>
+                        </div>
+                      </>
+                    ) : null}
+                    {selectedEvent.desc != "" && (
+                      <>
+                        <div>
+                          <p className="current-date fs-16 poppins-ft mb-0 fw-400 text-black">
+                            {selectedEvent.desc}
+                          </p>
+                        </div>
+                      </>
+                    )}
+                    {selectedEvent.status != "" && (
+                      <>
+                        <div>
+                          <p className="current-date fs-16 poppins-ft mb-0 fw-400 text-black">
+                            Status: {selectedEvent.status}
+                          </p>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
+              </Card.Body>
+            </Card>
+          </Modal.Body>
+          <Modal.Footer className="border-none">
+            <div className="text-right">
+              <button
+                className="btn btn-secondary border-black bg-white text-black btn-style"
+                type="button"
+                onClick={closeAppointmentModal}
+              >
+                Close
+              </button>
+            </div>
+          </Modal.Footer>
+        </Modal>
+      </div>
+    </>
+  );
+};
 MyCalendar.propTypes = {
-    localizer: PropTypes.instanceOf(DateLocalizer),
-}
+  localizer: PropTypes.instanceOf(DateLocalizer),
+};
 
 export default MyCalendar;

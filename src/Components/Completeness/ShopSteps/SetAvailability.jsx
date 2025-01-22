@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import HolidayBooking from "Components/Forms/HolidayBooking";
 import TimezoneDropdown from "Components/Forms/TimezoneDropdown";
 import { useUpdateUserAvailabilityMutation } from "store/api/mutations";
-import { useGetProfileQuery } from "store/api/queries";
+import { useGetProfileQuery, useGetMyCalenderQuery } from "store/api/queries";
 import { useSelector } from "react-redux";
 
 const initialBusinessHours = {
@@ -18,6 +18,7 @@ const initialBusinessHours = {
 const SetAvailability = ({ onStepPlusOne, edit, cancel }) => {
   const currenStoreUser = useSelector((state) => state.user.user);
   const { refetch: refetchUser } = useGetProfileQuery();
+  const calenderQuery = useGetMyCalenderQuery({ year: 2025, month: 1 });
   const [updateUserAvailability, { isLoading: isAvailabilityUpdating }] =
     useUpdateUserAvailabilityMutation();
   const [state, setState] = useState({
@@ -44,7 +45,7 @@ const SetAvailability = ({ onStepPlusOne, edit, cancel }) => {
     saturdayHoursCopyFormData: [],
   });
 
-  const daysOfWeek= [
+  const daysOfWeek = [
     {
       name: "Sunday",
       state: "isSundayChecked",
@@ -181,9 +182,12 @@ const SetAvailability = ({ onStepPlusOne, edit, cancel }) => {
       content: content.map((entry) => ({
         day_of_week: entry.day,
         time_slots: entry.availabilities.map((slot) => ({
-          start_time: slot.start.includes(':') ? slot.start.split(':').slice(0, 2).join(':') : slot.start,
-          end_time: slot.end.includes(':') ? slot.end.split(':').slice(0, 2).join(':') : slot.end,
-        
+          start_time: slot.start.includes(":")
+            ? slot.start.split(":").slice(0, 2).join(":")
+            : slot.start,
+          end_time: slot.end.includes(":")
+            ? slot.end.split(":").slice(0, 2).join(":")
+            : slot.end,
         })),
       })),
       holidays: holidays.flatMap((holiday) =>
@@ -202,6 +206,7 @@ const SetAvailability = ({ onStepPlusOne, edit, cancel }) => {
     const res = await updateUserAvailability(payload).unwrap();
     if (res.success) {
       refetchUser();
+      calenderQuery.refetch();
       toast.success(res.message);
       onStepPlusOne();
       setReloadCount(reloadCount + 1);
@@ -214,8 +219,6 @@ const SetAvailability = ({ onStepPlusOne, edit, cancel }) => {
       }));
     }
   };
-
- 
   return (
     <>
       <Row className="h-100">
