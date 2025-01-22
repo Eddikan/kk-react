@@ -24,7 +24,6 @@ import Signup from "Components/Forms/User/Signup";
 import { useCookies } from "react-cookie";
 import Loading from "Components/Shared/Loading";
 import axios from "axios";
-import { debounce } from "lodash";
 import "react-multi-carousel/lib/styles.css";
 import "Assets/styles/Designers/style.css";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
@@ -35,10 +34,10 @@ import { selectDesigners } from "store/slices/designersSlice";
 import { useSelector } from "react-redux";
 import { useGetDesignersQuery } from "store/api/queries";
 import useCountry from "hooks/useCountry";
+import SearchInput from "Components/Search/SearchInput";
 
 const Designers = () => {
   const { countries } = useCountry();
-  console.log("here", countries);
   const designFilters = useSelector(selectDesignersFilters);
   const currenStoreUser = useSelector((state) => state.user.user);
   const currentUser = currenStoreUser?.email;
@@ -86,32 +85,34 @@ const Designers = () => {
   const [signupModalShow, setSignupModalShow] = useState(false);
   const [activeTabGroup, setActiveTabGroup] = useState("");
   const [signupType, setSignupType] = useState("");
-  const [search, setSearch] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const [reloadCount, setReloadCount] = useState(0);
   const current_user_id = cookies.currentUser;
   const token = cookies.token;
   const [tempDesignerWishlist, setTempDesignerWishlist] = useState([]);
 
-  const selectedCountryIso2 = countries.find(
+  const selectedCountryIso3 = countries.find(
     (country) => country.name === selectedCountry
-  )?.iso2;
+  )?.iso3;
 
   const getDesignersQuery = useGetDesignersQuery({
     page: currentPage,
     per_page: pageSize,
     search: searchValue,
-    country: selectedCountryIso2,
+    country: selectedCountryIso3,
     areas_of_specialization: specializationSearch,
     categories: selectedCategories.join(","),
   });
+  useEffect(() => {
+    console.log("getDesignersQuery", getDesignersQuery);
+  }, [getDesignersQuery]);
 
   useEffect(() => {
     getDesignersQuery.refetch();
   }, [
     currentPage,
     searchValue,
-    selectedCountryIso2,
+    selectedCountryIso3,
     specializationSearch,
     selectedCategories,
   ]);
@@ -120,26 +121,15 @@ const Designers = () => {
     navigate("/designer-profile?user_id=" + e);
   };
 
-  const searchChangeDebounce = debounce((e) => {
-    setSearchValue(e);
-  }, 1000);
-
-  const handleChangeSearch = (e) => {
-    const { value } = e.target;
-    searchChangeDebounce.cancel();
-    searchChangeDebounce(value);
-    setSearch(value);
+  const handleSearchChange = (value) => {
+    console.log("value", value);
+    setSearchValue(value);
   };
-
-  const specializationChangeDebounce = debounce((e) => {
-    setSpecializationSearch(e);
-  }, 1000);
 
   const handleChangeSpecialization = (e) => {
     const { value } = e.target;
-    specializationChangeDebounce.cancel();
-    specializationChangeDebounce(value);
     setSpecializationValue(value);
+    setSpecializationSearch(value);
   };
 
   const handleChangePage = (pageNumber) => {
@@ -243,7 +233,6 @@ const Designers = () => {
     setSpecializationValue("");
     setSelectedCategories([]);
     setSelectedAllCategories(false);
-    setSearch("");
     setSearchValue("");
   };
 
@@ -409,11 +398,7 @@ const Designers = () => {
                   <div className="pe-4 pt-3">
                     <Form.Group className="mb-4">
                       <Form.Label className="fw-600 fs-14">Search</Form.Label>
-                      <Form.Control
-                        placeholder="Enter your search term..."
-                        type="text"
-                        onChange={(e) => handleChangeSearch(e)}
-                      />
+                      <SearchInput onSearchChange={handleSearchChange} />
                     </Form.Group>
                     <Form.Group className="mb-4">
                       <Form.Label className="fw-600 fs-14">Country</Form.Label>
@@ -478,7 +463,8 @@ const Designers = () => {
                         activeTabGroup == "categories" ? "open" : ""
                       }`}
                     >
-                      {categories && categories.length > 0 ? (
+                      {designFilters?.categories &&
+                      designFilters?.categories.length > 0 ? (
                         <>
                           <Form.Group className="mb-3">
                             <Form.Group key="all">
@@ -495,21 +481,24 @@ const Designers = () => {
                                 onChange={handleSelectAllCategories}
                               />
                             </Form.Group>
-                            {categories && categories.length > 0 ? (
+                            {designFilters?.categories &&
+                            designFilters?.categories.length > 0 ? (
                               <>
-                                {categories.map((category, index) => (
-                                  <Form.Check
-                                    key={index}
-                                    type="checkbox"
-                                    label={category.name}
-                                    value={category.id}
-                                    checked={selectedCategories.includes(
-                                      category.id
-                                    )}
-                                    onChange={handleSelectCategoryChange}
-                                    className="mb-2 fs-12"
-                                  />
-                                ))}
+                                {designFilters?.categories.map(
+                                  (category, index) => (
+                                    <Form.Check
+                                      key={index}
+                                      type="checkbox"
+                                      label={category.name}
+                                      value={category.id}
+                                      checked={selectedCategories.includes(
+                                        category.id
+                                      )}
+                                      onChange={handleSelectCategoryChange}
+                                      className="mb-2 fs-12"
+                                    />
+                                  )
+                                )}
                               </>
                             ) : null}
                           </Form.Group>
@@ -527,8 +516,7 @@ const Designers = () => {
                 </Col>
                 <Col lg="9">
                   <div id="profile-designs" className="ps-2 pt-4">
-                    {getDesignersQuery.isLoading  ? 'true':'false'}
-                    {getDesignersQuery.isLoading  ? (
+                    {getDesignersQuery.isFetching ? (
                       <>
                         <Card className="text-center">
                           <Card.Body>

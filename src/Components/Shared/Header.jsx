@@ -68,23 +68,22 @@ const Header = () => {
   const headerSearch = query.get("search");
   const headerType = query.get("type");
 
-  const { refetch: refetchDesignFilters } = useGetDesignFiltersQuery();
+  const { refetch: refetchDesignFilters } =
+    useGetDesignFiltersQuery();
   const { refetch: refetchDesignersFilters } = useGetDesignersFiltersQuery();
-  const myNotificationsQuery = 
-     useGetMyNotificationsQuery(undefined, {
-      skip: !isLoggedIn,
-    })
-
-  const myProfile = 
-     useGetProfileQuery(undefined, {
-      skip: !isLoggedIn,
-    })
-  const myCartQuery =  useGetCartItemsQuery(undefined, {
+  const myNotificationsQuery = useGetMyNotificationsQuery(undefined, {
     skip: !isLoggedIn,
   });
-  const myWishList =  useGetWishlistItemsQuery(undefined, {
+
+  const myProfile = useGetProfileQuery(undefined, {
     skip: !isLoggedIn,
-  })
+  });
+  const myCartQuery = useGetCartItemsQuery(undefined, {
+    skip: !isLoggedIn,
+  });
+  const myWishList = useGetWishlistItemsQuery(undefined, {
+    skip: !isLoggedIn,
+  });
   useEffect(() => {
     refetchDesignFilters();
     refetchDesignersFilters();
