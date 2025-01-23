@@ -184,6 +184,9 @@ export const queryService = api.injectEndpoints({
     getADesigner: builder.query({
       query: (id) => `designer/${id}`,
     }),
+    getADesignersDesign: builder.query({
+      query: (id) => `designer/${id}/designs?page=1&per_page=25`,
+    }),
   }),
 });
 
@@ -200,5 +203,6 @@ export const {
   useGetWishlistItemsQuery,
   useGetDesignsQuery,
   useGetMyCalenderQuery,
-  useGetADesignerQuery
+  useGetADesignerQuery,
+  useGetADesignersDesignQuery
 } = queryService;

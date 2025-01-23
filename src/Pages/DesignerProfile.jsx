@@ -24,7 +24,10 @@ import ResponsiveVideo from "Components/Shared/ResponsiveVideo";
 import { BsBroadcast } from "react-icons/bs";
 import axios from "axios";
 import moment from "moment";
-import { useGetADesignerQuery } from "store/api/queries";
+import {
+  useGetADesignerQuery,
+  useGetADesignersDesignQuery,
+} from "store/api/queries";
 import { useSelector } from "react-redux";
 
 const initialUserData = Object.freeze({
@@ -66,6 +69,19 @@ const DesignerProfile = () => {
   const user_id = query.get("user_id");
   const tab = query.get("tab");
   const getDesignerQuery = useGetADesignerQuery(user_id);
+  const designerDesignsQuery = useGetADesignersDesignQuery(user_id);
+  useEffect(() => {
+    designerDesignsQuery.refetch();
+    console.log("deignerDesignsQuery", designerDesignsQuery.data.data.data);
+  }, []);
+  const designsProp = useMemo(
+    () =>
+      designerDesignsQuery?.data?.data?.data
+        ? designerDesignsQuery?.data?.data?.data
+        : [],
+    [designerDesignsQuery.data]
+  );
+
   const designerData = useMemo(
     () => getDesignerQuery.data?.data,
     [getDesignerQuery.data]
@@ -466,7 +482,7 @@ const DesignerProfile = () => {
                 >
                   Portfolio
                 </span>
-                <span
+                {/* <span
                   className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${
                     fabricShow ? "fw-600 text-gold" : "text-black"
                   }`}
@@ -475,7 +491,7 @@ const DesignerProfile = () => {
                   }}
                 >
                   Fabrics
-                </span>
+                </span> */}
                 {/* {!isDesignerCurrentUser && (
                                     <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${calendarShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("calendar"); }}>Calendar</span>
                                 )} */}
@@ -566,8 +582,12 @@ const DesignerProfile = () => {
             {portfolioShow ? (
               <div>
                 <PortfolioGrid
+                  portfolioLoading={designerDesignsQuery.isLoading}
+                  designsProp={designsProp}
                   currentUser={user_id}
-                  reloadCount={reloadCount}
+                  reloadCount={() => {
+                    designerDesignsQuery.refetch;
+                  }}
                 />
               </div>
             ) : null}

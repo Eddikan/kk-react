@@ -33,6 +33,7 @@ const ProductGrid = (props) => {
     };
 
     const fetchData = async (e) => {
+        return
         try {
             const productsData = await GetUserProductsData(e);
             if (productsData) {

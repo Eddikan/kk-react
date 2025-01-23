@@ -58,8 +58,9 @@ const DesignersMarquee = () => {
     search: "",
     country: "",
   });
-  const designers = useSelector(selectDesigners);
-  console.log("here component");
+  const storeDesigners = useSelector(selectDesigners);
+  const designers = storeDesigners.data
+  console.log("here component",designers);
   useEffect(() => {
     refetch();
   }, []);

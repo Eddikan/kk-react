@@ -136,6 +136,7 @@ const PortfolioGrid = (props) => {
     };
 
     const fetchData = async (e) => {
+        return
         setPortfolioLoading(true);
         try {
             const portfolioData = await GetUserPortfolioData(e);
