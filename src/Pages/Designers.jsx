@@ -35,7 +35,6 @@ import { useSelector } from "react-redux";
 import { useGetDesignersQuery } from "store/api/queries";
 import useCountry from "hooks/useCountry";
 import SearchInput from "Components/Search/SearchInput";
-import SearchInput from "Components/Search/SearchInput";
 
 const Designers = () => {
   const { countries } = useCountry();
@@ -94,16 +93,13 @@ const Designers = () => {
   const [tempDesignerWishlist, setTempDesignerWishlist] = useState([]);
 
   const selectedCountryIso3 = countries.find(
-  const selectedCountryIso3 = countries.find(
     (country) => country.name === selectedCountry
-  )?.iso3;
   )?.iso3;
 
   const getDesignersQuery = useGetDesignersQuery({
     page: currentPage,
     per_page: pageSize,
     search: searchValue,
-    country: selectedCountryIso3,
     country: selectedCountryIso3,
     areas_of_specialization: specializationSearch,
     categories: selectedCategories.join(","),
@@ -142,15 +138,11 @@ const Designers = () => {
   const handleSearchChange = (value) => {
     console.log("value", value);
     setSearchValue(value);
-  const handleSearchChange = (value) => {
-    console.log("value", value);
-    setSearchValue(value);
   };
 
   const handleChangeSpecialization = (e) => {
     const { value } = e.target;
     setSpecializationValue(value);
-    setSpecializationSearch(value);
     setSpecializationSearch(value);
   };
 
@@ -421,7 +413,6 @@ const Designers = () => {
                     <Form.Group className="mb-4">
                       <Form.Label className="fw-600 fs-14">Search</Form.Label>
                       <SearchInput onSearchChange={handleSearchChange} />
-                      <SearchInput onSearchChange={handleSearchChange} />
                     </Form.Group>
                     <Form.Group className="mb-4">
                       <Form.Label className="fw-600 fs-14">Country</Form.Label>
@@ -488,8 +479,6 @@ const Designers = () => {
                     >
                       {designFilters?.categories &&
                       designFilters?.categories.length > 0 ? (
-                      {designFilters?.categories &&
-                      designFilters?.categories.length > 0 ? (
                         <>
                           <Form.Group className="mb-3">
                             <Form.Group key="all">
@@ -508,24 +497,7 @@ const Designers = () => {
                             </Form.Group>
                             {designFilters?.categories &&
                             designFilters?.categories.length > 0 ? (
-                            {designFilters?.categories &&
-                            designFilters?.categories.length > 0 ? (
                               <>
-                                {designFilters?.categories.map(
-                                  (category, index) => (
-                                    <Form.Check
-                                      key={index}
-                                      type="checkbox"
-                                      label={category.name}
-                                      value={category.id}
-                                      checked={selectedCategories.includes(
-                                        category.id
-                                      )}
-                                      onChange={handleSelectCategoryChange}
-                                      className="mb-2 fs-12"
-                                    />
-                                  )
-                                )}
                                 {designFilters?.categories.map(
                                   (category, index) => (
                                     <Form.Check

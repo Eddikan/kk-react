@@ -10,11 +10,8 @@ import 'react-multi-carousel/lib/styles.css';
 import { GoHeart } from 'react-icons/go';
 
 const Designers = (props) => {
-    const navigate = useNavigate();
-    const reloadCount = props.reloadCount;
     const currentUser = props.currentUser;
     const userRole = props.userRole;
-    const [selectedItemIndex, setSelectedItemIndex] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [pageCount, setPageCount] = useState(1);
     const [pageSize, setPageSize] = useState(10);
