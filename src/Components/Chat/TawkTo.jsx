@@ -1,14 +1,14 @@
-import React, { useEffect } from "react";
-import TawkMessengerReact from '@tawk.to/tawk-messenger-react';
+import TawkMessengerReact from "@tawk.to/tawk-messenger-react";
 
-const Tawkto = ({ children }) => {
-    return (
-        <>
-            <TawkMessengerReact
-                propertyId="638e0d9bb0d6371309d2ba3e"
-                widgetId="1houler0c" />
-        </>
-    );
-}
+const Tawkto = () => {
+  return (
+    <>
+      <TawkMessengerReact
+        propertyId="644f68d54247f20fefeeaecf"
+        widgetId="1ii819021"
+      />
+    </>
+  );
+};
 
 export default Tawkto;

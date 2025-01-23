@@ -222,6 +222,10 @@ const SetAvailability = ({ onStepPlusOne, edit, cancel }) => {
   return (
     <>
       <Row className="h-100">
+        <p className="tw-text-xl tw-text-left">
+          Select the days you want to be available for consultation. you can add
+          holidays to indicate your days off
+        </p>
         <Col lg="12">
           <div className="tw-flex tw-mb-5 tw-justify-start">
             <TimezoneDropdown
@@ -239,7 +243,7 @@ const SetAvailability = ({ onStepPlusOne, edit, cancel }) => {
                     id={`schedule-${day.name.toLowerCase()}`}
                     label={`Closed`}
                     name={`day`}
-                    className
+                    className="blackCheckBox"
                     checked={state[day.state]}
                     onChange={() => handleCheckboxChangeClose(day)}
                   />

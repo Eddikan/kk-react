@@ -562,7 +562,7 @@ const DesignerProfile = () => {
                         reloadCount={reloadCount}
                       />
                     </div>
-                    if is a seller
+                    {/* if is a seller
                     <div className="bg-lgray profile-top-selling ">
                       <div className="d-flex justify-content-between tw-p-2">
                         <span className="fs-16 fw-600 text-black ">
@@ -573,7 +573,7 @@ const DesignerProfile = () => {
                         currentUser={user_id}
                         reloadCount={reloadCount}
                       />
-                    </div>
+                    </div> */}
                   </Col>
                 </Row>
               </div>
