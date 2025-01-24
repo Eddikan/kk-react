@@ -72,7 +72,6 @@ const DesignerProfile = () => {
   const designerDesignsQuery = useGetADesignersDesignQuery(user_id);
   useEffect(() => {
     designerDesignsQuery.refetch();
-    console.log("deignerDesignsQuery", designerDesignsQuery.data.data.data);
   }, []);
   const designsProp = useMemo(
     () =>
@@ -409,7 +408,7 @@ const DesignerProfile = () => {
                               <span className="w-100">
                                 <a
                                   className="btn ms-3 btn-consultation fs-16 fw-400 btn-style"
-                                  href={`/designer/${designerData?.ids}/appointment/schedule/0`}
+                                  href={`/designer/${designerData?.id}/appointment/schedule/0`}
                                 >
                                   <IoVideocam className="me-2" size="20" />
                                   Schedule a Consultation
@@ -550,8 +549,7 @@ const DesignerProfile = () => {
                   </Col>
 
                   <Col lg="6">
-                    if is a designer
-                    <div className="bg-lgray profile-featured pt-0 mb-4 tw-p-2">
+                    {/* <div className="bg-lgray profile-featured pt-0 mb-4 tw-p-2">
                       <div className="d-flex justify-content-between">
                         <span className="fs-16 fw-600 text-black mt-3">
                           Featured Designs
@@ -561,7 +559,7 @@ const DesignerProfile = () => {
                         currentUser={user_id}
                         reloadCount={reloadCount}
                       />
-                    </div>
+                    </div> */}
                     {/* if is a seller
                     <div className="bg-lgray profile-top-selling ">
                       <div className="d-flex justify-content-between tw-p-2">

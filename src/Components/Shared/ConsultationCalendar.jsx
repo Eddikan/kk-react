@@ -1,809 +1,738 @@
-import { Calendar, momentLocalizer, Views, DateLocalizer } from 'react-big-calendar';
-import { Container, Row, Col, Button, Card } from 'react-bootstrap';
-import Form from 'react-bootstrap/Form';
-import FormControl from 'react-bootstrap/FormControl';
-import React, { useEffect, useState, useMemo, useRef } from 'react';
+import {
+  Calendar,
+  momentLocalizer,
+  Views,
+  DateLocalizer,
+} from "react-big-calendar";
+import { Row, Col, Card, Form, FormControl, Modal } from "react-bootstrap";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { FiCalendar } from "react-icons/fi";
 import { LuGlobe2 } from "react-icons/lu";
 import { FaRegUser } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
-import moment from 'moment';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
-import PropTypes from 'prop-types'
-import 'Assets/styles/DesignerCalendar/style.css';
-import UserPlaceholder from 'Assets/images/user.png';
-import { useCookies } from 'react-cookie';
-import { Modal } from 'react-bootstrap';
+import moment from "moment";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import PropTypes from "prop-types";
+import "Assets/styles/DesignerCalendar/style.css";
+import UserPlaceholder from "Assets/images/user.png";
+import { useCookies } from "react-cookie";
 import { TfiAlarmClock } from "react-icons/tfi";
-import { GoAlertFill } from 'react-icons/go';
-import { BiCommentDetail } from "react-icons/bi";
-import { useNavigate, useParams, Link } from 'react-router-dom';
-
+import { GoAlertFill } from "react-icons/go";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import toast from 'react-hot-toast';
-
-const initialBusinessHours = {
-    opens_at: '',
-    closes_at: '',
-    date: ''
-};
+import toast from "react-hot-toast";
+import { useGetADesignersCalenderQuery } from "store/api/queries";
+import useCalendar from "hooks/useCalendar";
 
 const initialAppointments = {
-    title: '',
+  title: "",
 };
 
 const intitialConsultationData = {
-    consultation_date_time: '',
-    consultation_hour_start: '',
-    consultation_hour_end: '',
-    email: '',
-    first_name: '',
-    last_name: '',
-    timezone: '',
-    consultation_details: '',
-}
+  consultation_hour_start: "",
+  consultation_hour_end: "",
+  email: "",
+  first_name: "",
+  last_name: "",
+  timezone: "",
+  consultation_details: "",
+};
 
 const localizer = momentLocalizer(moment);
 
-const ConsultationCalendar = ({ toggleEvent }) => {
-    const calendarRef = useRef(null);
-    const navigate = useNavigate();
-
-    const applyPastDateClass = () => {
-        const isPast = (date) => moment(date, 'DD').isBefore(moment(), 'day');
-
-        const dayCells = document.querySelectorAll('.rbc-date-cell'); // Select all day cell elements
-        
-        dayCells.forEach(cell => {
-            const button = cell.querySelector('button'); // Select the button element inside the day cell
-            const dateText = button.textContent.trim(); // Get the text content of the button
-            const date = moment(dateText, 'DD'); // Parse the date text using moment
-            if (isPast(date)) {
-                cell.classList.add('past-date'); // Add the class to the parent day cell
-                button.disabled = true;
-            } else {
-                cell.classList.remove('past-date'); // Remove the class from the parent day cell
-                button.disabled = false;
-            }
-        });
+const ConsultationCalendar = () => {
+  const { colors, handleNavigate, year, month } = useCalendar();
+  const { designerId, appointmentscheduleId } = useParams();
+  const dayPropGetter = (date) => {
+    const formattedDate = moment(date).format("YYYY-MM-DD");
+    const dayData = data.calender?.find((day) => day.date === formattedDate);
+    const isPastDate = (dateString) => {
+      return moment(dateString).isBefore(moment(), "day");
     };
-
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'token']);
-    const currentUser = cookies.currentUser;
-    const current_user_id = cookies.currentUser;
-    const token = cookies.token;
-    const currentUserDetails = cookies.userDetails;
-    const userRole = cookies.userRole;
-    const userDetails = cookies.userDetails;
-    const { designerId } = useParams();
-    const { appointmentscheduleId } = useParams();
-
-    const [events, setEvents] = useState([]);
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-
-    const [designer, setDesigner] = useState("");
-    const [designerUser, setDesignerUser] = useState("");
-    const [selectedDate, setSelectedDate] = useState("");
-    const [selectedDate12, setSelectedDate12] = useState("");
-    const [selectedHoursArray, setSelectedHoursArray] = useState([]);
-    const [reloadCount, setReloadCount] = useState(0);
-    const [formStatus, setFormStatus] = useState('standby');
-    const [appointmentFormData, setAppointmentFormData] = useState(initialAppointments);
-    const [times, setTimes] = useState([initialBusinessHours]);
-    const [selectedTimeSlot, setSelectedTimeSlot] = useState();
-    const [clickedTimeslotButton, setClickedTimeslotButton] = useState();
-    const [consultationFormData, setConsultationFormData] = useState(intitialConsultationData);
-    const [currentTimezone, setCurrentTimezone] = useState(null);
-    const [currentStep, setCurrentStep] = useState(1);
-    const [underConstructionShow, setUnderConstructionShow] = useState(false);
-    const [youAreScheduleShow, setYouAreScheduleShow] = useState(false);
-    const [modalHeading, setModalHeading] = useState();
-    const [scheduleLoading, setScheduleLoading] = useState(false);
-    const [consultationDetails, setConsultationDetails] = useState("");
-
-    const [appointmentLoading, setAppointmentLoading] = useState(true);
-
-    const [isScheduled, setIsScheduled] = useState(false);
-
-    const postSetAppointment = async (data) => {
-        return await axios.post(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/set/appointment?current_user_id=' + current_user_id + '&token=' + token, data);
-    };
-
-    const putSetAppointment = async (data) => {
-        return await axios.put(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentscheduleId + '?current_user_id=' + current_user_id + '&token=' + token, data);
-    };
-
-    const getSetAppointment = async (e) => {
-        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/availability?date=' + e + '&current_user_id=' + current_user_id + '&token=' + token);
-    };
-
-    const getAppointment = async () => {
-        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentscheduleId + '?current_user_id=' + current_user_id + '&token=' + token);
-    };
-
-    const getDesigner = async () => {
-        return await axios.get(import.meta.env.VITE_REACT_APP_API_ENDPOINT + 'designer/' + designerId + '?current_user_id=' + current_user_id + '&token=' + token);
-    };
-
-
-    const convertToDateOnly = (selectedDate) => {
-        const resultDate = new Date(selectedDate);
-
-        const year = resultDate.getFullYear();
-        const month = String(resultDate.getMonth() + 1).padStart(2, '0');
-        const day = String(resultDate.getDate()).padStart(2, '0');
-
-        const dateOnly = `${year}-${month}-${day}`;
-
-        return dateOnly;
-    };
-
-
-    const convert24hrTo12hr = (time24hr) => {
-        const [hours, minutes] = time24hr.split(':');
-        const date = new Date(2000, 0, 1, hours, minutes);
-        return date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-    };
-
-    // const convertToDateOnly = (selectedDate) => {
-    //     const resultDate = new Date(selectedDate);
-
-    //     const options = { month: 'long', day: 'numeric', year: 'numeric' };
-    //     const dateOnly = resultDate.toLocaleDateString('en-US', options);
-
-    //     return dateOnly;
-    // };
-
-
-    const formatDate = (selectedDate) => {
-        const date = new Date(selectedDate);
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        return date.toLocaleDateString('en-US', options);
+    if (isPastDate(dayData?.date)) {
+      return {
+        style: {
+          backgroundColor: "#E6E6E6",
+          color: "white",
+        },
+      };
+    }
+    if (dayData?.is_holiday) {
+      return {
+        style: {
+          backgroundColor: "#FFDAB3",
+          color: "white",
+        },
+      };
     }
 
+    if (dayData?.is_available) {
+      return {
+        style: {
+          backgroundColor: "#E1EACD",
+          color: "white",
+        },
+      };
+    }
+
+    return {};
+  };
+
+  const calenderQuery = useGetADesignersCalenderQuery({
+    designer_id: designerId,
+    year,
+    month,
+  });
+
+  const data = useMemo(() => {
+    return calenderQuery?.data?.data ? calenderQuery?.data?.data : {};
+  }, [calenderQuery]);
+  useEffect(() => {
+    calenderQuery.refetch();
+  }, [year, month]);
 
 
-    const convertHoursToDatetime = (time) => {
-        const [hours, minutes, period] = time.split(/[: ]/);
+  const calendarRef = useRef(null);
+  const navigate = useNavigate();
 
-        // Convert hours to 24-hour format
-        const hours24 = period === 'PM' ? parseInt(hours, 10) + 12 : parseInt(hours, 10);
+  const applyPastDateClass = () => {
+    const isPast = (date) => moment(date, "DD").isBefore(moment(), "day");
 
-        const resultDatetime = new Date(selectedDate);
-        resultDatetime.setHours(hours24);
-        resultDatetime.setMinutes(parseInt(minutes, 10));
+    const dayCells = document.querySelectorAll(".rbc-date-cell"); // Select all day cell elements
 
-        return resultDatetime.toISOString();
-    };
+    dayCells.forEach((cell) => {
+      const button = cell.querySelector("button"); // Select the button element inside the day cell
+      const dateText = button.textContent.trim(); // Get the text content of the button
+      const date = moment(dateText, "DD"); // Parse the date text using moment
+      if (isPast(date)) {
+        cell.classList.add("past-date"); // Add the class to the parent day cell
+        button.disabled = true;
+      } else {
+        cell.classList.remove("past-date"); // Remove the class from the parent day cell
+        button.disabled = false;
+      }
+    });
+  };
 
-    function convert12to24(time12) {
-        const [time, period] = time12.split(' ');
+  const [cookies] = useCookies([
+    "currentUser",
+    "isLoggedIn",
+    "userDetails",
+    "userRole",
+    "token",
+  ]);
+  const currentUser = cookies.currentUser;
+  const current_user_id = cookies.currentUser;
+  const token = cookies.token;
+  const userRole = cookies.userRole;
 
-        let [hours, minutes] = time.split(':');
-        hours = parseInt(hours, 10);
+  const [events, setEvents] = useState([]);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedHoursArray, setSelectedHoursArray] = useState([]);
+  const [reloadCount, setReloadCount] = useState(0);
+  const [formStatus, setFormStatus] = useState("standby");
+  const [appointmentFormData, setAppointmentFormData] =
+    useState(initialAppointments);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState();
+  const [clickedTimeslotButton, setClickedTimeslotButton] = useState();
+  const [consultationFormData, setConsultationFormData] = useState(
+    intitialConsultationData
+  );
+  const [currentTimezone, setCurrentTimezone] = useState(null);
+  const [currentStep, setCurrentStep] = useState(1);
+  const [underConstructionShow, setUnderConstructionShow] = useState(false);
+  const [youAreScheduleShow, setYouAreScheduleShow] = useState(false);
+  const [modalHeading, setModalHeading] = useState();
 
-        if (period === 'PM' && hours !== 12) {
-            hours += 12;
-        } else if (period === 'AM' && hours === 12) {
-            hours = 0;
+  const postSetAppointment = async (data) => {
+    return await axios.post(
+      import.meta.env.VITE_REACT_APP_API_ENDPOINT +
+        "designer/" +
+        designerId +
+        "/set/appointment?current_user_id=" +
+        current_user_id +
+        "&token=" +
+        token,
+      data
+    );
+  };
+
+  const putSetAppointment = async (data) => {
+    return await axios.put(
+      import.meta.env.VITE_REACT_APP_API_ENDPOINT +
+        "designer/appointment/" +
+        appointmentscheduleId +
+        "?current_user_id=" +
+        current_user_id +
+        "&token=" +
+        token,
+      data
+    );
+  };
+
+  
+
+
+
+
+  const convert24hrTo12hr = (time24hr) => {
+    const [hours, minutes] = time24hr.split(":");
+    const date = new Date(2000, 0, 1, hours, minutes);
+    return date.toLocaleString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
+  };
+
+
+
+
+
+  function convert12to24(time12) {
+    const [time, period] = time12.split(" ");
+    let [hours, minutes] = time.split(":");
+    hours = parseInt(hours, 10);
+    if (period === "PM" && hours !== 12) {
+      hours += 12;
+    } else if (period === "AM" && hours === 12) {
+      hours = 0;
+    }
+    const hours24 = hours.toString().padStart(2, "0");
+    const minutes24 = minutes.padStart(2, "0");
+    return `${hours24}:${minutes24}`;
+  }
+
+
+  const { defaultDate, views } = useMemo(
+    () => ({
+      defaultDate: new Date(1970, 1, 1),
+      views: [Views.MONTH],
+    }),
+    []
+  );
+
+  function toggleUnderConstruction(message) {
+    setUnderConstructionShow(!underConstructionShow);
+    setModalHeading(message);
+  }
+
+  function toggleSchedule(message) {
+    setYouAreScheduleShow(!youAreScheduleShow);
+    setModalHeading(message);
+  }
+  const findDayByDate = (dateString) => {
+    const formattedDate = moment(dateString).format("YYYY-MM-DD");
+    return data?.calender?.find((day) => day.date === formattedDate);
+  };
+  const handleCalendarTimeslotClick = ({ start }) => {
+    const designersDay = findDayByDate(start);
+    if (designersDay?.is_holiday) {
+      toast.error("Designer is on holiday");
+      return;
+    } else if (!designersDay?.is_available) {
+      toast.error("Designer isn't available");
+    } else {
+      const isPast = moment(start).isBefore(moment(), "day");
+      if (isPast) {
+        toast.error("You can't book in the past");
+
+        setSelectedDate("");
+        setSelectedHoursArray([]);
+        return;
+      }
+      setSelectedHoursArray(designersDay.available_time_slots);
+      // set available dates
+    }
+
+    setClickedTimeslotButton(null);
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
+      start
+    );
+    setSelectedDate(formattedDate);
+  };
+
+  const [selectedTime, setSelectedTime] = useState("");
+
+  const handleTimeslotClick = (data) => {
+    setSelectedTimeSlot(convert12to24(data.time));
+    setClickedTimeslotButton(data.index);
+  };
+
+  const handleTimeslotNextClick = (time) => {
+    setConsultationFormData({
+      ...consultationFormData,
+      email: data?.designer?.email,
+      first_name: data?.designer?.first_name,
+      last_name: data?.designer?.last_name,
+      consultation_hour_end: time.end_time,
+      consultation_hour_start: selectedTimeSlot,
+      timezone: currentTimezone,
+    });
+    setCurrentStep(2);
+  };
+
+  const handleChangeConsultation = (e) => {
+    const { name, value } = e.target;
+    setConsultationFormData({
+      ...consultationFormData,
+      [name]: value,
+    });
+  };
+
+  const addAppointmentSubmit = (e) => {
+    setFormStatus("loading");
+    postSetAppointment({ ...consultationFormData })
+      .then((response) => {
+        const status = response.data.status;
+        if (status === "Success") {
+          setFormStatus("standby");
+          setReloadCount(reloadCount + 1);
+          setAppointmentFormData(initialAppointments);
+          toast.success("Consultation added successfully!");
+          {
+            userRole !== "Admin"
+              ? setTimeout(() => {
+                  setReloadCount((prevReloadCount) => prevReloadCount + 1);
+                  navigate("/appointments/" + currentUser);
+                }, 1000)
+              : setTimeout(() => {
+                  setReloadCount(prevReloadCount + 1);
+                  navigate("/admin/appointments");
+                }, 1000);
+          }
+        } else {
+          setFormStatus("standby");
+          toast.error("Designer is not available at this time");
         }
+      })
+      .catch(() => {
+        toast.error("Designer is not available at this time");
+      });
+  };
 
-        // Format the result in 24-hour format
-        const hours24 = hours.toString().padStart(2, '0');
-        const minutes24 = minutes.padStart(2, '0');
-
-        return `${hours24}:${minutes24}`;
-    }
-
-    function convertTo12HourFormat(time24) {
-        const [hours, minutes] = time24.split(':');
-        let hours12 = parseInt(hours, 10);
-        const ampm = hours12 >= 12 ? 'PM' : 'AM';
-        hours12 = hours12 % 12 || 12;
-        return `${hours12}:${minutes} ${ampm}`;
-    }
-
-
-    function addOneHour(time24) {
-        let [hours, minutes] = time24.split(':');
-        hours = parseInt(hours, 10);
-        minutes = parseInt(minutes, 10);
-
-        const dateObject = new Date();
-        dateObject.setHours(hours + 1);
-        dateObject.setMinutes(minutes);
-
-        const result = `${dateObject.getHours().toString().padStart(2, '0')}:${dateObject.getMinutes().toString().padStart(2, '0')}`;
-        return result;
-    }
-
-    function convertArrayTo12HourFormat(hoursArray) {
-        return hoursArray.map(hour => convertTo12HourFormat(hour));
-    }
-
-    const { defaultDate, views } = useMemo(
-        () => ({
-            defaultDate: new Date(1970, 1, 1),
-            views: [Views.MONTH],
-        }),
-        []
-    )
-
-    function toggleUnderConstruction(message) {
-        setUnderConstructionShow(!underConstructionShow);
-        setModalHeading(message);
-    }
-
-    function toggleSchedule(message) {
-        setYouAreScheduleShow(!youAreScheduleShow);
-        setModalHeading(message);
-    }
-
-    const handleCalendarTimeslotClick = ({ start, end }) => {
-        console.log(start);
-        console.log(end);
-        setScheduleLoading(true);
-        const isPast = moment(start).isBefore(moment(), 'day');
-
-        // If the start date is in the past, do nothing
-        if (isPast) {
-            setSelectedDate('');
-            setSelectedHoursArray([]);
-            setScheduleLoading(false);
-            return;
+  const putAppointmentSubmit = (e) => {
+    setFormStatus("loading");
+    putSetAppointment({ ...consultationFormData })
+      .then((response) => {
+        const status = response.data.status;
+        if (status === "Success") {
+          setFormStatus("standby");
+          setReloadCount(reloadCount + 1);
+          setAppointmentFormData(initialAppointments);
+          toast.success("Consultation updated successfully!");
+          {
+            userRole !== "Admin"
+              ? setTimeout(() => {
+                  setReloadCount(prevReloadCount + 1);
+                  navigate("/appointments/" + currentUser);
+                }, 1000)
+              : setTimeout(() => {
+                  setReloadCount(prevReloadCount + 1);
+                  navigate("/admin/appointments");
+                }, 1000);
+          }
+        } else {
+          setFormStatus("standby");
+          toast.error("Designer is not available at this time");
         }
+      })
+      .catch(() => {
+        toast.error("Designer is not available at this time");
+      });
+  };
 
-        //clear previous selected hour slot
-        setClickedTimeslotButton(null);
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
-
-        const formattedDate = new Intl.DateTimeFormat('en-US', options).format(start);
-        console.log(formattedDate);
-        setSelectedDate(formattedDate);
-        const timeDifference = end - start;
-
-        // Convert milliseconds to hours
-        const hoursDifference = timeDifference / (1000 * 60 * 60);
-
-        getSetAppointment(formattedDate).then((response) => {
-            const selectedHours = response.data.data?.available_hours;
-            const status = response.data.status;
-            if (status == "Fail") {
-                const errors = response.data.errors;
-                if (errors && errors.length > 0) {
-                    errors.map((error, index) => {
-                        toast.error(error);
-                        return null; // React requires a return value, so we return null here
-                    })
-                }
-                setScheduleLoading(false);
-            } else {
-                if (selectedHours) {
-                    let hoursArray = convertArrayTo12HourFormat(selectedHours);
-                    setSelectedHoursArray(hoursArray);
-                    setScheduleLoading(false);
-                } else {
-                    const errors = response.data.errors;
-                    if (errors && errors.length > 0) {
-                        errors.map((error, index) => {
-                            toast.error(error);
-                            return null; // React requires a return value, so we return null here
-                        });
-                    } else {
-                        toast.error('There has been an error getting the schedule, please try again!');
-                    }
-                    setScheduleLoading(false);
-                }
-            }
-        }).catch((error) => {
-            toast.error('There has been an error getting the schedule, please try again!');
-            setScheduleLoading(false);
-        });
+  useEffect(() => {
+    const getTimezone = () => {
+      const timezone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
+      setCurrentTimezone(timezone);
     };
 
-    const [selectedTime, setSelectedTime] = useState('');
+    const currentDate = new Date();
+    const nextDate = new Date();
+    nextDate.setDate(currentDate.getDate() + 1);
+    handleCalendarTimeslotClick({ start: currentDate, end: nextDate });
+    getTimezone();
+  }, []);
 
-    const handleTimeslotClick = (data) => {
-        setSelectedTimeSlot(convert12to24(data.time));
-        setClickedTimeslotButton(data.index);
-        // setSelectedTime(data.time);
+  useEffect(() => {
+    if (calendarRef.current) {
+      applyPastDateClass();
     }
+  }, [calendarRef.current]);
 
-    const handleTimeslotNextClick = () => {
-        setConsultationFormData({
-            ...consultationFormData,
-            email: currentUserDetails.email,
-            first_name: currentUserDetails.first_name,
-            last_name: currentUserDetails.last_name,
-            consultation_date_time: convertHoursToDatetime(selectedTimeSlot),
-            consultation_hour_end: addOneHour(selectedTimeSlot),
-            consultation_hour_start: selectedTimeSlot,
-            consultation_date: convertToDateOnly(selectedDate),
-            timezone: currentTimezone,
-        });
-        setCurrentStep(2);
-    }
+  return (
+    <>
+      <Col lg="3">
+        <div className="appointment-preview-container">
+          <h3 className="mb-3 user-image-calendar">Designer</h3>
+          <div className="fw-500 mb-4 user-image-calendar d-flex">
+            {data?.designer?.avatar ? (
+              <div
+                className="user-photo-calendar me-2"
+                style={{
+                  backgroundImage: `url(${data?.designer?.avatar})`,
+                }}
+              ></div>
+            ) : (
+              <div
+                className="user-photo-calendar me-2"
+                style={{ backgroundImage: `url(${UserPlaceholder})` }}
+              ></div>
+            )}
+            <span className="d-flex align-items-center">
+              {data?.designer?.first_name} {data?.designer?.last_name}
+            </span>
+          </div>
+          <h3>Appointment Preview</h3>
+          <div>
+            {selectedDate != "" && (
+              <>
+                <p>
+                  <FiCalendar size={20} color={"#CEA835"} className="mb-1" />
+                  <span className="fw-500 current-date">{selectedDate}</span>
+                </p>
+              </>
+            )}
+            {consultationFormData.consultation_hour_start != "" &&
+              consultationFormData.consultation_hour_end != "" && (
+                <>
+                  <p>
+                    <TfiAlarmClock
+                      size={20}
+                      color={"#CEA835"}
+                      className="mb-1"
+                    />
+                    <span className="fw-500 current-date">
+                      {convert24hrTo12hr(
+                        consultationFormData.consultation_hour_start
+                      )}
+                      &nbsp;-&nbsp;
+                      {convert24hrTo12hr(
+                        consultationFormData.consultation_hour_end
+                      )}
+                    </span>
+                  </p>
+                </>
+              )}
+            {consultationFormData.timezone != "" && (
+              <>
+                <p>
+                  <LuGlobe2 size={20} color={"#CEA835"} className="mb-1" />
+                  <span className="fw-500 current-date">
+                    {consultationFormData.timezone}
+                  </span>
+                </p>
+              </>
+            )}
+            {consultationFormData.email != "" && (
+              <>
+                <p>
+                  <MdOutlineEmail
+                    size={20}
+                    color={"#CEA835"}
+                    className="mb-1"
+                  />
+                  <span className="fw-500 current-date">
+                    {consultationFormData.email}
+                  </span>
+                </p>
+              </>
+            )}
+          </div>
+        </div>
+      </Col>
+      <Col lg="9">
+        {currentStep == 1 ? (
+          <div className="appointment-calendar-container ">
+            <div className="tw-flex tw-mb-2 tw-gap-2 tw-items-center">
+              <span className="tw-font-semibold">Select a Date and Time</span>
+              <div className="tw-flex ">
+                <div
+                  className="tw-w-4 tw-h-4  tw-mr-2"
+                  style={{ backgroundColor: colors.holidayColor }}
+                ></div>
+                <span>Holidays</span>
+              </div>
+              <div className="tw-flex tw-items-center">
+                <div
+                  className="tw-w-4 tw-h-4  tw-mr-2"
+                  style={{ backgroundColor: colors.availableColor }}
+                ></div>
+                <span>Available</span>
+              </div>{" "}
+            </div>
 
-    const handleChangeConsultation = (e) => {
-        const { name, value } = e.target;
-        setConsultationFormData({
-            ...consultationFormData,
-            [name]: value,
-        });
-    }
-
-    const handleDefault = (e) => {
-        e.preventDefault();
-    }
-
-    const addAppointmentSubmit = (e) => {
-        setFormStatus('loading');
-        postSetAppointment({ ...consultationFormData })
-            .then(response => {
-                const status = response.data.status;
-                if (status === "Success") {
-                    setFormStatus('standby');
-                    setReloadCount(reloadCount + 1);
-                    setAppointmentFormData(initialAppointments);
-                    toast.success('Consultation added successfully!');
-
-                    {
-                        userRole !== 'Admin' ?
-                        setTimeout(() => {
-                            setReloadCount(prevReloadCount => prevReloadCount + 1);
-                            navigate('/appointments/' + currentUser);
-                        }, 1000)
-                        :
-                        setTimeout(() => {
-                            setReloadCount(prevReloadCount => prevReloadCount + 1);
-                            navigate('/admin/appointments');
-                        }, 1000)
-                    }
-
-                } else {
-                    setFormStatus('standby');
-                    toast.error('Designer is not available at this time');
-                }
-            }).catch(() => {
-                toast.error('Designer is not available at this time');
-            });
-    }
-
-    const putAppointmentSubmit = (e) => {
-        setFormStatus('loading');
-        putSetAppointment({ ...consultationFormData })
-            .then(response => {
-                const status = response.data.status;
-                if (status === "Success") {
-                    setFormStatus('standby');
-                    setReloadCount(reloadCount + 1);
-                    setAppointmentFormData(initialAppointments);
-                    toast.success('Consultation updated successfully!');
-
-                    {
-                        userRole !== 'Admin' ?
-                        setTimeout(() => {
-                            setReloadCount(prevReloadCount => prevReloadCount + 1);
-                            navigate('/appointments/' + currentUser);
-                        }, 1000)
-                        :
-                        setTimeout(() => {
-                            setReloadCount(prevReloadCount => prevReloadCount + 1);
-                            navigate('/admin/appointments');
-                        }, 1000)
-                    }
-
-                } else {
-                    setFormStatus('standby');
-                    toast.error('Designer is not available at this time');
-                }
-            }).catch(() => {
-                toast.error('Designer is not available at this time');
-            });
-    }
-
-    useEffect(() => {
-        const getTimezone = () => {
-            const timezone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
-            setCurrentTimezone(timezone);
-        };
-
-        const currentDate = new Date();
-        const nextDate = new Date();
-        nextDate.setDate(currentDate.getDate() + 1);
-
-        handleCalendarTimeslotClick({ start: currentDate, end: nextDate });
-
-        getTimezone();
-    }, []);
-
-    useEffect(() => {
-        if (calendarRef.current) {
-            applyPastDateClass();
-        }
-    }, [calendarRef.current]);
-
-    useEffect(() => {
-        getDesigner()
-            .then((response) => {
-                const selectedDesigner = response.data.data;
-                if (selectedDesigner) {
-                    setDesigner(selectedDesigner);
-                    setDesignerUser(selectedDesigner.user);
-                } else {
-                    toast.error('There has been an error getting the designer, please try again!');
-                }
-            })
-            .catch((error) => {
-                toast.error('There has been an error getting the designer, please try again!');
-            });
-
-        if (currentUser && appointmentscheduleId != 0) {
-            getAppointment()
-                .then((response) => {
-                    setAppointmentLoading(false);
-                    const selectedAppointment = response.data.data;
-                    if (selectedAppointment) {
-                        setConsultationFormData(selectedAppointment);
-                        setConsultationDetails(selectedAppointment.consultation_details);
-                        setSelectedDate(formatDate(selectedAppointment.consultation_date));
-                    } else {
-                        toast.error('There has been an error getting the appointments, please try again!');
-                        setAppointmentLoading(false);
-                    }
-                })
-                .catch((error) => {
-                    toast.error('There has been an error getting the appointments, please try again!');
-                    setAppointmentLoading(false);
-                });
-        }
-    },
-        [reloadCount]);
-
-    return (
-        <>
-            <Col lg="3">
-                <div className="appointment-preview-container">
-                    <h3 className='mb-3 user-image-calendar'>Designer</h3>
-                    <div className='fw-500 mb-4 user-image-calendar d-flex'>
-                        {designerUser.image ?
-                            <div
-                                className='user-photo-calendar me-2'
-                                style={{ backgroundImage: `url(${import.meta.env.VITE_REACT_APP_STORAGE_URL}user/${designerUser.image})` }}
-                            >
-                            </div>
-                            :
-                            <div
-                                className='user-photo-calendar me-2'
-                                style={{ backgroundImage: `url(${UserPlaceholder})` }}
-                            >
-                            </div>
-                        }
-
-                        <span className='d-flex align-items-center'>
-                            {designer?.user?.first_name} {designer?.user?.last_name}
-                        </span>
-                    </div>
-
-                    <h3>Appointment Preview</h3>
-                    <div>
-
-                        {selectedDate != "" &&
-                            <>
-                                <p><FiCalendar size={20} color={'#CEA835'} className='mb-1' />
-                                    <span className="fw-500 current-date">{selectedDate}</span>
-                                </p>
-                            </>
-                        }
-
-                        {/* {formattedSelectedDate != "" &&
-                         <>
-                            <p><FiCalendar size={20} color={'#CEA835'}/><span className="fw-500 current-date">{formattedSelectedDate}</span></p>
-                        </> 
-                        } */}
-
-                        {consultationFormData.consultation_hour_start != "" && consultationFormData.consultation_hour_end != "" &&
-                            <>
-                                <p><TfiAlarmClock size={20} color={'#CEA835'} className='mb-1' />
-                                    <span className="fw-500 current-date">
-                                        {convert24hrTo12hr(consultationFormData.consultation_hour_start)}&nbsp;-&nbsp;
-                                        {convert24hrTo12hr(consultationFormData.consultation_hour_end)}
-                                    </span>
-                                </p>
-                            </>
-                        }
-
-                        {consultationFormData.timezone != "" &&
-                            <>
-                                <p><LuGlobe2 size={20} color={'#CEA835'} className='mb-1' />
-                                    <span className="fw-500 current-date">{consultationFormData.timezone}</span>
-                                </p>
-                            </>
-                        }
-
-                        {/* {consultationFormData.first_name != "" &&
-                            <>
-                                <p><FaRegUser size={20} color={'#CEA835'} className='mb-1'/>
-                                    <span className="fw-500 current-date">{consultationFormData.first_name} {consultationFormData.last_name}</span>
-                                </p>
-                            </>
-                        } */}
-
-                        {consultationFormData.email != "" &&
-                            <>
-                                <p><MdOutlineEmail size={20} color={'#CEA835'} className='mb-1' />
-                                    <span className="fw-500 current-date">{consultationFormData.email}</span>
-                                </p>
-                            </>
-                        }
-
-                        {/* {selectedTimeSlot != "" &&
-                            <>
-                                <p><TfiAlarmClock  size={20} color={'#CEA835'} className='mb-1'/>
-                                    <span className="fw-500 current-date">{selectedTimeSlot}</span>
-                                </p>
-                            </>
-                        } */}
-                    </div>
+            <Row>
+              <Col lg="8">
+                <div className="schedule-calendar-container">
+                  <Calendar
+                    ref={calendarRef}
+                    localizer={localizer}
+                    events={events}
+                    defaultView={Views.MONTH}
+                    startAccessor="start"
+                    endAccessor="end"
+                    onSelectSlot={handleCalendarTimeslotClick}
+                    dayPropGetter={dayPropGetter}
+                    selectable
+                    onNavigate={handleNavigate}
+                    views={views}
+                  />
                 </div>
-            </Col>
+              </Col>
 
-            <Col lg="9">
-                {currentStep == 1 ?
-                    <div className="appointment-calendar-container">
-                        <h3>Select a Date and Time</h3>
-                        <Row>
-                            <Col lg="8">
-                                <div className="schedule-calendar-container">
-                                <Calendar
-                                    ref={calendarRef}
-                                    localizer={localizer}
-                                    events={events}
-                                    defaultView={Views.MONTH}
-                                    startAccessor="start"
-                                    endAccessor="end"
-                                    onSelectSlot={handleCalendarTimeslotClick}
-                                    selectable
-                                    onView={(view, element) => {
-                                        applyPastDateClass();
-                                        if (view === 'month') {
-                                            // Scroll to today's date when the month view is loaded
-                                            calendarRef.current.getApi().gotoDate(new Date());
-                                        }
-                                    }}
-                                    onRangeChange={applyPastDateClass}
-                                    views={views}
-                                />
-                                </div>
-                            </Col>
-
-                            <Col lg="4">
-                                <div className="time-container">
-                                    <h4>Time</h4>
-                                    <div className="timeslots-container">
-                                        {scheduleLoading ?
-                                            <div>
-                                                <p>Loading...</p>
-                                            </div>
-                                            :
-                                            <>
-                                                {selectedHoursArray.length > 0 ?
-                                                    <>
-                                                        {selectedHoursArray.map((time, index) => (
-                                                            <div className="timeslots-column" key={index}>
-                                                                <div>
-                                                                    <button
-                                                                        key={index}
-                                                                        className={clickedTimeslotButton == index || selectedTime === time ? "btn btn-primary timeslot-btn" : "btn btn-primary"}
-                                                                        onClick={() => handleTimeslotClick({ time, index })}
-                                                                    >
-                                                                        {time}
-                                                                    </button>
-                                                                </div>
-
-                                                                {/* <div>
-                                                                    {(clickedTimeslotButton === index ? "btn btn-primary timeslot-btn" : "btn btn-primary" || selectedTime === time) && (
-                                                                        <button 
-                                                                            key={index} 
-                                                                            className="btn btn-primary timeslot-btn"
-                                                                            onClick={() => handleTimeslotNextClick()}
-                                                                            autoFocus={selectedTime === time} 
-                                                                        >
-                                                                            Next
-                                                                        </button>
-                                                                    )}
-                                                                </div> */}
-
-                                                                <div>
-                                                                    {(clickedTimeslotButton == index || selectedTime === time) && (
-                                                                        <button
-                                                                            key={index}
-                                                                            className="btn btn-primary timeslot-btn"
-                                                                            onClick={() => handleTimeslotNextClick()}
-                                                                        >
-                                                                            Next
-                                                                        </button>
-                                                                    )}
-                                                                </div>
-                                                            </div>
-
-                                                        ))}
-                                                    </>
-                                                    :
-                                                    <>
-                                                        <div>
-                                                            <p>No available hours.</p>
-                                                        </div>
-                                                    </>
-                                                }
-                                            </>
-                                        }
-                                    </div>
-                                </div>
-                            </Col>
-                        </Row>
-                    </div>
-                    :
-                    <div className="appointment-calendar-container">
-                        <h3>Enter Details</h3>
-                        <Form>
-                            <Form.Group className='my-4'>
-                                <Form.Label>Provide any information regarding the details of the meeting.</Form.Label>
-                                <FormControl as="textarea"
-                                    name="consultation_details"
-                                    rows={5}
-                                    value={consultationFormData.consultation_details}
-                                    placeholder='I would like to discuss the design specifications, required materials, and other related details.'
-                                    onChange={handleChangeConsultation}
-                                />
-                            </Form.Group>
-                        </Form>
-
-                        {/* temporary, should be inside the form */}
-                        <div className="send-btn-container">
-                            <button
-                                className="btn btn-primary bg-transparent text-black"
-                                onClick={() => { setCurrentStep(1); setConsultationFormData(intitialConsultationData); setSelectedDate(''); setSelectedHoursArray([]); }}
-                            >
-                                Cancel
-                            </button>
-
-                            {/* {formStatus != "loading" ?
-                                <button className="btn btn-primary" onClick={() => addAppointmentSubmit("You are Scheduled!")}>Schedule Now</button>
-
-                                :
-                                <button className="btn btn-primary" onClick={handleDefault}>Loading...</button>
-                            } */}
-
-                            {/* {isScheduled ? (
-                                <button className="btn btn-primary" onClick={() => addAppointmentSubmit("You are Scheduled!")}>
-                                    Schedule Now
+              <Col lg="4">
+                <div className="time-container">
+                  <h4>Available time slots</h4>
+                  <div className="timeslots-container">
+                    <>
+                      {selectedHoursArray.length > 0 ? (
+                        <>
+                          {selectedHoursArray.map((time, index) => (
+                            <div className="timeslots-column" key={index}>
+                              <div>
+                                <button
+                                  key={index}
+                                  className={
+                                    clickedTimeslotButton == index ||
+                                    selectedTime === time.start_time
+                                      ? "btn btn-primary timeslot-btn"
+                                      : "btn btn-primary"
+                                  }
+                                  onClick={() =>
+                                    handleTimeslotClick({
+                                      time: time.start_time,
+                                      index,
+                                    })
+                                  }
+                                >
+                                  {time?.start_time} - {time?.end_time}
                                 </button>
-                            ) : (
-                                <button className="btn btn-primary" onClick={() => putAppointmentSubmit("You are Updated!")}>
-                                    Update Now
-                                </button>
-                            )} */}
+                              </div>
 
-                            {appointmentscheduleId == 0 || appointmentscheduleId == "0" ? (
-                                <>
-                                    {formStatus == "loading" ?
-                                        <>
-                                            <button className="btn btn-primary" disabled>
-                                                Submitting
-                                            </button>
-                                        </>
-                                        :
-                                        <button className="btn btn-primary" onClick={() => addAppointmentSubmit("You are Scheduled!")}>
-                                            Schedule Now
-                                        </button>
+                              <div>
+                                {(clickedTimeslotButton == index ||
+                                  selectedTime === time) && (
+                                  <button
+                                    key={index}
+                                    className="btn btn-primary timeslot-btn"
+                                    onClick={() =>
+                                      handleTimeslotNextClick(time)
                                     }
-                                </>
-                            ) : (
-                                <>
-                                    {formStatus == "loading" ?
-                                        <>
-                                            <button className="btn btn-primary" disabled>
-                                                Updating Now
-                                            </button>
-                                        </>
-                                        :
-                                        <>
-                                            <button className="btn btn-primary" onClick={() => putAppointmentSubmit("You are Updated!")}>
-                                                Update Now
-                                            </button>
-                                        </>
-                                    }
-                                </>
-                            )}
+                                  >
+                                    Next
+                                  </button>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </>
+                      ) : (
+                        <>
+                          <div>
+                            <p>No available hours.</p>
+                          </div>
+                        </>
+                      )}
+                    </>
+                  </div>
+                </div>
+              </Col>
+            </Row>
+          </div>
+        ) : (
+          <div className="appointment-calendar-container">
+            <h3>Enter Details</h3>
+            <Form>
+              <Form.Group className="my-4">
+                <Form.Label>
+                  Provide any information regarding the details of the meeting.
+                </Form.Label>
+                <FormControl
+                  as="textarea"
+                  name="consultation_details"
+                  rows={5}
+                  value={consultationFormData.consultation_details}
+                  placeholder="I would like to discuss the design specifications, required materials, and other related details."
+                  onChange={handleChangeConsultation}
+                />
+              </Form.Group>
+            </Form>
 
+            <div className="send-btn-container">
+              <button
+                className="btn btn-primary bg-transparent text-black"
+                onClick={() => {
+                  setCurrentStep(1);
+                  setConsultationFormData(intitialConsultationData);
+                  setClickedTimeslotButton("");
+                }}
+              >
+                Cancel
+              </button>
 
-                        </div>
-                    </div>
-                }
-
-            </Col>
-            <Modal
-                show={underConstructionShow}
-                className='modal-preview'
-                fade={false}
-                centered
-                size="sm"
-            >
-                <Modal.Header className="py-0">
-                    <h5 className='modal-title text-uppercase text-left'></h5>
-                    <button type='button' className='close react-modal-close' onClick={() => toggleUnderConstruction("")} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+              {appointmentscheduleId == 0 || appointmentscheduleId == "0" ? (
+                <>
+                  {formStatus == "loading" ? (
+                    <>
+                      <button className="btn btn-primary" disabled>
+                        Submitting
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => addAppointmentSubmit("You are Scheduled!")}
+                    >
+                      Schedule Now
                     </button>
-                </Modal.Header>
-                <Modal.Body>
-                    <h4 className='fs-25 fw-600 mb-3'>{modalHeading}</h4>
-                    <Card>
-                        <Card.Body className="text-center py-5">
-                            <GoAlertFill size="60px" className="mb-2 text-gold" />
-                            <p className="fs-20 text-black">Under Construction</p>
-                            {/* <DateTimePicker onTimeChange={handleTimeChange} onDone={handleDoneTimeChange} availability={currentAvailability} /> */}
-                        </Card.Body>
-                    </Card>
-                </Modal.Body>
-            </Modal>
+                  )}
+                </>
+              ) : (
+                <>
+                  {formStatus == "loading" ? (
+                    <>
+                      <button className="btn btn-primary" disabled>
+                        Updating Now
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => putAppointmentSubmit("You are Updated!")}
+                      >
+                        Update Now
+                      </button>
+                    </>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+        )}
+      </Col>
+      <Modal
+        show={underConstructionShow}
+        className="modal-preview"
+        fade={false}
+        centered
+        size="sm"
+      >
+        <Modal.Header className="py-0">
+          <h5 className="modal-title text-uppercase text-left"></h5>
+          <button
+            type="button"
+            className="close react-modal-close"
+            onClick={() => toggleUnderConstruction("")}
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </Modal.Header>
+        <Modal.Body>
+          <h4 className="fs-25 fw-600 mb-3">{modalHeading}</h4>
+          <Card>
+            <Card.Body className="text-center py-5">
+              <GoAlertFill size="60px" className="mb-2 text-gold" />
+              <p className="fs-20 text-black">Under Construction</p>
+            </Card.Body>
+          </Card>
+        </Modal.Body>
+      </Modal>
 
-            <Modal
-                show={youAreScheduleShow}
-                className='modal-preview'
-                fade={false}
-                centered
-                size="sm"
+      <Modal
+        show={youAreScheduleShow}
+        className="modal-preview"
+        fade={false}
+        centered
+        size="sm"
+      >
+        <Modal.Header className="py-0">
+          <h5 className="modal-title text-uppercase text-left"></h5>
+          <button
+            type="button"
+            className="close react-modal-close"
+            onClick={() => toggleSchedule("")}
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </Modal.Header>
+        <Modal.Body className="pt-4">
+          <h4 className="fs-25 fw-600 mb-3 text-center">{modalHeading}</h4>
+          <div className="sent-email text-center text-black mb-3">
+            An invite has been sent to your email. See you then!
+          </div>
+          <div className="d-flex justify-content-center align-items-center">
+            <Card className="w-75">
+              <Card.Body className="pb-0">
+                <div>
+                  {selectedDate != "" && (
+                    <>
+                      <p>
+                        <FiCalendar size={20} color={"#CEA835"} />
+                        <span className="fw-500 current-date ms-2">
+                          {selectedDate}
+                        </span>
+                      </p>
+                    </>
+                  )}
+
+                  {consultationFormData.timezone != "" && (
+                    <>
+                      <p>
+                        <LuGlobe2 size={20} color={"#CEA835"} />
+                        <span className="fw-500 current-date ms-2">
+                          {consultationFormData.timezone}
+                        </span>
+                      </p>
+                    </>
+                  )}
+                  {consultationFormData.first_name != "" && (
+                    <>
+                      <p>
+                        <FaRegUser size={20} color={"#CEA835"} />
+                        <span className="fw-500 current-date ms-2">
+                          {consultationFormData.first_name}{" "}
+                          {consultationFormData.last_name}
+                        </span>
+                      </p>
+                    </>
+                  )}
+                  {consultationFormData.email != "" && (
+                    <>
+                      <p>
+                        <MdOutlineEmail size={20} color={"#CEA835"} />
+                        <span className="fw-500 current-date ms-2">
+                          {consultationFormData.email}
+                        </span>
+                      </p>
+                    </>
+                  )}
+                </div>
+              </Card.Body>
+            </Card>
+          </div>
+          <div className="text-center mt-2">
+            <button
+              className="btn btn-primary mt-3"
+              onClick={() => toggleSchedule("")}
             >
-                <Modal.Header className="py-0">
-                    <h5 className='modal-title text-uppercase text-left'></h5>
-                    <button type='button' className='close react-modal-close' onClick={() => toggleSchedule("")} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
-                    </button>
-                </Modal.Header>
-                <Modal.Body className='pt-4'>
-                    <h4 className='fs-25 fw-600 mb-3 text-center'>{modalHeading}</h4>
-                    <div className='sent-email text-center text-black mb-3'>An invite has been sent to your email. See you then!</div>
-                    <div className='d-flex justify-content-center align-items-center'>
-                        <Card className='w-75'>
-                            <Card.Body className='pb-0'>
-                                <div>
-
-                                    {selectedDate != "" &&
-                                        <>
-                                            <p><FiCalendar size={20} color={'#CEA835'} /><span className="fw-500 current-date ms-2">{selectedDate}</span></p>
-                                        </>
-                                    }
-
-                                    {consultationFormData.timezone != "" &&
-                                        <>
-                                            <p><LuGlobe2 size={20} color={'#CEA835'} /><span className="fw-500 current-date ms-2">{consultationFormData.timezone}</span></p>
-                                        </>
-                                    }
-                                    {consultationFormData.first_name != "" &&
-                                        <>
-                                            <p><FaRegUser size={20} color={'#CEA835'} /><span className="fw-500 current-date ms-2">{consultationFormData.first_name} {consultationFormData.last_name}</span></p>
-                                        </>
-                                    }
-                                    {consultationFormData.email != "" &&
-                                        <>
-                                            <p><MdOutlineEmail size={20} color={'#CEA835'} /><span className="fw-500 current-date ms-2">{consultationFormData.email}</span></p>
-                                        </>
-                                    }
-                                </div>
-                            </Card.Body>
-                        </Card>
-                    </div>
-                    <div className='text-center mt-2'>
-                        <button className='btn btn-primary mt-3' onClick={() => toggleSchedule("")}>Ok</button>
-                    </div>
-                </Modal.Body>
-            </Modal>
-
-
-        </>
-    )
-}
+              Ok
+            </button>
+          </div>
+        </Modal.Body>
+      </Modal>
+    </>
+  );
+};
 ConsultationCalendar.propTypes = {
-    localizer: PropTypes.instanceOf(DateLocalizer),
-}
+  localizer: PropTypes.instanceOf(DateLocalizer),
+};
 
 export default ConsultationCalendar;

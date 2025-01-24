@@ -169,6 +169,11 @@ export const queryService = api.injectEndpoints({
         }
       },
     }),
+    getADesignersCalender: builder.query({
+      query: ({ designer_id = "", year = 2024, month = "01" }) =>
+        `designer/${designer_id}/calender?year=${year}&month=${month}`,
+    }),
+
     getMyCalender: builder.query({
       query: ({ year = 2024, month = "01" }) =>
         `user/calender/${year}/${month}`,
@@ -204,5 +209,6 @@ export const {
   useGetDesignsQuery,
   useGetMyCalenderQuery,
   useGetADesignerQuery,
-  useGetADesignersDesignQuery
+  useGetADesignersDesignQuery,
+  useGetADesignersCalenderQuery
 } = queryService;

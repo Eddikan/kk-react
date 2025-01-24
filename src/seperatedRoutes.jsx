@@ -408,10 +408,7 @@ export const unAuthenticatedRoutes = [
     path: "/user/center/live/stream",
     element: <LiveStreams />,
   },
-  {
-    path: "/designer/:designerId/appointment/schedule/:appointmentscheduleId",
-    element: <ScheduleConsultation />,
-  },
+
   {
     path: "/body-gram",
     element: <BodyGram />,
@@ -447,6 +444,10 @@ export const authenticatedRoutes = [
   {
     path: "/:user/profile",
     element: <UserProfile />,
+  },
+  {
+    path: "/designer/:designerId/appointment/schedule/:appointmentscheduleId",
+    element: <ScheduleConsultation />,
   },
   {
     path: "/user/complete-profile",

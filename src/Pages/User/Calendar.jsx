@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Row, Col, Modal, Card } from "react-bootstrap";
 import "Assets/styles/DesignerCalendar/style.css";
 import { useCookies } from "react-cookie";
@@ -8,7 +8,7 @@ import MyCalendar from "Components/Shared/MyCalendar";
 import GoBack from "Components/Shared/GoBack";
 import LayoutSellerCenter from "Components/Layout/LayoutSellerCenter";
 import SetAvailability from "Components/Completeness/ShopSteps/SetAvailability";
-
+import useCalendar from "hooks/useCalendar";
 
 const Calendar = (props) => {
   const [cookies, setCookie, removeCookie] = useCookies([
@@ -20,7 +20,7 @@ const Calendar = (props) => {
   const designerId = cookies.currentUserDesigner;
   const [designerBusinessHoursModalShow, setDesignerBusinessHoursModalShow] =
     useState(false);
-  
+
   const [currentTimezone, setCurrentTimezone] = useState(null);
   const [noAvailableHours, setNoAvailableHors] = useState(false);
 
@@ -33,8 +33,7 @@ const Calendar = (props) => {
 
     getTimezone();
   }, []);
-
-
+const {colors} = useCalendar()
   return (
     <LayoutSellerCenter>
       <section>
@@ -67,14 +66,21 @@ const Calendar = (props) => {
                       md={5}
                       className="d-flex justify-content-left align-items-center"
                     >
-                <div className="tw-flex tw-items-center tw-mr-4">
-            <div className="tw-w-4 tw-h-4 tw-bg-[#FFDAB3] tw-mr-2"></div>
-            <span>Holidays</span>
-          </div>
-          <div className="tw-flex tw-items-center">
-            <div className="tw-w-4 tw-h-4 tw-bg-[#E1EACD] tw-mr-2"></div>
-            <span>Available</span>
-          </div> </Col>
+                      <div className="tw-flex tw-items-center tw-mr-4">
+                        <div className="tw-w-4 tw-h-4  tw-mr-2"
+                        style={{ backgroundColor: colors.holidayColor }}
+                        
+                        ></div>
+                        <span>Holidays</span>
+                      </div>
+                      <div className="tw-flex tw-items-center">
+                        <div className="tw-w-4 tw-h-4  tw-mr-2"
+                        style={{ backgroundColor: colors.availableColor }}
+                        
+                        ></div>
+                        <span>Available</span>
+                      </div>{" "}
+                    </Col>
 
                     <Col md={3} className="text-right">
                       <button
@@ -102,9 +108,7 @@ const Calendar = (props) => {
                     </Row>
                   ) : null}
                   <div className="calendar-container">
-                    <MyCalendar
-                      designerId={designerId}
-                    />
+                    <MyCalendar designerId={designerId} />
                   </div>
                 </Col>
               </Row>
@@ -120,19 +124,21 @@ const Calendar = (props) => {
       >
         <Modal.Header closeButton className="pb-0">
           <Modal.Title className="rufina-family fs-22">
-           Availability
+            Availability
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Card>
             <Card.Body>
-              <SetAvailability edit cancel={()=>{
-                setDesignerBusinessHoursModalShow(false)
-              }} />
+              <SetAvailability
+                edit
+                cancel={() => {
+                  setDesignerBusinessHoursModalShow(false);
+                }}
+              />
             </Card.Body>
           </Card>
         </Modal.Body>
-     
       </Modal>
     </LayoutSellerCenter>
   );

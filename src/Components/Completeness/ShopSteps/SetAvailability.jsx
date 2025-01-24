@@ -9,6 +9,7 @@ import TimezoneDropdown from "Components/Forms/TimezoneDropdown";
 import { useUpdateUserAvailabilityMutation } from "store/api/mutations";
 import { useGetProfileQuery, useGetMyCalenderQuery } from "store/api/queries";
 import { useSelector } from "react-redux";
+import useCalendar from "hooks/useCalendar";
 
 const initialBusinessHours = {
   start: "",
@@ -18,7 +19,11 @@ const initialBusinessHours = {
 const SetAvailability = ({ onStepPlusOne, edit, cancel }) => {
   const currenStoreUser = useSelector((state) => state.user.user);
   const { refetch: refetchUser } = useGetProfileQuery();
-  const calenderQuery = useGetMyCalenderQuery({ year: 2025, month: 1 });
+  const {
+    month,
+    year,
+  } = useCalendar();
+  const calenderQuery = useGetMyCalenderQuery({ year, month });
   const [updateUserAvailability, { isLoading: isAvailabilityUpdating }] =
     useUpdateUserAvailabilityMutation();
   const [state, setState] = useState({
@@ -208,7 +213,6 @@ const SetAvailability = ({ onStepPlusOne, edit, cancel }) => {
       refetchUser();
       calenderQuery.refetch();
       toast.success(res.message);
-      onStepPlusOne();
       setReloadCount(reloadCount + 1);
       setState((prevState) => ({
         ...prevState,
@@ -217,6 +221,7 @@ const SetAvailability = ({ onStepPlusOne, edit, cancel }) => {
           return acc;
         }, {}),
       }));
+      cancel()
     }
   };
   return (

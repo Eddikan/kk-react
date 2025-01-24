@@ -1,587 +1,39 @@
-import {
-  Calendar,
-  momentLocalizer,
-  Views,
-  DateLocalizer,
-} from "react-big-calendar";
-import { Row, Col, Button, Modal, Card } from "react-bootstrap";
-import React, { useEffect, useState, useCallback, useMemo } from "react";
-import { useNavigate, useParams, Link } from "react-router-dom";
-import { useCookies } from "react-cookie";
+import { Calendar, momentLocalizer, DateLocalizer } from "react-big-calendar";
+import { useEffect } from "react";
+import { Modal, Card } from "react-bootstrap";
+import PropTypes from "prop-types";
 import { MdOutlineCalendarMonth } from "react-icons/md";
-import { GoPlus } from "react-icons/go";
+import { GiAlarmClock } from "react-icons/gi";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import PropTypes from "prop-types";
 import "Assets/styles/DesignerCalendar/style.css";
-import axios from "axios";
-import toast from "react-hot-toast";
-import { GiAlarmClock } from "react-icons/gi";
-import { useSelector } from "react-redux";
+import useCalendar from "hooks/useCalendar";
 import { useGetMyCalenderQuery } from "store/api/queries";
-
-const intitialConsultationData = {
-  consultation_date_time: "",
-  consultation_hour_start: "",
-  consultation_hour_end: "",
-  consultation_date: "",
-  email: "",
-  first_name: "",
-  last_name: "",
-  timezone: "",
-  consultation_details: "",
-};
-
-const initialAppointments = {
-  consultation_date_time: "",
-  consultation_hour_start: "",
-  consultation_hour_end: "",
-  consultation_date: "",
-  email: "",
-  first_name: "",
-  last_name: "",
-  timezone: "",
-  consultation_details: "",
-};
 
 const localizer = momentLocalizer(moment);
 
-const MyCalendar = ({ designerId }) => {
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const year = currentDate.getFullYear();
-  const month = currentDate.getMonth() + 1;
-
+const MyCalendar = () => {
+  const {
+    month,
+    year,
+    events,
+    modalIsOpen,
+    appointmentModalIsOpen,
+    selectedEvent,
+    handleNavigate,
+    handleSelectEvent,
+    views,
+    closeAppointmentModal,
+    handleDateClick,
+    handleModalClose,
+    addAppointmentSubmit,
+    dayPropGetter,
+  } = useCalendar();
   const calenderQuery = useGetMyCalenderQuery({ year, month });
-  const handleNavigate = (date) => {
-    setCurrentDate(date);
-  };
+
   useEffect(() => {
     calenderQuery.refetch();
-  }, [year, month, currentDate]);
-
-  const [cookies, setCookie, removeCookie] = useCookies([
-    "currentUser",
-    "isLoggedIn",
-    "userDetails",
-    "userRole",
-    "token",
-  ]);
-  const currentUserDetails = cookies.userDetails;
-  const current_user_id = cookies.currentUser;
-  const token = cookies.token;
-  const { designerIdParams } = useParams();
-
-  const designer_id = designerId ?? designerIdParams;
-
-  const [events, setEvents] = useState([]);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [appointmentModalIsOpen, setAppointmentModalIsOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [reloadCount, setReloadCount] = useState(0);
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState();
-  const [formStatus, setFormStatus] = useState("standby");
-  const [appointmentFormData, setAppointmentFormData] =
-    useState(initialAppointments);
-  const [times, setTimes] = useState([initialAppointments]);
-  const [consultationFormData, setConsultationFormData] = useState(
-    intitialConsultationData
-  );
-  const [currentTimezone, setCurrentTimezone] = useState(null);
-  const [selectedEvent, setSelectedEvent] = useState(null);
-
-  const [selectedHoursArray, setSelectedHoursArray] = useState([]);
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
-  const [scheduledAppointments, setScheduledAppointments] = useState([]);
-
-  const postSetAppointment = async (data) => {
-    return await axios.post(
-      import.meta.env.VITE_REACT_APP_API_ENDPOINT +
-        "designer/" +
-        designer_id +
-        "/set/appointment?current_user_id=" +
-        current_user_id,
-      data
-    );
-  };
-
-  const getAvailabilities = async (e) => {
-    return await axios.get(
-      import.meta.env.VITE_REACT_APP_API_ENDPOINT +
-        "designer/" +
-        designer_id +
-        "/availability?date=" +
-        e +
-        "?current_user_id=" +
-        current_user_id +
-        "&token" +
-        token
-    );
-  };
-
-  const getDesignerAppointment = async () => {
-    return await axios.get(
-      import.meta.env.VITE_REACT_APP_API_ENDPOINT +
-        "designer/" +
-        designer_id +
-        "/appointment?current_user_id=" +
-        current_user_id +
-        "&token=" +
-        token
-    );
-  };
-
-  function convertTo12HourFormat(time24) {
-    const [hours, minutes] = time24.split(":");
-    let hours12 = parseInt(hours, 10);
-    const ampm = hours12 >= 12 ? "PM" : "AM";
-    hours12 = hours12 % 12 || 12;
-    return `${hours12}:${minutes} ${ampm}`;
-  }
-
-  function convert12to24(time12) {
-    const [time, period] = time12.split(" ");
-
-    let [hours, minutes] = time.split(":");
-    hours = parseInt(hours, 10);
-
-    if (period === "PM" && hours !== 12) {
-      hours += 12;
-    } else if (period === "AM" && hours === 12) {
-      hours = 0;
-    }
-
-    // Format the result in 24-hour format
-    const hours24 = hours.toString().padStart(2, "0");
-    const minutes24 = minutes.padStart(2, "0");
-
-    return `${hours24}:${minutes24}`;
-  }
-
-  function convertArrayTo12HourFormat(hoursArray) {
-    return hoursArray.map((hour) => convertTo12HourFormat(hour));
-  }
-
-  const convertHoursToDatetime = (time, selectedDate) => {
-    const [hours, minutes, period] = time.split(/[: ]/);
-
-    // Convert hours to 24-hour format
-    const hours24 =
-      period === "PM" ? parseInt(hours, 10) + 12 : parseInt(hours, 10);
-
-    const resultDatetime = new Date(selectedDate);
-    resultDatetime.setHours(hours24);
-    resultDatetime.setMinutes(parseInt(minutes, 10));
-
-    return resultDatetime.toISOString();
-  };
-
-  const convertToIsoDatetime = (date) => {
-    const resultDatetime = new Date(date);
-
-    return resultDatetime.toISOString();
-  };
-
-  const handleSelectEvent = useCallback((event) => {
-    const options = {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-    };
-    const optionsDate = { year: "numeric", month: "long", day: "numeric" };
-    const optionsTimeEnd = { hour: "numeric", minute: "numeric" };
-    const optionsTimeStart = { hour: "numeric", minute: "numeric" };
-    const formattedDate = new Intl.DateTimeFormat("en-US", optionsDate).format(
-      event.start
-    );
-    const formattedTimeEnd = new Intl.DateTimeFormat(
-      "en-US",
-      optionsTimeEnd
-    ).format(event.end);
-    const formattedTimeStart = new Intl.DateTimeFormat(
-      "en-US",
-      optionsTimeStart
-    ).format(event.start);
-
-    setSelectedEvent({
-      ...selectedEvent,
-      title: event.title,
-      start: formattedTimeStart,
-      end: formattedTimeEnd,
-      date: formattedDate,
-      desc: event.desc,
-      status: event.status,
-    });
-    setAppointmentModalIsOpen(true);
-  }, []);
-
-  const { defaultDate, views } = useMemo(
-    () => ({
-      defaultDate: new Date(1970, 1, 1),
-      views: [Views.MONTH],
-    }),
-    []
-  );
-
-  const closeAppointmentModal = () => {
-    setAppointmentModalIsOpen(false);
-    setSelectedEvent(null);
-  };
-
-  // const handleChangeConsultation = (e) => {
-  //     var { name, value } = e.target;
-  //     setConsultationFormData({
-  //         ...consultationFormData,
-
-  //         email: currentUserDetails.email,
-  //         first_name: currentUserDetails.first_name,
-  //         last_name: currentUserDetails.last_name,
-  //         timezone: currentTimezone,
-  //         // consultation_date_time: convertToIsoDatetime(selectedDate),
-  //         consultation_date: convertToIsoDatetime(selectedDate),
-  //         consultation_details: 'Self added Appointment',
-  //         [name]: value,
-
-  //     });
-  // }
-  const handleChangeConsultation = (e) => {
-    let { name, value } = e.target;
-    const updatedFormData = {
-      ...consultationFormData,
-      email: currentUserDetails.email,
-      first_name: currentUserDetails.first_name,
-      last_name: currentUserDetails.last_name,
-      timezone: currentTimezone,
-      consultation_date: convertToIsoDatetime(selectedDate),
-      consultation_details: "Self added Appointment",
-      [name]: value,
-    };
-
-    // Validation logic for time fields
-    // if (name === 'consultation_hour_start' && updatedFormData.consultation_hour_end) {
-    //     if (value >= updatedFormData.consultation_hour_end) {
-    //         toast.error("Start time must be before the end time.");
-    //         return;
-    //     }
-    // } else if (name === 'consultation_hour_end' && updatedFormData.consultation_hour_start) {
-    //     if (value <= updatedFormData.consultation_hour_start) {
-    //         toast.error("End time must be after the start time.");
-    //         return;
-    //     }
-    // }
-
-    // Update the state with validated data
-    setConsultationFormData(updatedFormData);
-  };
-
-  const handleDateClick = ({ start }) => {
-    setModalIsOpen(true);
-
-    return;
-    if (moment(start).isBefore(moment(), "day")) {
-      toast.error("You can't select a past date!");
-      return;
-    }
-
-    // const selectedTime = moment(start);
-    // if (selectedTime.isBefore(moment(), 'minute')) {
-    //     toast.error("You can't select a past time!");
-    //     return;
-    // }
-
-    const options = { year: "numeric", month: "long", day: "numeric" };
-
-    const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
-      start
-    );
-
-    getAvailabilities(formattedDate)
-      .then((response) => {
-        const selectedHours = response.data.data?.available_hours;
-        const status = response.data.status;
-        if (status == "Fail") {
-          const errors = response.data.errors;
-          if (errors && errors.length > 0) {
-            errors.map((error, index) => {
-              toast.error(error);
-              return null; // React requires a return value, so we return null here
-            });
-          }
-        } else {
-          if (selectedHours) {
-            let hoursArray = convertArrayTo12HourFormat(selectedHours);
-            setSelectedHoursArray(hoursArray);
-            if (hoursArray.length > 0) {
-              if (hoursArray.length > 1) {
-                setStartTime(hoursArray[0]);
-                setEndTime(hoursArray[hoursArray.length - 1]);
-              } else {
-                setStartTime(hoursArray[0]);
-              }
-              setConsultationFormData({
-                ...consultationFormData,
-
-                email: currentUserDetails.email,
-                first_name: currentUserDetails.first_name,
-                last_name: currentUserDetails.last_name,
-                timezone: currentTimezone,
-                // consultation_date_time: convertToIsoDatetime(selectedDate),
-                consultation_date: convertToIsoDatetime(selectedDate),
-                consultation_details: "Self added Appointment",
-                consultation_hour_start: convert12to24(hoursArray[0]),
-              });
-            } else {
-              setConsultationFormData({
-                ...consultationFormData,
-
-                email: currentUserDetails.email,
-                first_name: currentUserDetails.first_name,
-                last_name: currentUserDetails.last_name,
-                timezone: currentTimezone,
-                // consultation_date_time: convertToIsoDatetime(selectedDate),
-                consultation_date: convertToIsoDatetime(selectedDate),
-                consultation_details: "Self added Appointment",
-                consultation_hour_start: "",
-              });
-              setStartTime("");
-              setEndTime("");
-            }
-          } else {
-            const errors = response.data.errors;
-            if (errors && errors.length > 0) {
-              errors.map((error, index) => {
-                toast.error(error);
-                return null; // React requires a return value, so we return null here
-              });
-            } else {
-              toast.error(
-                "There has been an error getting the schedule, please try again!"
-              );
-            }
-          }
-        }
-      })
-      .catch(() => {
-        toast.error(
-          "There has been an error adding the appointment, please try again!"
-        );
-      });
-    setSelectedDate(start);
-  };
-
-  const handleModalClose = () => {
-    setModalIsOpen(false);
-    setSelectedDate(null);
-  };
-
-  const isOverlapping = (start1, end1, start2, end2) => {
-    return start1 < end2 && end1 > start2;
-  };
-
-  const addAppointmentSubmit = (e) => {
-    e.preventDefault();
-
-    const newStart = new Date(
-      convertHoursToDatetime(
-        consultationFormData.consultation_hour_start,
-        consultationFormData.consultation_date
-      )
-    );
-    const newEnd = new Date(
-      convertHoursToDatetime(
-        consultationFormData.consultation_hour_end,
-        consultationFormData.consultation_date
-      )
-    );
-
-    // Validation for start time and end time
-    if (newStart >= newEnd) {
-      toast.error("Start time must be before the end time.");
-      return;
-    }
-
-    // Get the current time for comparison
-    const currentTime = new Date();
-
-    // Check if the selected start time is in the past
-    if (newStart < currentTime) {
-      toast.error("You can't schedule an appointment in the past!");
-      return;
-    }
-
-    // Check if the selected end time is in the past
-    if (newEnd < currentTime) {
-      toast.error("You can't schedule an appointment that ends in the past!");
-      return;
-    }
-
-    // Convert available startTime and endTime to comparable Date objects
-    const availableStart = new Date(
-      convertHoursToDatetime(startTime, consultationFormData.consultation_date)
-    );
-    const availableEnd = new Date(
-      convertHoursToDatetime(endTime, consultationFormData.consultation_date)
-    );
-
-    // Check if the new appointment falls within the available time range
-    if (newStart < availableStart || newEnd > availableEnd) {
-      toast.error(
-        "Appointment time is outside of available hours. Please choose a valid time."
-      );
-      return;
-    }
-    // Check for overlap with existing appointments
-    const hasOverlap = scheduledAppointments.some((appointment) => {
-      const existingStart = new Date(appointment.start);
-      const existingEnd = new Date(appointment.end);
-      return isOverlapping(newStart, newEnd, existingStart, existingEnd);
-    });
-
-    if (hasOverlap) {
-      toast.error("Time slot unavailable. Please choose another time.");
-      return;
-    }
-
-    setFormStatus("loading");
-    postSetAppointment({ ...consultationFormData })
-      .then((response) => {
-        const status = response.data.status;
-        if (status === "Success") {
-          setFormStatus("standby");
-          setReloadCount(reloadCount + 1);
-          setConsultationFormData(intitialConsultationData);
-          toast.success("Appointment added successfully!");
-          handleModalClose();
-        } else {
-          if (status == "Fail") {
-            const errors = response.data.errors;
-            if (errors && errors.length > 0) {
-              errors.map((error, index) => {
-                toast.error(error);
-                return null; // React requires a return value, so we return null here
-              });
-            }
-            setFormStatus("standby");
-          }
-        }
-      })
-      .catch(() => {
-        toast.error(
-          "There has been an error adding the appointment, please try again!"
-        );
-      });
-  };
-
-  useEffect(() => {
-    const getTimezone = () => {
-      const timezone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
-      setCurrentTimezone(timezone);
-    };
-
-    getTimezone();
-  }, []);
-  useEffect(() => {
-    return
-    getDesignerAppointment()
-      .then((response) => {
-        const appointments = response.data?.data;
-        const status = response.data.status;
-        if (status == "Fail") {
-          const errors = response.data.errors;
-          if (errors && errors.length > 0) {
-            errors.map((error, index) => {
-              toast.error(error);
-              return null; // React requires a return value, so we return null here
-            });
-          }
-        } else {
-          if (appointments) {
-            const apiEventDataArray = [];
-            for (let i = 0; i < appointments.length; i++) {
-              const appointment = appointments[i];
-              // const appointmentDateTime = appointment.consultation_date_time;
-              const appointmentDateTime = appointment.consultation_date;
-              if (
-                appointment.consultation_hour_start &&
-                appointment.consultation_hour_end
-              ) {
-                const appointmentStartIso = convertHoursToDatetime(
-                  appointment.consultation_hour_start,
-                  appointmentDateTime
-                );
-                const appointmentEndIso = convertHoursToDatetime(
-                  appointment.consultation_hour_end,
-                  appointmentDateTime
-                );
-                const eventData = {
-                  id: appointment.id,
-                  title: appointment.title
-                    ? appointment.title
-                    : "Appointment with " +
-                      appointment.customer?.first_name +
-                      " " +
-                      appointment.customer?.last_name,
-                  start: new Date(appointmentStartIso),
-                  end: new Date(appointmentEndIso),
-                  desc: appointment.consultation_details,
-                  status: appointment.status,
-                };
-                apiEventDataArray.push(eventData);
-              }
-            }
-            setEvents(apiEventDataArray);
-            setScheduledAppointments(apiEventDataArray);
-          } else {
-            const errors = response.data.errors;
-            if (errors && errors.length > 0) {
-              errors.forEach((error) => {
-                toast.error(error);
-              });
-            } else {
-              toast.error(
-                "There has been an error getting the appointments, please try again!"
-              );
-            }
-          }
-        }
-      })
-      .catch((error) => {
-        toast.error(
-          "There has been an error getting the appointments, please try again!"
-        );
-      });
-  }, [reloadCount]);
-
-  const myCalender = useSelector((state) => state.calendar.calendarData);
-  console.log("my calender", myCalender.calender);
-  const dayPropGetter = (date) => {
-    const formattedDate = moment(date).format("YYYY-MM-DD");
-    const dayData = myCalender.calender?.find(
-      (day) => day.date === formattedDate
-    );
-
-    if (dayData?.is_holiday) {
-      return {
-        style: {
-          backgroundColor: "#FFDAB3",
-          color: "white",
-        },
-      };
-    }
-
-    if (dayData?.is_available) {
-      return {
-        style: {
-          backgroundColor: "#E1EACD",
-          color: "white",
-        },
-      };
-    }
-
-    return {};
-  };
+  }, [year, month]);
   return (
     <>
       <div>
@@ -622,7 +74,7 @@ const MyCalendar = ({ designerId }) => {
               <div className="tw-flex tw-justify-center">
                 No Appointments on this day
               </div>
-              {/* {selectedDate && (
+               {/* {selectedDate && (
                 <Card>
                   <Card.Body className="pt-1 pb-1">
                     <Row className="p-3">
@@ -734,7 +186,7 @@ const MyCalendar = ({ designerId }) => {
               )} */}
             </Modal.Body>
             <Modal.Footer className="border-none pt-0">
-              {/* <div className="text-right">
+                {/* <div className="text-right">
                 {(!startTime || !endTime) && (
                   <p className="text-danger text-right fs-12">
                     Store is not available on this date
@@ -862,6 +314,7 @@ const MyCalendar = ({ designerId }) => {
     </>
   );
 };
+
 MyCalendar.propTypes = {
   localizer: PropTypes.instanceOf(DateLocalizer),
 };
