@@ -158,8 +158,20 @@ export const queryService = api.injectEndpoints({
       },
     }),
     getDesigns: builder.query({
-      query: ({ page = 1, per_page = 100 }) =>
-        `designs?page=${page}&per_page=${per_page}`,
+      query: ({
+        search = '',
+        page = 1,
+        per_page = 50,
+        colors = '',
+        genders = '',
+        materials = '',
+        categories = '',
+        seasons = '',
+        sort_by = 'created_at',
+        sort_order = 'asc',
+        country = ''
+      }) =>
+        `designs?search=${search}&page=${page}&per_page=${per_page}&colors=${colors}&genders=${genders}&materials=${materials}&categories=${categories}&seasons=${seasons}&sort_by=${sort_by}&sort_order=${sort_order}&country=${country}`,
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
@@ -170,8 +182,13 @@ export const queryService = api.injectEndpoints({
       },
     }),
     getADesignersCalender: builder.query({
-      query: ({ designer_id = "", year = 2024, month = "01" }) =>
-        `designer/${designer_id}/calender?year=${year}&month=${month}`,
+      query: ({
+        designer_id = "",
+        year = 2024,
+        month = "01",
+        timezone = "UTC",
+      }) =>
+        `designer/${designer_id}/calender?year=${year}&month=${month}&timezone=${timezone}`,
     }),
 
     getMyCalender: builder.query({
@@ -210,5 +227,5 @@ export const {
   useGetMyCalenderQuery,
   useGetADesignerQuery,
   useGetADesignersDesignQuery,
-  useGetADesignersCalenderQuery
+  useGetADesignersCalenderQuery,
 } = queryService;
