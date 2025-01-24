@@ -181,6 +181,34 @@ const SetAvailability = ({ onStepPlusOne, edit, cancel }) => {
       day: day.name.toLowerCase(),
       availabilities: state[day.formData],
     }));
+  
+    // Validation
+    for (const entry of content) {
+      for (const slot of entry.availabilities) {
+        const startTime = slot.start.includes(":")
+          ? slot.start.split(":").slice(0, 2).join(":")
+          : slot.start;
+        const endTime = slot.end.includes(":")
+          ? slot.end.split(":").slice(0, 2).join(":")
+          : slot.end;
+  
+        if (!startTime) {
+          toast.error(`${entry.day.charAt(0).toUpperCase() + entry.day.slice(1)} has an empty start time`);
+          return;
+        }
+  
+        if (!endTime) {
+          toast.error(`${entry.day.charAt(0).toUpperCase() + entry.day.slice(1)} has an empty end time`);
+          return;
+        }
+  
+        if (startTime >= endTime) {
+          toast.error(`${entry.day.charAt(0).toUpperCase() + entry.day.slice(1)}'s start time should be less than the end time`);
+          return;
+        }
+      }
+    }
+  
     const payload = {
       time_format: "24H",
       timezone: selectedTimezone,
@@ -207,7 +235,7 @@ const SetAvailability = ({ onStepPlusOne, edit, cancel }) => {
       ),
     };
     console.log("BusinessHoursSubmitPost", payload);
-
+  
     const res = await updateUserAvailability(payload).unwrap();
     if (res.success) {
       refetchUser();
@@ -221,7 +249,7 @@ const SetAvailability = ({ onStepPlusOne, edit, cancel }) => {
           return acc;
         }, {}),
       }));
-      cancel()
+      cancel();
     }
   };
   return (
@@ -254,13 +282,13 @@ const SetAvailability = ({ onStepPlusOne, edit, cancel }) => {
                   />
                 </Col>
                 <Col lg="9" className="d-flex justify-content-end">
-                  <Row className="align-items-center">
+                  <Row className="align-items-center tw-w-full">
                     {state[day.formData].map((time, index) => (
                       <>
                         {state[day.formData].length > 0 && (
                           <>
-                            <Col md="5" className="pe-0 position-relative">
-                              <p className="hours-header">Opens at</p>
+                            <Col md="6" className="pe-0 position-relative">
+                              <p className="hours-header">Available from</p>
                               <Form.Group className="mb-3">
                                 <FormControl
                                   type="time"
@@ -274,7 +302,7 @@ const SetAvailability = ({ onStepPlusOne, edit, cancel }) => {
                               </Form.Group>
                             </Col>
                             <Col md="5" className="pe-0 position-relative">
-                              <p className="hours-header">Closes at</p>
+                              <p className="hours-header">Available to</p>
                               {index > 0 && (
                                 <div className="close-container">
                                   <div
@@ -304,7 +332,7 @@ const SetAvailability = ({ onStepPlusOne, edit, cancel }) => {
                       </>
                     ))}
                     {!state[day.state] && (
-                      <Col md="2" className="pl-0">
+                      <Col md="1" className="pl-0">
                         <GoPlus
                           size={25}
                           className="plus-btn mt-2"
