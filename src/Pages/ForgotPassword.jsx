@@ -50,9 +50,9 @@ const ForgotPassword = () => {
       if (success) {
         setForgotPasswordFormData(initialForgotPassword);
         toast.success(response.data.message);
-        setTimeout(function () {
-          navigate("/reset-password");
-        }, 2000);
+        // setTimeout(function () {
+        //   navigate("/reset-password");
+        // }, 2000);
       }
     } catch (error) {
       const errors = error.response.data.errors;
