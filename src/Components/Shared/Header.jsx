@@ -59,7 +59,7 @@ const Header = () => {
     return new URLSearchParams(useLocation().search);
   };
   let query = useQuery();
-  const currenStoreUser = useSelector((state) => state.user.user);
+  const currenStoreUser = useSelector((state) => state.user?.user);
   const currentUser = useSelector((state) => state.user?.user?.email);
   const isLoggedIn = currentUser;
 
@@ -483,7 +483,7 @@ const Header = () => {
                           className="nav-link cursor-pointer text-decoration-none border-bottom pb-3 mb-2"
                           style={{ pointerEvents: "none" }}
                         >
-                          {user.first_name ? ` Hi, ${user.first_name} !` : "Hi"}
+                          {user?.first_name ? ` Hi, ${user?.first_name} !` : "Hi"}
                         </a>
                         <a
                           className="nav-link cursor-pointer text-decoration-none pb-0"
@@ -737,8 +737,8 @@ const Header = () => {
                       {userMenuOpen && (
                         <div
                           className={
-                            user.profile_completeness >= 0 &&
-                            user.profile_completeness < 100
+                            user?.profile_completeness >= 0 &&
+                            user?.profile_completeness < 100
                               ? "action-box-incomplete-profile user-menu"
                               : "action-box user-menu"
                           }
@@ -784,7 +784,7 @@ const Header = () => {
 
                                 <Col lg="9">
                                   <div className="fw-600">
-                                    Hi,&nbsp;{user.first_name}!
+                                    Hi,&nbsp;{user?.first_name}!
                                   </div>
                                   <Link
                                     to={`/user/profile`}
@@ -799,8 +799,8 @@ const Header = () => {
                                   </Link>
                                 </Col>
                                 <Col lg="12" className="text-center">
-                                  {user.profile_completeness >= 0 &&
-                                    user.profile_completeness < 100 && (
+                                  {user?.profile_completeness >= 0 &&
+                                    user?.profile_completeness < 100 && (
                                       <Link
                                         to={`/user/complete-profile`}
                                         className="mt-2 text-decoration-none d-block d-contents d-flex"
