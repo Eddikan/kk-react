@@ -250,7 +250,7 @@ const Appointments = (props) => {
 
     return (
         <LayoutNoFooter>
-            {appointmentLoading ?
+            {false ?
                 <LoadingPage />
                 :
                 <>

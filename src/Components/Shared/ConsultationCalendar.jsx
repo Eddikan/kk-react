@@ -22,7 +22,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useGetADesignersCalenderQuery } from "store/api/queries";
+import { usePostSetAppointmentMutation } from "store/api/mutations";
+
 import useCalendar from "hooks/useCalendar";
+import TimezoneDropdown from "Components/Forms/TimezoneDropdown";
+import { useSelector } from "react-redux";
 
 const initialAppointments = {
   title: "",
@@ -43,6 +47,15 @@ const localizer = momentLocalizer(moment);
 const ConsultationCalendar = () => {
   const { colors, handleNavigate, year, month } = useCalendar();
   const { designerId, appointmentscheduleId } = useParams();
+  const currentUser = useSelector((state) => state.user?.user);
+
+  const timezone = currentUser.timezone;
+
+  const [selectedTimezone, setSelectedTimezone] = useState(
+    timezone ? timezone : "UTC"
+  );
+  const [postSetAppointment, { isLoading }] = usePostSetAppointmentMutation();
+
   const dayPropGetter = (date) => {
     const formattedDate = moment(date).format("YYYY-MM-DD");
     const dayData = data.calender?.find((day) => day.date === formattedDate);
@@ -82,15 +95,16 @@ const ConsultationCalendar = () => {
     designer_id: designerId,
     year,
     month,
+    timezone: selectedTimezone,
   });
 
   const data = useMemo(() => {
     return calenderQuery?.data?.data ? calenderQuery?.data?.data : {};
   }, [calenderQuery]);
   useEffect(() => {
-    calenderQuery.refetch();
-  }, [year, month]);
-
+    if (!selectedDay) return;
+    handleCalendarTimeslotClick({ start: selectedDay });
+  }, [selectedTimezone]);
 
   const calendarRef = useRef(null);
   const navigate = useNavigate();
@@ -115,19 +129,18 @@ const ConsultationCalendar = () => {
   };
 
   const [cookies] = useCookies([
-    "currentUser",
     "isLoggedIn",
     "userDetails",
     "userRole",
     "token",
   ]);
-  const currentUser = cookies.currentUser;
   const current_user_id = cookies.currentUser;
   const token = cookies.token;
-  const userRole = cookies.userRole;
 
   const [events, setEvents] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
+  const [selectedDay, setSelectedDay] = useState("");
+
   const [selectedHoursArray, setSelectedHoursArray] = useState([]);
   const [reloadCount, setReloadCount] = useState(0);
   const [formStatus, setFormStatus] = useState("standby");
@@ -144,19 +157,6 @@ const ConsultationCalendar = () => {
   const [youAreScheduleShow, setYouAreScheduleShow] = useState(false);
   const [modalHeading, setModalHeading] = useState();
 
-  const postSetAppointment = async (data) => {
-    return await axios.post(
-      import.meta.env.VITE_REACT_APP_API_ENDPOINT +
-        "designer/" +
-        designerId +
-        "/set/appointment?current_user_id=" +
-        current_user_id +
-        "&token=" +
-        token,
-      data
-    );
-  };
-
   const putSetAppointment = async (data) => {
     return await axios.put(
       import.meta.env.VITE_REACT_APP_API_ENDPOINT +
@@ -170,11 +170,6 @@ const ConsultationCalendar = () => {
     );
   };
 
-  
-
-
-
-
   const convert24hrTo12hr = (time24hr) => {
     const [hours, minutes] = time24hr.split(":");
     const date = new Date(2000, 0, 1, hours, minutes);
@@ -184,10 +179,6 @@ const ConsultationCalendar = () => {
       hour12: true,
     });
   };
-
-
-
-
 
   function convert12to24(time12) {
     const [time, period] = time12.split(" ");
@@ -202,7 +193,6 @@ const ConsultationCalendar = () => {
     const minutes24 = minutes.padStart(2, "0");
     return `${hours24}:${minutes24}`;
   }
-
 
   const { defaultDate, views } = useMemo(
     () => ({
@@ -226,6 +216,14 @@ const ConsultationCalendar = () => {
     return data?.calender?.find((day) => day.date === formattedDate);
   };
   const handleCalendarTimeslotClick = ({ start }) => {
+    const isPast = moment(start).isBefore(moment(), "day");
+    if (isPast) {
+      toast.error("You can't book in the past");
+
+      setSelectedDate("");
+      setSelectedHoursArray([]);
+      return;
+    }
     const designersDay = findDayByDate(start);
     if (designersDay?.is_holiday) {
       toast.error("Designer is on holiday");
@@ -233,14 +231,7 @@ const ConsultationCalendar = () => {
     } else if (!designersDay?.is_available) {
       toast.error("Designer isn't available");
     } else {
-      const isPast = moment(start).isBefore(moment(), "day");
-      if (isPast) {
-        toast.error("You can't book in the past");
-
-        setSelectedDate("");
-        setSelectedHoursArray([]);
-        return;
-      }
+  
       setSelectedHoursArray(designersDay.available_time_slots);
       // set available dates
     }
@@ -250,12 +241,15 @@ const ConsultationCalendar = () => {
     const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
       start
     );
+
+    setSelectedDay(start);
     setSelectedDate(formattedDate);
   };
 
   const [selectedTime, setSelectedTime] = useState("");
 
   const handleTimeslotClick = (data) => {
+    setSelectedTime(data.time)
     setSelectedTimeSlot(convert12to24(data.time));
     setClickedTimeslotButton(data.index);
   };
@@ -281,35 +275,32 @@ const ConsultationCalendar = () => {
     });
   };
 
-  const addAppointmentSubmit = (e) => {
-    setFormStatus("loading");
-    postSetAppointment({ ...consultationFormData })
-      .then((response) => {
-        const status = response.data.status;
-        if (status === "Success") {
-          setFormStatus("standby");
-          setReloadCount(reloadCount + 1);
-          setAppointmentFormData(initialAppointments);
-          toast.success("Consultation added successfully!");
-          {
-            userRole !== "Admin"
-              ? setTimeout(() => {
-                  setReloadCount((prevReloadCount) => prevReloadCount + 1);
-                  navigate("/appointments/" + currentUser);
-                }, 1000)
-              : setTimeout(() => {
-                  setReloadCount(prevReloadCount + 1);
-                  navigate("/admin/appointments");
-                }, 1000);
-          }
-        } else {
-          setFormStatus("standby");
-          toast.error("Designer is not available at this time");
-        }
-      })
-      .catch(() => {
-        toast.error("Designer is not available at this time");
-      });
+  const addAppointmentSubmit = async () => {
+    const payload = {
+      date: moment(selectedDay).format("YYYY-MM-DD"),
+      start_time: consultationFormData.consultation_hour_start,
+      end_time: consultationFormData.consultation_hour_end,
+      info: consultationFormData.consultation_details,
+      timezone: selectedTimezone,
+      designer_id: data.designer.id,
+    };
+    console.log("here");
+
+    try {
+      const res = await postSetAppointment(payload).unwrap();
+      console.log("res is", res);
+      if (res.success) {
+        toast.success(res.message);
+        setAppointmentFormData(initialAppointments);
+        calenderQuery.refetch();
+        // navigate("/appointments/" + res.data.id);
+        navigate("/user/profile");
+        
+      }
+    } catch (error) {
+      console.log("error", error);
+      toast.error("An error occurred while adding the consultation.");
+    }
   };
 
   const putAppointmentSubmit = (e) => {
@@ -322,17 +313,7 @@ const ConsultationCalendar = () => {
           setReloadCount(reloadCount + 1);
           setAppointmentFormData(initialAppointments);
           toast.success("Consultation updated successfully!");
-          {
-            userRole !== "Admin"
-              ? setTimeout(() => {
-                  setReloadCount(prevReloadCount + 1);
-                  navigate("/appointments/" + currentUser);
-                }, 1000)
-              : setTimeout(() => {
-                  setReloadCount(prevReloadCount + 1);
-                  navigate("/admin/appointments");
-                }, 1000);
-          }
+          navigate("/appointments/" + "sss");
         } else {
           setFormStatus("standby");
           toast.error("Designer is not available at this time");
@@ -342,19 +323,6 @@ const ConsultationCalendar = () => {
         toast.error("Designer is not available at this time");
       });
   };
-
-  useEffect(() => {
-    const getTimezone = () => {
-      const timezone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
-      setCurrentTimezone(timezone);
-    };
-
-    const currentDate = new Date();
-    const nextDate = new Date();
-    nextDate.setDate(currentDate.getDate() + 1);
-    handleCalendarTimeslotClick({ start: currentDate, end: nextDate });
-    getTimezone();
-  }, []);
 
   useEffect(() => {
     if (calendarRef.current) {
@@ -416,12 +384,12 @@ const ConsultationCalendar = () => {
                   </p>
                 </>
               )}
-            {consultationFormData.timezone != "" && (
+            {selectedTimezone && (
               <>
                 <p>
                   <LuGlobe2 size={20} color={"#CEA835"} className="mb-1" />
                   <span className="fw-500 current-date">
-                    {consultationFormData.timezone}
+                    {selectedTimezone}
                   </span>
                 </p>
               </>
@@ -435,7 +403,7 @@ const ConsultationCalendar = () => {
                     className="mb-1"
                   />
                   <span className="fw-500 current-date">
-                    {consultationFormData.email}
+                    {consultationFormData.email}ss
                   </span>
                 </p>
               </>
@@ -446,22 +414,28 @@ const ConsultationCalendar = () => {
       <Col lg="9">
         {currentStep == 1 ? (
           <div className="appointment-calendar-container ">
-            <div className="tw-flex tw-mb-2 tw-gap-2 tw-items-center">
-              <span className="tw-font-semibold">Select a Date and Time</span>
-              <div className="tw-flex ">
-                <div
-                  className="tw-w-4 tw-h-4  tw-mr-2"
-                  style={{ backgroundColor: colors.holidayColor }}
-                ></div>
-                <span>Holidays</span>
+            <div className="tw-flex tw-mb-2 tw-gap-2 tw-items-center tw-justify-between">
+              <div className="tw-flex tw-items-end tw-gap-3 tw-pb-1">
+                <span className="tw-font-semibold">Select a Date and Time</span>
+                <div className="tw-flex ">
+                  <div
+                    className="tw-w-4 tw-h-4  tw-mr-2"
+                    style={{ backgroundColor: colors.holidayColor }}
+                  ></div>
+                  <span>Holidays</span>
+                </div>
+                <div className="tw-flex tw-items-center">
+                  <div
+                    className="tw-w-4 tw-h-4  tw-mr-2"
+                    style={{ backgroundColor: colors.availableColor }}
+                  ></div>
+                  <span>Available</span>
+                </div>{" "}
               </div>
-              <div className="tw-flex tw-items-center">
-                <div
-                  className="tw-w-4 tw-h-4  tw-mr-2"
-                  style={{ backgroundColor: colors.availableColor }}
-                ></div>
-                <span>Available</span>
-              </div>{" "}
+              <TimezoneDropdown
+                selectedTimezone={selectedTimezone}
+                setSelectedTimezone={setSelectedTimezone}
+              />
             </div>
 
             <Row>
@@ -488,52 +462,58 @@ const ConsultationCalendar = () => {
                   <h4>Available time slots</h4>
                   <div className="timeslots-container">
                     <>
-                      {selectedHoursArray.length > 0 ? (
-                        <>
-                          {selectedHoursArray.map((time, index) => (
-                            <div className="timeslots-column" key={index}>
-                              <div>
-                                <button
-                                  key={index}
-                                  className={
-                                    clickedTimeslotButton == index ||
-                                    selectedTime === time.start_time
-                                      ? "btn btn-primary timeslot-btn"
-                                      : "btn btn-primary"
-                                  }
-                                  onClick={() =>
-                                    handleTimeslotClick({
-                                      time: time.start_time,
-                                      index,
-                                    })
-                                  }
-                                >
-                                  {time?.start_time} - {time?.end_time}
-                                </button>
-                              </div>
-
-                              <div>
-                                {(clickedTimeslotButton == index ||
-                                  selectedTime === time) && (
-                                  <button
-                                    key={index}
-                                    className="btn btn-primary timeslot-btn"
-                                    onClick={() =>
-                                      handleTimeslotNextClick(time)
-                                    }
-                                  >
-                                    Next
-                                  </button>
-                                )}
-                              </div>
-                            </div>
-                          ))}
-                        </>
+                      {calenderQuery.isFetching && selectedDay ? (
+                        <>loading...</>
                       ) : (
                         <>
-                          <div>
-                            <p>No available hours.</p>
-                          </div>
+                          {selectedHoursArray.length > 0 ? (
+                            <>
+                              {selectedHoursArray.map((time, index) => (
+                                <div className="timeslots-column" key={index}>
+                                  <div>
+                                    <button
+                                      key={index}
+                                      className={
+                                        clickedTimeslotButton == index ||
+                                        selectedTime === time.start_time
+                                          ? "btn btn-primary timeslot-btn"
+                                          : "btn btn-primary"
+                                      }
+                                      onClick={() =>
+                                        handleTimeslotClick({
+                                          time: time.start_time,
+                                          index,
+                                        })
+                                      }
+                                    >
+                                      {time?.start_time} - {time?.end_time}
+                                    </button>
+                                  </div>
+
+                                  <div>
+                                    {(clickedTimeslotButton == index ||
+                                      selectedTime === time) && (
+                                      <button
+                                        key={index}
+                                        className="btn btn-primary timeslot-btn"
+                                        onClick={() =>
+                                          handleTimeslotNextClick(time)
+                                        }
+                                      >
+                                        Next
+                                      </button>
+                                    )}
+                                  </div>
+                                </div>
+                              ))}
+                            </>
+                          ) : (
+                            <>
+                              <div>
+                                <p>No available hours.</p>
+                              </div>
+                            </>
+                          )}
                         </>
                       )}
                     </>
@@ -575,7 +555,7 @@ const ConsultationCalendar = () => {
 
               {appointmentscheduleId == 0 || appointmentscheduleId == "0" ? (
                 <>
-                  {formStatus == "loading" ? (
+                  {isLoading ? (
                     <>
                       <button className="btn btn-primary" disabled>
                         Submitting
@@ -683,12 +663,12 @@ const ConsultationCalendar = () => {
                     </>
                   )}
 
-                  {consultationFormData.timezone != "" && (
+                  {selectedTimezone != "" && (
                     <>
                       <p>
                         <LuGlobe2 size={20} color={"#CEA835"} />
                         <span className="fw-500 current-date ms-2">
-                          {consultationFormData.timezone}
+                          {selectedTimezone}
                         </span>
                       </p>
                     </>

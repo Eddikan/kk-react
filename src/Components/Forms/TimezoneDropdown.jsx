@@ -21,7 +21,7 @@ const TimezoneDropdown = ({ setSelectedTimezone, selectedTimezone }) => {
   if (error) return <div> Failed to load timezones</div>;
 
   return (
-    <div className="tw-flex tw-flex-col tw-items-center tw-justify-start tw-gap-4 ">
+    <div className="tw-flex tw-flex-col tw-items-center tw-justify-start tw-gap-1 ">
       <label
         htmlFor="timezone-dropdown"
         className="tw-text-lg tw-font-semibold  tw-mr-auto tw-text-gray-700"

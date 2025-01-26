@@ -249,6 +249,7 @@ const SetAvailability = ({ onStepPlusOne, edit, cancel }) => {
           return acc;
         }, {}),
       }));
+      onStepPlusOne()
       cancel();
     }
   };

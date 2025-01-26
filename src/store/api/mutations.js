@@ -84,7 +84,13 @@ export const mutationService = api.injectEndpoints({
         method: "DELETE",
       }),
     }),
-    
+    postSetAppointment: builder.mutation({
+      query: (payload) => ({
+        url: `appointment/schedule`,
+        method: "POST",
+        body: payload,
+      }),
+    }),
   }),
 });
 
@@ -101,4 +107,5 @@ export const {
   useCreateDesignMutation,
   useDeleteDesignerImageMutation,
   useDeleteMyDesignMutation,
+  usePostSetAppointmentMutation,
 } = mutationService;
