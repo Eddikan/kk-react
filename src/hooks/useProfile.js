@@ -6,7 +6,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import useAuth from "hooks/useAuth";
-import GetUserData from "Utils/GetUserData";
 import {
   useUpdateUserAvatarMutation,
   useUpdateUserSettingsMutation,

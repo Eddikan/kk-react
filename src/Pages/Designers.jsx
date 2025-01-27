@@ -1,226 +1,26 @@
-import React, { useEffect,useRef, useState } from "react";
+import { useEffect } from "react";
 import Layout from "Components/Layout/Layout";
-import { useNavigate, Link, useLocation } from "react-router-dom";
-import {
-  Modal,
-  Container,
-  Row,
-  Col,
-  Button,
-  Form,
-  Card,
-} from "react-bootstrap";
+import { Link } from "react-router-dom";
+import { Container, Row, Col, Button, Form, Card } from "react-bootstrap";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import MalePlaceholder from "Assets/images/placeholders/male-placeholder.jpg";
 import FemalePlaceholder from "Assets/images/placeholders/female-placeholder.jpg";
 import { IoShirtSharp } from "react-icons/io5";
-import toast from "react-hot-toast";
 import Pagination from "Components/Pagination/Pagination";
 import { GoHeart } from "react-icons/go";
-import Signup from "Components/Forms/User/Signup";
-import { useCookies } from "react-cookie";
 import Loading from "Components/Shared/Loading";
-import axios from "axios";
 import "react-multi-carousel/lib/styles.css";
 import "Assets/styles/Designers/style.css";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import ShopIcon from "Assets/images/icons/shop.png";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
-import { selectDesignersFilters } from "store/slices/designersSlice";
-import { selectDesigners } from "store/slices/designersSlice";
-import { useSelector } from "react-redux";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { useGetDesignersQuery } from "store/api/queries";
-import useCountry from "hooks/useCountry";
+
 import SearchInput from "Components/Search/SearchInput";
-
+import useDesignersFilters from "hooks/useDesigner";
 const Designers = () => {
-  const { countries } = useCountry();
-  const designFilters = useSelector(selectDesignersFilters);
-  const currenStoreUser = useSelector((state) => state.user.user);
-  const currentUser = currenStoreUser?.email;
-  const designerQueryResult = useSelector(selectDesigners);
-  const designers = designerQueryResult.data;
-  const navigate = useNavigate();
-  const useQuery = () => {
-    return new URLSearchParams(useLocation().search);
-  };
-  const isFirstRender = useRef(true);
-
-  let query = useQuery();
-  const headerSearch = query.get("search");
-
-  const [cookies, setCookie, removeCookie] = useCookies([
-    "currentUser",
-    "token",
-    "isLoggedIn",
-    "userDetails",
-    "userRole",
-    "tempDesignerWishlist",
-    "selectedCountry",
-    "selectedCountryCode",
-  ]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageCount, setPageCount] = useState(1);
-  const [pageSize, setPageSize] = useState(12);
-  const [selectedCountry, setSelectedCountry] = useState(
-    cookies.selectedCountry ?? ""
-  );
-
-  // Search
-  const [specializationSearch, setSpecializationSearch] = useState("");
-  const [specializationValue, setSpecializationValue] = useState("");
-
-  // Filter Arrays
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const [selectedAllCategories, setSelectedAllCategories] = useState(false);
-  const [categories, setCategories] = useState([]);
-
-  const [signupModalShow, setSignupModalShow] = useState(false);
-  const [activeTabGroup, setActiveTabGroup] = useState("");
-  const [signupType, setSignupType] = useState("");
-  const [searchValue, setSearchValue] = useState("");
-  const [tempDesignerWishlist, setTempDesignerWishlist] = useState([]);
-
-  const selectedCountryIso3 = countries.find(
-    (country) => country.name === selectedCountry
-  )?.iso3;
-
-  const getDesignersQuery = useGetDesignersQuery({
-    page: currentPage,
-    per_page: pageSize,
-    search: searchValue,
-    country: selectedCountryIso3,
-    areas_of_specialization: specializationSearch,
-    categories: selectedCategories.join(","),
-  });
-  useEffect(() => {
-    console.log("getDesignersQuery", getDesignersQuery);
-  }, [getDesignersQuery]);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-
-  useEffect(() => {
-    if (isRefreshing) {
-      getDesignersQuery.refetch().finally(() => {
-          setIsRefreshing(false);
-      });
-  }
-  }, [
-    isRefreshing,
-   
-  ]);
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-  }
-    setIsRefreshing(true);
-}, [ currentPage,
-  searchValue,
-  selectedCountryIso3,
-  specializationSearch,
-  selectedCategories,]);
-
-  const toggleGetUser = (e) => {
-    navigate("/designer-profile?user_id=" + e);
-  };
-
-  const handleSearchChange = (value) => {
-    setSearchValue(value);
-  };
-
-  const handleChangeSpecialization = (e) => {
-    const { value } = e.target;
-    setSpecializationValue(value);
-    setSpecializationSearch(value);
-  };
-
-  const handleChangePage = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  async function wishlistDesignerUpdate() {
-    // Implement wishlist update logic
-  }
-
-  const toggleTempDesignerWishlist = (item) => {
-    const itemExists = tempDesignerWishlist.some(
-      (wishlistItem) => wishlistItem.id === item.id
-    );
-
-    let updatedDesignerWishlist;
-    if (itemExists) {
-      updatedDesignerWishlist = tempDesignerWishlist.filter(
-        (wishlistItem) => wishlistItem.id !== item.id
-      );
-    } else {
-      updatedDesignerWishlist = [...tempDesignerWishlist, item];
-    }
-
-    setCookie("tempDesignerWishlist", JSON.stringify(updatedDesignerWishlist), {
-      path: "/",
-    });
-    setTempDesignerWishlist(updatedDesignerWishlist);
-  };
-
-
-
-  const handleChangeCategory = (event) => {
-    const categoryId = parseInt(event, 10);
-    if (!selectedCategories.includes(categoryId)) {
-      setSelectedCategories([...selectedCategories, categoryId]);
-      if (selectedAllCategories.length + 1 === categories.length) {
-        setSelectedAllCategories(true);
-      } else {
-        setSelectedAllCategories(false);
-      }
-    } else {
-      setSelectedCategories(
-        selectedCategories.filter((id) => id !== categoryId)
-      );
-    }
-  };
-
-  const handleSelectCategoryChange = (event) => {
-    const categoryId = parseInt(event.target.value, 10);
-    if (event.target.checked) {
-      setSelectedCategories([...selectedCategories, categoryId]);
-    } else {
-      setSelectedCategories(
-        selectedCategories.filter((id) => id !== categoryId)
-      );
-    }
-  };
-
-  const handleSelectAllCategories = (event) => {
-    if (event.target.checked) {
-      setSelectedCategories(categories.map((category) => category.id));
-    } else {
-      setSelectedCategories([]);
-    }
-  };
-
-  const clearFilters = () => {
-    setSelectedCountry("");
-    setSpecializationSearch("");
-    setSpecializationValue("");
-    setSelectedCategories([]);
-    setSelectedAllCategories(false);
-    setSearchValue("");
-  };
-
-  useEffect(() => {
-    setSelectedCountry(cookies.selectedCountry ?? "");
-  }, [cookies]);
-
-
-
-  const handleChangeCountry = (e) => {
-    const { value } = e.target;
-    setSelectedCountry(value ?? "");
-  };
-
   const settings = {
     className: "slider variable-width",
     dots: false,
@@ -244,6 +44,58 @@ const Designers = () => {
       />
     ),
   };
+
+  const {
+    setSelectedCategories,
+    countries,
+    designFilters,
+    currentUser,
+    designers,
+    currentPage,
+    pageCount,
+    pageSize,
+    selectedCountry,
+    specializationValue,
+    setActiveTabGroup,
+    selectedCategories,
+    selectedAllCategories,
+    categories,
+    activeTabGroup,
+    tempDesignerWishlist,
+    isRefreshing,
+    toggleGetUser,
+    handleSearchChange,
+    handleChangeSpecialization,
+    handleChangePage,
+    wishlistDesignerUpdate,
+    toggleTempDesignerWishlist,
+    handleChangeCategory,
+    handleSelectCategoryChange,
+    handleSelectAllCategories,
+    clearFilters,
+    handleChangeCountry,
+    setSelectedAllCategories,
+    setIsRefreshing,
+    searchValue,
+    selectedCountryIso3,
+    specializationSearch,
+  } = useDesignersFilters();
+
+  const getDesignersQuery = useGetDesignersQuery({
+    page: currentPage,
+    per_page: pageSize,
+    search: searchValue,
+    country: selectedCountryIso3,
+    areas_of_specialization: specializationSearch,
+    categories: selectedCategories.join(","),
+  });
+  useEffect(() => {
+    if (isRefreshing) {
+      getDesignersQuery.refetch().finally(() => {
+        setIsRefreshing(false);
+      });
+    }
+  }, [isRefreshing]);
 
   return (
     <Layout>
@@ -382,7 +234,7 @@ const Designers = () => {
                         onChange={handleChangeCountry}
                       >
                         <option value="">Select Country</option>
-                        {countries.map((country, index) => (
+                        {countries.map((country) => (
                           <option key={country.iso3} value={country.name}>
                             {country.name}
                           </option>
@@ -767,7 +619,7 @@ const Designers = () => {
           </Container>
         </section>
         {/* Signup */}
-        <Modal
+        {/* <Modal
           show={signupModalShow}
           fullscreen={false}
           onHide={() => setSignupModalShow(false)}
@@ -784,7 +636,7 @@ const Designers = () => {
               </Row>
             </Container>
           </Modal.Body>
-        </Modal>
+        </Modal> */}
       </div>
     </Layout>
   );
