@@ -15,7 +15,6 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import MalePlaceholder from "Assets/images/placeholders/male-placeholder.jpg";
 import FemalePlaceholder from "Assets/images/placeholders/female-placeholder.jpg";
-import Countries from "Utils/Countries";
 import { IoShirtSharp } from "react-icons/io5";
 import toast from "react-hot-toast";
 import Pagination from "Components/Pagination/Pagination";
@@ -76,20 +75,12 @@ const Designers = () => {
   // Filter Arrays
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedAllCategories, setSelectedAllCategories] = useState(false);
-  const [colors, setColors] = useState([]);
-  const [genders, setGenders] = useState([]);
-  const [seasons, setSeasons] = useState([]);
-  const [materials, setMaterials] = useState([]);
-  const [tags, setTags] = useState([]);
   const [categories, setCategories] = useState([]);
 
   const [signupModalShow, setSignupModalShow] = useState(false);
   const [activeTabGroup, setActiveTabGroup] = useState("");
   const [signupType, setSignupType] = useState("");
   const [searchValue, setSearchValue] = useState("");
-  const [reloadCount, setReloadCount] = useState(0);
-  const current_user_id = cookies.currentUser;
-  const token = cookies.token;
   const [tempDesignerWishlist, setTempDesignerWishlist] = useState([]);
 
   const selectedCountryIso3 = countries.find(
@@ -136,7 +127,6 @@ const Designers = () => {
   };
 
   const handleSearchChange = (value) => {
-    console.log("value", value);
     setSearchValue(value);
   };
 
@@ -174,37 +164,7 @@ const Designers = () => {
     setTempDesignerWishlist(updatedDesignerWishlist);
   };
 
-  async function getPortfolioFilters() {
-    axios
-      .get(
-        import.meta.env.VITE_REACT_APP_API_ENDPOINT +
-          "design/filter/type?current_user_id=" +
-          current_user_id +
-          "&token=" +
-          token
-      )
-      .then((response) => {
-        const data = response.data;
-        if (data) {
-          const filters = data.data;
-          setColors(filters.colors ?? []);
-          setGenders(filters.genders ?? []);
-          setSeasons(filters.seasons ?? []);
-          setMaterials(filters.materials ?? []);
-          setTags(filters.tags ?? []);
-          setCategories(filters.categories ?? []);
-        } else {
-          toast.error(
-            "An error occured. Please try again or contact the administrator."
-          );
-        }
-      })
-      .catch((e) => {
-        toast.error(
-          "An error occured. Please try again or contact the administrator."
-        );
-      });
-  }
+
 
   const handleChangeCategory = (event) => {
     const categoryId = parseInt(event, 10);
@@ -254,9 +214,7 @@ const Designers = () => {
     setSelectedCountry(cookies.selectedCountry ?? "");
   }, [cookies]);
 
-  useEffect(() => {
-    getPortfolioFilters();
-  }, []);
+
 
   const handleChangeCountry = (e) => {
     const { value } = e.target;
