@@ -1,8 +1,11 @@
-import React, { useState, useEffect, useCallback } from "react";
+import  { useState, useEffect, useCallback } from "react";
 import { debounce } from "lodash";
 import Form from "react-bootstrap/Form";
 
-const SearchInput = ({ onSearchChange }) => {
+const SearchInput = ({
+  onSearchChange,
+  placeholder = "Enter your search term...",
+}) => {
   const [search, setSearch] = useState("");
 
   const debounceSearch = useCallback(
@@ -26,7 +29,7 @@ const SearchInput = ({ onSearchChange }) => {
 
   return (
     <Form.Control
-      placeholder="Enter your search term..."
+      placeholder={placeholder}
       type="text"
       value={search}
       onChange={handleSearchChange}

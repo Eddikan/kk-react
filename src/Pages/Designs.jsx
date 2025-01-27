@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Container, Row, Col, Button, Card, Modal } from "react-bootstrap";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Layout from "Components/Layout/Layout";
 import PlaceholderImage from "Assets/images/placeholders/image.png";
-import { Form, ModalHeader, ModalFooter } from "react-bootstrap";
+import { Form, ModalHeader } from "react-bootstrap";
 import { IoShirtSharp } from "react-icons/io5";
 import { PiNotepadFill } from "react-icons/pi";
-import { GoAlertFill, GoHeart, GoStar } from "react-icons/go";
+import { GoAlertFill, GoStar } from "react-icons/go";
 import UserPlaceholder from "Assets/images/user.png";
 import PinIcon from "../Assets/images/pin.png";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import DiamondIcon from "Assets/images/icons/diamond.png";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
-import useCountry from "hooks/useCountry";
+import SearchInput from "Components/Search/SearchInput";
 
 import {
   IoShareSocial,
@@ -39,6 +39,7 @@ import Pagination from "Components/Pagination/Pagination";
 import { useGetDesignsQuery } from "store/api/queries";
 import { useSelector } from "react-redux";
 import { selectDesignFilters } from "store/slices/designersSlice";
+import useDesignersFilters from "hooks/useDesigner";
 
 const Designs = () => {
   const useQuery = () => {
@@ -47,40 +48,79 @@ const Designs = () => {
   let query = useQuery();
 
   // Search
-  const [seasonsSearch, setSeasonsSearch] = useState("");
-  const [seasonsValue, setSeasonsValue] = useState("");
-  const [colorsSearch, setColorsSearch] = useState("");
-  const [colorsValue, setColorsValue] = useState("");
-  const [materialsSearch, setMaterialsSearch] = useState("");
-  const [materialsValue, setMaterialsValue] = useState("");
 
   let PageSize = 20;
 
   const [signupModalShow, setSignupModalShow] = useState(false);
   const [signupType, setSignupType] = useState("");
+  const currenStoreUser = useSelector((state) => state.user?.user);
 
+  const is_designer = currenStoreUser?.type == "designer" ? true : false;
+
+  const {
+    materialsValue,
+    handleChangeMaterial,
+    handleChangeColor,
+    searchValue,
+    setSelectedCategories,
+    countries,
+    currentUser,
+    currentPage,
+    pageCount,
+    pageSize,
+    selectedCountry,
+    handleChangeSeason,
+    seasonsValue,
+    setActiveTabGroup,
+    selectedCategories,
+    selectedAllCategories,
+    categories,
+    activeTabGroup,
+    isRefreshing,
+    handleSearchChange,
+    handleChangePage,
+    handleChangeCategory,
+    handleSelectCategoryChange,
+    handleSelectAllCategories,
+    clearFilters,
+    handleChangeCountry,
+    setSelectedAllCategories,
+    setIsRefreshing,
+    selectedCountryIso3,
+    colorsValue,
+    handleCheckBoxChange,
+    genders,
+    setGenders,
+  } = useDesignersFilters();
 
   const designsQuery = useGetDesignsQuery({
-    search: "",
-    page: 1,
-    per_page: 50,
-    colors: colorsSearch,
-    genders: "",
-    materials: "",
-    categories: "",
-    seasons: seasonsSearch,
+    search: searchValue,
+    page: currentPage,
+    per_page: pageSize,
+    colors: colorsValue,
+    genders: genders.join(","),
+    materials: materialsValue,
+    categories: selectedCategories.join(","),
+    seasons: seasonsValue,
     sort_by: "created_at",
     sort_order: "asc",
-    country: "",
+    country: selectedCountryIso3,
   });
-  const designFilters = useSelector(selectDesignFilters);
-
-  const designs = useSelector((state) => state.designs.designs.data);
+  useEffect(() => {
+    if (isRefreshing) {
+      designsQuery.refetch().finally(() => {
+        setIsRefreshing(false);
+      });
+    }
+  }, [isRefreshing]);
 
   useEffect(() => {
     designsQuery.refetch();
-    console.log("here", designs);
   }, []);
+
+  const designFilters = useSelector(selectDesignFilters);
+
+  const designs = useSelector((state) => state.designs.designs.data);
 
   const headerSearch = query.get("search");
   const [cookies, setCookie, removeCookie] = useCookies([
@@ -92,18 +132,9 @@ const Designs = () => {
     "selectedCountry",
     "favoriteItemCount",
   ]);
-  const currentUser = cookies.currentUser;
   const userRole = cookies.userRole;
-  const user = cookies.userDetails;
-
-  const [mounted, setMounted] = useState(false);
-  const [selectedGenders, setSelectedGenders] = useState([]);
-  const [search, setSearch] = useState("");
-  const [searchValue, setSearchValue] = useState("");
 
   // Filter Arrays
-  const [categories, setCategories] = useState([]);
-
   const [portfoliosImage, setPortfolioImage] = useState(false);
   const [underConstructionShow, setUnderConstructionShow] = useState(false);
   const [singleDesign, setSingleDesign] = useState("");
@@ -114,22 +145,10 @@ const Designs = () => {
   const [copyEmbedLink, setCopyEmbedLink] = useState(false);
 
   const [messageShow, setMessageShow] = useState(false);
-  const [selectedSortField, setSelectedSortField] = useState(null);
-  const [selectedSortOrder, setSelectedSortOrder] = useState(null);
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const [selectedAllCategories, setSelectedAllCategories] = useState(false);
   const [isDesignCurrentUser, setIsDesignCurrentUser] = useState(false);
   const [profileViewShow, setProfileViewShow] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState(
-    cookies.selectedCountry ?? ""
-  );
-  const [activeTabGroup, setActiveTabGroup] = useState("");
-
   const [modalHeading, setModalHeading] = useState("");
   const [copy, setCopy] = useState(false);
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageCount, setPageCount] = useState(1);
   const [inWishlist, setInWishlist] = useState(false);
   const [tempFavorites, setTempFavorites] = useState(
     cookies.tempFavorites ?? []
@@ -154,74 +173,6 @@ const Designs = () => {
     setUnderConstructionShow(true);
     setModalHeading(message);
   }
-
-  async function onFilterChange(data) {
-    return;
-  }
-
-  const handleSelectAllCategories = (event) => {
-    if (event.target.checked) {
-      setSelectedCategories(categories.map((category) => category.id));
-    } else {
-      setSelectedCategories([]);
-    }
-  };
-
-  const searchChangeDebounce = debounce((e) => {
-    setSearch(e);
-  }, 1000); // 1000 milliseconds (2 seconds) delay
-
-  const handleChangeSearch = (e) => {
-    const { name, value } = e.target;
-    // Clear the previous debounce timer
-    searchChangeDebounce.cancel();
-
-    // Set a new debounce timer
-    searchChangeDebounce(value);
-    setSearchValue(value);
-  };
-
-  const seasonChangeDebounce = debounce((e) => {
-    setSeasonsSearch(e);
-  }, 1000); // 1000 milliseconds (2 seconds) delay
-
-  const handleChangeSeason = (e) => {
-    const { name, value } = e.target;
-    // Clear the previous debounce timer
-    seasonChangeDebounce.cancel();
-
-    // Set a new debounce timer
-    seasonChangeDebounce(value);
-    setSeasonsValue(value);
-  };
-
-  const colorChangeDebounce = debounce((e) => {
-    setColorsSearch(e);
-  }, 1000); // 1000 milliseconds (2 seconds) delay
-
-  const handleChangeColor = (e) => {
-    const { name, value } = e.target;
-    // Clear the previous debounce timer
-    colorChangeDebounce.cancel();
-
-    // Set a new debounce timer
-    colorChangeDebounce(value);
-    setColorsValue(value);
-  };
-
-  const materialChangeDebounce = debounce((e) => {
-    setMaterialsSearch(e);
-  }, 1000); // 1000 milliseconds (2 seconds) delay
-
-  const handleChangeMaterial = (e) => {
-    const { name, value } = e.target;
-    // Clear the previous debounce timer
-    materialChangeDebounce.cancel();
-
-    // Set a new debounce timer
-    materialChangeDebounce(value);
-    setMaterialsValue(value);
-  };
 
   async function favoriteDesignUpdate(e) {
     return;
@@ -318,107 +269,9 @@ const Designs = () => {
     }
   }
 
-  async function toggleAddViewCount(id) {
-    return;
+  async function toggleAddViewCount() {
+    alert("Add view count");
   }
-
-  async function getPortfolioFilters() {
-    return;
-  }
-
-  const handleChangeCategory = (event) => {
-    const categoryId = parseInt(event, 10);
-    if (!selectedCategories.includes(categoryId)) {
-      setSelectedCategories([...selectedCategories, categoryId]);
-      if (selectedAllCategories.length + 1 === categories.length) {
-        setSelectedAllCategories(true);
-      } else {
-        setSelectedAllCategories(false);
-      }
-    } else {
-      setSelectedCategories(
-        selectedCategories.filter((id) => id !== categoryId)
-      );
-    }
-  };
-  // Handle checkbox change event
-  const handleSelectCategoryChange = (event) => {
-    const categoryId = parseInt(event.target.value, 10);
-    if (event.target.checked) {
-      setSelectedCategories([...selectedCategories, categoryId]);
-      if (selectedAllCategories.length + 1 === categories.length) {
-        setSelectedAllCategories(true);
-      } else {
-        setSelectedAllCategories(false);
-      }
-    } else {
-      setSelectedCategories(
-        selectedCategories.filter((id) => id !== categoryId)
-      );
-    }
-  };
-
-  const handleSelectGenderChange = (event) => {
-    const gender = event.target.value;
-    if (event.target.checked) {
-      setSelectedGenders([...selectedGenders, gender]);
-    } else {
-      setSelectedGenders(selectedGenders.filter((g) => g !== gender));
-    }
-  };
-
-  // Pagination
-  const handleChangePage = (pageNumber) => {
-    return;
-  };
-  const { countries } = useCountry();
-
-  const handleChangeCountry = (e) => {
-    const { value } = e.target;
-    setSelectedCountry(value ?? "");
-  };
-
-  useEffect(() => {
-    // Only run the filter API call after the component has mounted
-    if (mounted) {
-      // Call the API with the updated filter values
-      onFilterChange({
-        sortField: selectedSortField,
-        sortOrder: selectedSortOrder,
-        search: searchValue || headerSearch || "",
-        portfolio_item_category_ids: selectedCategories,
-        genders: selectedGenders,
-        seasons: seasonsSearch,
-        colors: colorsSearch,
-        materials: materialsSearch,
-      });
-    } else {
-      // Set the component as mounted
-      setMounted(true);
-    }
-  }, [
-    mounted,
-    searchValue,
-    headerSearch,
-    selectedCategories,
-    selectedGenders,
-    seasonsSearch,
-    colorsSearch,
-    materialsSearch,
-    selectedCountry,
-  ]);
-
-  useEffect(() => {
-    // Only run the filter API call after the component has mounted
-    if (headerSearch) {
-      setSearch(headerSearch);
-      setSearchValue(headerSearch);
-    } else {
-      // Set the component as mounted
-      setSearch("");
-      setSearchValue("");
-    }
-  }, [headerSearch]);
 
   const settings = {
     className: "slider variable-width",
@@ -443,15 +296,6 @@ const Designs = () => {
       />
     ),
   };
-
-  useEffect(() => {
-    // Only run the filter API call after the component has mounted
-    setSelectedCountry(cookies.selectedCountry ?? "");
-  }, [cookies]);
-
-  useEffect(() => {
-    getPortfolioFilters();
-  }, []);
 
   return (
     <Layout>
@@ -505,7 +349,7 @@ const Designs = () => {
                                   )}
                                   {designFilters?.categories.map(
                                     (category, index) => (
-                                      <>
+                                      <div key={index}>
                                         {selectedCategories.includes(
                                           category.id
                                         ) ? (
@@ -531,7 +375,7 @@ const Designs = () => {
                                             </span>
                                           </div>
                                         )}
-                                      </>
+                                      </div>
                                     )
                                   )}
                                 </Slider>
@@ -541,8 +385,8 @@ const Designs = () => {
                           <Col lg="3" className="text-right">
                             {currentUser ? (
                               <>
-                                {user.is_designer == 1 ? (
-                                  <Link to="/user/profile?tab=designs&tab_group=designs">
+                                {is_designer == 1 ? (
+                                  <Link to="/user/center/portfolio">
                                     <button className="ddf-button fs-12 btn bg-white border-black text-black bg-white-hover border-gold-hover text-black-hover">
                                       <img
                                         src={DiamondIcon}
@@ -588,12 +432,7 @@ const Designs = () => {
                 <div className="pe-4 pt-3">
                   <Form.Group className="mb-4">
                     <Form.Label className="fw-600 fs-14">Search</Form.Label>
-                    <Form.Control
-                      placeholder="Enter your search term..."
-                      value={searchValue}
-                      type="text"
-                      onChange={(e) => handleChangeSearch(e)}
-                    />
+                    <SearchInput onSearchChange={handleSearchChange} />
                   </Form.Group>
                   <Form.Group className="mb-4">
                     <Form.Label className="fw-600 fs-14">Country</Form.Label>
@@ -618,54 +457,55 @@ const Designs = () => {
                   <hr />
                   <Form.Group className="mb-3">
                     <Form.Label className="fw-600 fs-14">Gender</Form.Label>
-                    <Form.Check
-                      type="checkbox"
-                      label="Male"
-                      value="Male"
-                      checked={selectedGenders.includes("Male")}
-                      onChange={handleSelectGenderChange}
-                      className="mb-2 fs-12"
-                    />
-                    <Form.Check
-                      type="checkbox"
-                      label="Female"
-                      value="Female"
-                      checked={selectedGenders.includes("Female")}
-                      onChange={handleSelectGenderChange}
-                      className="mb-2 fs-12"
-                    />
-                    <Form.Check
-                      type="checkbox"
-                      label="Other"
-                      value="Other"
-                      checked={selectedGenders.includes("Other")}
-                      onChange={handleSelectGenderChange}
-                      className="mb-2 fs-12"
-                    />
+                    {designFilters?.genders &&
+                    designFilters?.genders?.length > 0 ? (
+                      <>
+                        {designFilters?.genders?.map((name) => (
+                          <Form.Group
+                            as={Col}
+                            lg={3}
+                            className="d-flex mt-1"
+                            key={name}
+                          >
+                            <Form.Check
+                              className="cursor-pointer me-2"
+                              type="checkbox"
+                              checked={genders.includes(name)}
+                              onChange={() =>
+                                handleCheckBoxChange(name, setGenders)
+                              }
+                            />
+                            <span>{name}</span>
+                          </Form.Group>
+                        ))}
+                      </>
+                    ) : null}
                   </Form.Group>
                   <hr />
                   <Form.Group className="mb-3">
                     <Form.Label className="fw-600 fs-14">Season</Form.Label>
-                    <Form.Control
-                      value={seasonsValue}
-                      onChange={(e) => handleChangeSeason(e)}
-                    ></Form.Control>
+
+                    <SearchInput
+                      placeholder=""
+                      onSearchChange={handleChangeSeason}
+                    />
                   </Form.Group>
                   <hr />
                   <Form.Group className="mb-3">
                     <Form.Label className="fw-600 fs-14">Color</Form.Label>
-                    <Form.Control
-                      value={colorsValue}
-                      onChange={(e) => handleChangeColor(e)}
-                    ></Form.Control>
+
+                    <SearchInput
+                      placeholder=""
+                      onSearchChange={handleChangeColor}
+                    />
                   </Form.Group>
                   <hr />
                   <Form.Group className="mb-3">
                     <Form.Label className="fw-600 fs-14">Material</Form.Label>
-                    <Form.Control
-                      value={materialsValue}
-                      onChange={(e) => handleChangeMaterial(e)}
-                    ></Form.Control>
+                    <SearchInput
+                      placeholder=""
+                      onSearchChange={handleChangeMaterial}
+                    />
                   </Form.Group>
                   <hr />
                   <p
@@ -741,11 +581,18 @@ const Designs = () => {
                       </>
                     ) : null}
                   </div>
+                  <Button
+                    variant="secondary"
+                    className="mt-3"
+                    onClick={clearFilters}
+                  >
+                    Clear Filters
+                  </Button>
                 </div>
               </Col>
               <Col lg="9">
                 <div id="profile-designs" className="ps-2 pt-4">
-                  {designsQuery.isLoading ? (
+                  {designsQuery.isLoading || isRefreshing ? (
                     <>
                       <Card className="text-center">
                         <Card.Body>
@@ -758,7 +605,7 @@ const Designs = () => {
                       {designs && designs.length > 0 ? (
                         <>
                           <Row className="designs-row">
-                            {designs.map((design, index) => {
+                            {designs.map((design) => {
                               const designImage =
                                 design.media?.[0]?.url || DressPlaceholder;
                               const wishlist_user_ids =
@@ -1511,7 +1358,8 @@ const Designs = () => {
                   </Carousel>
                 ) : null}
                 <div>
-                  {singleDesign.tags && singleDesign.tags.length > 0
+                  {Array.isArray(singleDesign?.tags) &&
+                  singleDesign?.tags.length > 0
                     ? singleDesign.tags.slice(0, 3).map((tag, index) => (
                         <span
                           key={index}

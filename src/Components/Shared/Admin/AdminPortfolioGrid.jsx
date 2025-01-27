@@ -221,6 +221,7 @@ const AdminPortfolioGrid = (props) => {
     };
 
     useEffect(() => {
+        return
         fetchData(userId);
     }, [reloadCount]);
 

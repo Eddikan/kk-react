@@ -4,8 +4,7 @@ import "Assets/styles/User/Profile/style.css";
 import UserPlaceholder from "Assets/images/user.png";
 import Loading from "Assets/images/loading.gif";
 import { FaLocationDot } from "react-icons/fa6";
-import AdminPortfolio from "Components/Shared/Admin/AdminPortfolioGrid";
-import AdminFabrics from "Components/Shared/Admin/AdminFabricsGrid";
+
 import LoadingPage from "Components/Shared/LoadingPage";
 import { GoPencil } from "react-icons/go";
 import { IoStorefrontOutline } from "react-icons/io5";
@@ -640,62 +639,10 @@ const Profile = () => {
                     </Row>
                   ) : null}
 
-                  {activeTabGroup == "designs" ? (
-                    <Row>
-                      <Col lg="12">
-                        <div className="designs-container">
-                          <p className="title-designer mb-1 lh-25">Designs </p>
-                          <div className="mt-15">
-                            <AdminPortfolio
-                              currentUser={currentUser}
-                              reloadCount={reloadCount}
-                            />
-                          </div>
-                        </div>
-                      </Col>
-                    </Row>
-                  ) : null}
-
-                  {activeTabGroup == "fabrics" ? (
-                    <Row>
-                      <Col lg="12">
-                        <div className="fabrics-container">
-                          <p className="title-designer mb-1 lh-25">Fabrics </p>
-                          <div className="mt-15">
-                            <AdminFabrics
-                              currentUser={currentUser}
-                              reloadCount={reloadCount}
-                            />
-                          </div>
-                        </div>
-                      </Col>
-                    </Row>
-                  ) : null}
                 </div>
               </Col>
             </Row>
-            {user?.is_designer == 1 && (
-              <>
-                {portfolioShow ? (
-                  <AdminPortfolio
-                    currentUser={currentUser}
-                    reloadCount={reloadCount}
-                  />
-                ) : null}
-              </>
-            )}
-
-            {user?.is_seller == 1 && (
-              <>
-                {fabricShow ? (
-                  <AdminFabrics
-                    currentUser={currentUser}
-                    reloadCount={reloadCount}
-                  />
-                ) : null}
-              </>
-            )}
-
+           
             {processShow ? (
               <div id="profile-portfolio">
                 <p>Under Construction</p>
