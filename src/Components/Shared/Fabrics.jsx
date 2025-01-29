@@ -51,7 +51,7 @@ const Fabrics = (props) => {
   useEffect(() => {
     if (error) {
       console.error("Error fetching fabrics:", error);
-      toast.error("Failed to load fabrics. Please try again later.");
+      // toast.error("Failed to load fabrics. Please try again later.");
     }
   }, [error]);
 
@@ -102,20 +102,20 @@ const Fabrics = (props) => {
   return (
     <>
       <div id="profile-designs">
-        <p className="fs-20 text-center text-dark mb-1" >
+        <p className="fs-20 text-center text-dark mb-1">
           {" "}
           Searching for Fabrics?
         </p>
         <h2 className="fs-40 fw-500 text-center text-black explore-premium-fabrics mb-30">
           Explore Premium Fabrics
         </h2>
-        {fabricsLoading ? (
+        {fabricsLoading && !fabrics?.length ? (
           <>
             <p className="text-center mb-3 mt-3">Loading...</p>
           </>
         ) : (
           <>
-            {fabrics && fabrics.length > 0 ? (
+            {fabrics && fabrics?.length > 0 ? (
               <>
                 <Row className="designs-row">
                   {/* {currentUser ?

@@ -73,7 +73,7 @@ const DesignersMarquee = () => {
   return (
     <>
       <div id="designers-marquee">
-        {isDesignerLoading ? (
+        {isDesignerLoading && !designers.length ? (
           <>
             <Loading className="bg-white" />
           </>

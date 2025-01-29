@@ -49,7 +49,8 @@ const persistConfig = {
 // Root reducer with reset logic
 const rootReducer = (state, action) => {
   if (action.type === "RESET_STATE") {
-    state = undefined; // Reset state
+    const { designers, fabrics } = state; // Preserve designers and fabrics slices
+    state = { designers, fabrics }; // Reset other slices
   }
   return combineReducers({
     auth: authReducer,
