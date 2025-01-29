@@ -209,6 +209,19 @@ export const queryService = api.injectEndpoints({
     getADesignersDesign: builder.query({
       query: (id) => `designer/${id}/designs?page=1&per_page=25`,
     }),
+    getNotifications: builder.query({
+      query: () => `user/notifications?per_page=25&page=1`,
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          if (data.success) {
+            dispatch(setNotifications(data.data));
+          }
+        } catch (error) {
+          console.log("error", error);
+        }
+      },
+    }),
   }),
 });
 
@@ -228,4 +241,5 @@ export const {
   useGetADesignerQuery,
   useGetADesignersDesignQuery,
   useGetADesignersCalenderQuery,
+  useGetNotificationsQuery,
 } = queryService;

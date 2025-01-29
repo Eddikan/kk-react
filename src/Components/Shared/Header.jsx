@@ -28,7 +28,6 @@ import { useCookies } from "react-cookie";
 import { LiaUserTieSolid } from "react-icons/lia";
 import { Link } from "react-router-dom";
 import { IoBookmarkOutline } from "react-icons/io5";
-import NewAppointment from "Assets/images/new-appointment-icon.png";
 import UserPlaceholder from "Assets/images/user.png";
 import TextLogo from "Assets/images/logos/kouture-text-logo.png";
 import "Assets/styles/Headers/style.css";
@@ -39,7 +38,6 @@ import DesignerIcon from "Assets/images/user-box/edit-tools.png";
 import UserIcon from "Assets/images/icons/profile.png";
 import FavoritesIcon from "Assets/images/icons/bookmark.png";
 import CartIcon from "Assets/images/icons/cart.png";
-import BellIcon from "Assets/images/icons/bell.png";
 import DesignerModalIcon from "Assets/images/icons/designer-modal-icon-purple.png";
 import FabricModalIcon from "Assets/images/icons/fabric-modal-icon-purple.png";
 import DesignerVendorModalIcon from "Assets/images/icons/sewing-modal-icon-purple.png";
@@ -51,6 +49,7 @@ import {
   useGetCartItemsQuery,
   useGetWishlistItemsQuery,
 } from "store/api/queries";
+import Notification from "Components/Shared/Notification";
 const Header = () => {
   const { logOut } = useAuth();
   const navigate = useNavigate();
@@ -68,8 +67,7 @@ const Header = () => {
   const headerSearch = query.get("search");
   const headerType = query.get("type");
 
-  const { refetch: refetchDesignFilters } =
-    useGetDesignFiltersQuery();
+  const { refetch: refetchDesignFilters } = useGetDesignFiltersQuery();
   const { refetch: refetchDesignersFilters } = useGetDesignersFiltersQuery();
   const myNotificationsQuery = useGetMyNotificationsQuery(undefined, {
     skip: !isLoggedIn,
@@ -113,12 +111,10 @@ const Header = () => {
   ]);
 
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const [userBellOpen, setUserBellOpen] = useState(false);
   const [userCountryOpen, setUserCountryOpen] = useState(false);
   const [userWishlistOpen, setUserWishlistOpen] = useState(false);
   const [userImage, setUserImage] = useState("");
   const [user, setUser] = useState(currenStoreUser);
-  const [notifications, setNotifications] = useState([]);
   const [cartItemCount, setCartItemCount] = useState(
     cookies.cartItemCount ?? 0
   );
@@ -126,7 +122,6 @@ const Header = () => {
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
 
   const userRef = useRef(null);
-  const bellRef = useRef(null);
   const wishlistRef = useRef(null);
   const countryRef = useRef(null);
   const searchRef = useRef(null);
@@ -164,9 +159,6 @@ const Header = () => {
     if (userRef.current && !userRef.current.contains(event.target)) {
       setUserMenuOpen(false);
     }
-    if (bellRef.current && !bellRef.current.contains(event.target)) {
-      setUserBellOpen(false);
-    }
 
     if (countryRef.current && !countryRef.current.contains(event.target)) {
       setUserCountryOpen(false);
@@ -189,10 +181,6 @@ const Header = () => {
 
   const toggleCountryMenu = () => {
     setUserCountryOpen(!userCountryOpen);
-  };
-
-  const toggleBellMenu = () => {
-    setUserBellOpen(!userBellOpen);
   };
 
   const toggleWishlistMenu = () => {
@@ -483,7 +471,9 @@ const Header = () => {
                           className="nav-link cursor-pointer text-decoration-none border-bottom pb-3 mb-2"
                           style={{ pointerEvents: "none" }}
                         >
-                          {user?.first_name ? ` Hi, ${user?.first_name} !` : "Hi"}
+                          {user?.first_name
+                            ? ` Hi, ${user?.first_name} !`
+                            : "Hi"}
                         </a>
                         <a
                           className="nav-link cursor-pointer text-decoration-none pb-0"
@@ -598,83 +588,7 @@ const Header = () => {
                       </a>
                     )}
 
-                    <div
-                      className="user-dropdown nav-link cursor-pointer d-block position-relative"
-                      ref={bellRef}
-                      onClick={toggleBellMenu}
-                    >
-                      <div className="nav-link header-tooltip">
-                        <span className="icon-tooltiptext fs-14">
-                          Notifications
-                        </span>
-                        {/* <VscBell size={25} /> */}
-                        <img
-                          src={BellIcon}
-                          className="navigation-icon"
-                          alt="Notifications"
-                        />
-                      </div>
-                      {userBellOpen && (
-                        <div
-                          className="action-box-bell scroll-bar user-menu-bell"
-                          id="style-2"
-                        >
-                          {notifications?.length > 0 ? (
-                            <>
-                              {notifications.map((notification, index) => {
-                                const options = {
-                                  year: "numeric",
-                                  month: "long",
-                                  day: "numeric",
-                                  hour: "numeric",
-                                  minute: "numeric",
-                                };
-
-                                const today = new Date(
-                                  notification.created_at
-                                ).toLocaleDateString("en-ES", options);
-                                return (
-                                  <>
-                                    <Row key={index} className="mb-2">
-                                      <Col lg={2}>
-                                        <img
-                                          src={NewAppointment}
-                                          className="new-appointment-image"
-                                          alt="New Appointment"
-                                        />
-                                      </Col>
-
-                                      <Col lg={10} className="pb-2">
-                                        <div className="body-text-bell">
-                                          <div className="fs-16 fw-600 text-black">
-                                            {notification.subject}
-                                          </div>
-                                          <span className="fs-14 text-black">
-                                            {notification.message}
-                                          </span>
-                                          <div className="hours-bell fs-14 mt-1">
-                                            {today}
-                                          </div>
-                                        </div>
-                                      </Col>
-                                    </Row>
-                                    <hr className="mt-0 mb-3" />
-                                  </>
-                                );
-                              })}
-                            </>
-                          ) : (
-                            <>
-                              <Card>
-                                <Card.Body className="text-center">
-                                  No notifications were found.
-                                </Card.Body>
-                              </Card>
-                            </>
-                          )}
-                        </div>
-                      )}
-                    </div>
+                    <Notification />
                     {user?.shop?.is_complete ? (
                       <>
                         {(is_seller || is_designer) && (
@@ -906,20 +820,6 @@ const Header = () => {
                             </Link>
                           )}
 
-                          {/* {userRole !== 'Admin' &&
-                            <div className='mb-2'>
-                              <DropdownButton id="dropdown-survey-button" title={<span><PiNotepadLight className='note-icon ' size={17} />Surveys</span>}>
-                                <Dropdown.Item href="/customer-satisfaction-survey" className='yellow-hover'>Customer Satisfaction</Dropdown.Item>
-                                <Dropdown.Item href="/general-feedback-survey" className='yellow-hover'>General Feedback</Dropdown.Item>
-
-                                {user.is_designer == 1 &&
-                                  <>
-                                    <Dropdown.Item href="/vendor-feedback-survey" className='yellow-hover'>Vendor Feedback</Dropdown.Item>
-                                  </>
-                                }
-                              </DropdownButton>
-                            </div>
-                          } */}
 
                           <div>
                             <p className="mb-0 cursor-pointer" onClick={logOut}>
